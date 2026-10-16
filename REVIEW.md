@@ -54,6 +54,21 @@ status: issues_found
 
 Reviewed all 31 JavaScript, JSX, CSS, and package-manifest files under `IMovies`, tracing the registration, booking, database-startup, and seed flows. The client-side implementation and configuration files are empty, registration permits unauthenticated admin creation, booking prices are client-controlled, and seat checks are not atomic. The seed command also deletes all users, movies, and bookings. The server files were reviewed in full; the client files are zero-byte files except for an empty `{}` package manifest.
 
+## Follow-up remediation
+
+The findings in this review snapshot have since been addressed:
+
+- **BL-01:** Added the Vite HTML entry point and populated the client; the production build now succeeds.
+- **BL-02:** Public registration always creates a regular user.
+- **BL-03:** Booking prices are calculated from the movie's server-side ticket price.
+- **BL-04:** A unique MongoDB index now atomically reserves seats; duplicate-key conflicts return HTTP 409.
+- **BL-05 / WR-03:** Seeding requires development mode, an explicit reset flag, destructive-operation confirmation, and non-default passwords from environment variables.
+- **WR-01:** The server waits for MongoDB and the seat index before listening.
+- **WR-02:** `.gitignore` excludes `.env`; `server/.env.example` documents local configuration.
+- **WR-04:** Occupied-seat queries require a valid movie, date, and showtime.
+
+Follow-up checks: frontend production build passed; six backend regression tests passed; the production dependency audit reported no vulnerabilities. A local MongoDB server was unavailable, so database integration and index creation against existing data were not exercised. The full dependency audit still reports development-tool advisories; its suggested fixes require major Tailwind/Vite upgrades.
+
 ## Critical Issues
 
 ### BL-01: Client application has no runnable implementation
