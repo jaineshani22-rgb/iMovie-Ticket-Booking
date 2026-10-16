@@ -16,4 +16,9 @@ const bookingSchema = new mongoose.Schema({
   bookingDate: { type: Date, default: Date.now }
 });
 
+bookingSchema.index(
+  { movie: 1, showDate: 1, showTime: 1, seats: 1 },
+  { unique: true, name: 'unique_movie_show_seat' }
+);
+
 module.exports = mongoose.model('Booking', bookingSchema);

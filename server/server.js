@@ -1,10 +1,11 @@
 const express = require('express');
 const dotenv = require('dotenv');
 const cors = require('cors');
+const mongoose = require('mongoose');
 const connectDB = require('./config/db');
+const Booking = require('./models/Booking');
 
 dotenv.config();
-connectDB();
 
 const app = express();
 
@@ -20,6 +21,31 @@ app.use('/api/movies', require('./routes/movieRoutes'));
 app.use('/api/bookings', require('./routes/bookingRoutes'));
 
 const PORT = process.env.PORT || 5000;
-app.listen(PORT, () => {
-  console.log(`iMovies Server running on http://localhost:${PORT}`);
-});
+
+const startServer = async () => {
+  try {
+    if (!process.env.JWT_SECRET || process.env.JWT_SECRET.length < 32) {
+      throw new Error('JWT_SECRET must be set to a secret with at least 32 characters');
+    }
+
+    await connectDB();
+    await Booking.init();
+
+    const server = app.listen(PORT);
+    await new Promise((resolve, reject) => {
+      server.once('listening', resolve);
+      server.once('error', reject);
+    });
+    console.log(`iMovies Server running on http://localhost:${PORT}`);
+  } catch (error) {
+    console.error(`Failed to start iMovies Server: ${error.message}`);
+    await mongoose.disconnect();
+    process.exitCode = 1;
+  }
+};
+
+if (require.main === module) {
+  startServer();
+}
+
+module.exports = app;

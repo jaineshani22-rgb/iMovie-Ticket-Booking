@@ -10,15 +10,31 @@ dotenv.config();
 
 const seedData = async () => {
   try {
+    if (process.env.NODE_ENV !== 'development') {
+      throw new Error('Database seeding is only allowed when NODE_ENV=development');
+    }
+    if (process.env.SEED_ALLOW_DESTRUCTIVE !== 'true' || !process.argv.includes('--reset')) {
+      throw new Error('Seeding deletes existing data. Set SEED_ALLOW_DESTRUCTIVE=true and pass --reset to continue.');
+    }
+    if (
+      !process.env.SEED_ADMIN_PASSWORD ||
+      process.env.SEED_ADMIN_PASSWORD.length < 12 ||
+      !process.env.SEED_USER_PASSWORD ||
+      process.env.SEED_USER_PASSWORD.length < 12
+    ) {
+      throw new Error('SEED_ADMIN_PASSWORD and SEED_USER_PASSWORD must each be at least 12 characters.');
+    }
+
     await connectDB();
 
     await Booking.deleteMany();
     await Movie.deleteMany();
     await User.deleteMany();
+    await Booking.createIndexes();
 
     const salt = await bcrypt.genSalt(10);
-    const adminPassword = await bcrypt.hash('admin123', salt);
-    const userPassword = await bcrypt.hash('user123', salt);
+    const adminPassword = await bcrypt.hash(process.env.SEED_ADMIN_PASSWORD, salt);
+    const userPassword = await bcrypt.hash(process.env.SEED_USER_PASSWORD, salt);
 
     const [adminUser, demoUser] = await User.insertMany([
       {
@@ -133,15 +149,16 @@ const seedData = async () => {
       showTime: '06:30 PM'
     });
 
-    console.log('✅ Database Seeded Successfully!');
+    console.log('Database seeded successfully.');
     console.log('-------------------------------------------');
-    console.log('Admin Login:    admin@imovies.com / admin123');
-    console.log('Customer Login: user@imovies.com  / user123');
+    console.log('Admin account:    admin@imovies.com');
+    console.log('Customer account: user@imovies.com');
     console.log('-------------------------------------------');
-    process.exit(0);
   } catch (error) {
-    console.error(`❌ Seeding Error: ${error.message}`);
-    process.exit(1);
+    console.error(`Seeding failed: ${error.message}`);
+    process.exitCode = 1;
+  } finally {
+    await mongoose.disconnect();
   }
 };
 
