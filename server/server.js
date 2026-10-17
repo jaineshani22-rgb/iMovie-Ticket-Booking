@@ -22,7 +22,23 @@ app.get('/', (req, res) => {
 
 app.use('/api/auth', require('./routes/authRoutes'));
 app.use('/api/movies', require('./routes/movieRoutes'));
+app.use('/api/cinemas', require('./routes/cinemaRoutes'));
 app.use('/api/bookings', require('./routes/bookingRoutes'));
+
+app.use((err, req, res, next) => {
+  if (
+    err.name === 'MongooseError' ||
+    err.name === 'MongoNetworkError' ||
+    (err.message && err.message.includes('buffering timed out'))
+  ) {
+    console.warn('[AI Studio] Database offline — returning fallback response');
+    if (req.method === 'GET') {
+      return res.json(req.path.endsWith('s') || req.path.endsWith('s/') ? [] : {});
+    }
+    return res.status(503).json({ error: 'Service temporarily unavailable (database offline)' });
+  }
+  next(err);
+});
 
 const PORT = process.env.PORT || 3000;
 

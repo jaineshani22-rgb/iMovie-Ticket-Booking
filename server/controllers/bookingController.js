@@ -12,11 +12,66 @@ const isValidShowDate = (value) => {
   return Number.isFinite(date.getTime()) && date.toISOString().slice(0, 10) === value;
 };
 
+// @desc    Temporarily hold seats during checkout (8 min TTL)
+// @route   POST /api/bookings/hold
+exports.holdSeats = async (req, res) => {
+  try {
+    const { movie, seats, showDate, showTime } = req.body;
+    if (!movie || !seats || !Array.isArray(seats) || seats.length === 0) {
+      return res.status(400).json({ message: 'Please select a movie and seats to hold' });
+    }
+    if (!isValidShowDate(showDate) || typeof showTime !== 'string' || !showTime.trim()) {
+      return res.status(400).json({ message: 'Valid showDate and showTime are required' });
+    }
+
+    try {
+      const holdResult = inMemoryStore.holdSeats({
+        userId: req.user.id,
+        movieId: movie,
+        showDate,
+        showTime,
+        seats
+      });
+      return res.status(200).json(holdResult);
+    } catch (err) {
+      return res.status(409).json({ message: err.message });
+    }
+  } catch (error) {
+    return res.status(500).json({ message: 'Failed to hold seats', error: error.message });
+  }
+};
+
+// @desc    Release temporary seat hold
+// @route   POST /api/bookings/release
+exports.releaseSeats = async (req, res) => {
+  try {
+    const { holdId } = req.body;
+    if (holdId) {
+      inMemoryStore.releaseHold({ holdId, userId: req.user.id });
+    }
+    return res.status(200).json({ message: 'Hold released successfully' });
+  } catch (error) {
+    return res.status(500).json({ message: 'Failed to release hold', error: error.message });
+  }
+};
+
 // @desc    Create new ticket booking
 // @route   POST /api/bookings
 exports.createBooking = async (req, res) => {
   try {
-    const { movie, seats, showDate, showTime } = req.body;
+    const {
+      movie,
+      seats,
+      showDate,
+      showTime,
+      cinema,
+      city,
+      country,
+      currency,
+      seatTier,
+      customer,
+      paymentMethod
+    } = req.body;
 
     if (!movie || !seats || !Array.isArray(seats) || seats.length === 0) {
       return res.status(400).json({ message: 'Please select a movie and at least one seat' });
@@ -72,7 +127,8 @@ exports.createBooking = async (req, res) => {
           movie,
           showDate,
           showTime,
-          seats: { $in: seats }
+          seats: { $in: seats },
+          status: { $ne: 'cancelled' }
         });
       } catch (err) {
         existingBookings = [];
@@ -85,7 +141,7 @@ exports.createBooking = async (req, res) => {
         });
       }
     } else {
-      const occupied = inMemoryStore.getOccupiedSeats(movie, showDate, showTime);
+      const occupied = inMemoryStore.getOccupiedSeats(movie, showDate, showTime, req.user.id);
       const conflictSeats = seats.filter((s) => occupied.includes(s));
       if (conflictSeats.length > 0) {
         return res.status(409).json({
@@ -104,7 +160,16 @@ exports.createBooking = async (req, res) => {
           seats,
           totalPrice: calculatedTotal,
           showDate,
-          showTime
+          showTime,
+          cinema: cinema || movieDoc.theater || 'iMovies IMAX Laser',
+          city: city || 'New York',
+          country: country || 'US',
+          currency: currency || 'USD',
+          seatTier: seatTier || 'VIP Recliner',
+          customer: customer || { name: req.user.username, email: req.user.email },
+          paymentMethod: paymentMethod || 'Test Payment Gateway (Verified)',
+          paymentStatus: 'paid',
+          status: 'confirmed'
         });
 
         const populatedBooking = await Booking.findById(booking._id)
@@ -123,7 +188,14 @@ exports.createBooking = async (req, res) => {
           seats,
           totalPrice: calculatedTotal,
           showDate,
-          showTime
+          showTime,
+          cinema: cinema || movieDoc.theater,
+          city,
+          country,
+          currency,
+          seatTier,
+          customer,
+          paymentMethod
         });
         return res.status(201).json({
           ...newBooking,
@@ -138,7 +210,14 @@ exports.createBooking = async (req, res) => {
         seats,
         totalPrice: calculatedTotal,
         showDate,
-        showTime
+        showTime,
+        cinema: cinema || movieDoc.theater,
+        city,
+        country,
+        currency,
+        seatTier,
+        customer,
+        paymentMethod
       });
       return res.status(201).json({
         ...newBooking,
@@ -151,6 +230,36 @@ exports.createBooking = async (req, res) => {
       return res.status(409).json({ message: 'One or more selected seats were just booked. Please choose different seats.' });
     }
     return res.status(500).json({ message: 'Failed to create booking', error: error.message });
+  }
+};
+
+// @desc    Cancel booking and release seats
+// @route   POST /api/bookings/:id/cancel
+exports.cancelBooking = async (req, res) => {
+  try {
+    const { id } = req.params;
+    let booking = null;
+
+    try {
+      booking = await Booking.findOne({ _id: id, user: req.user.id });
+      if (booking) {
+        booking.status = 'cancelled';
+        booking.paymentStatus = 'refunded';
+        await booking.save();
+        return res.status(200).json({ message: 'Booking cancelled successfully. Refund issued to test account.', booking });
+      }
+    } catch (e) {
+      // Ignored
+    }
+
+    try {
+      const inMemBooking = inMemoryStore.cancelBooking(id, req.user.id);
+      return res.status(200).json({ message: 'Booking cancelled successfully. Refund issued to test account.', booking: inMemBooking });
+    } catch (err) {
+      return res.status(404).json({ message: err.message });
+    }
+  } catch (error) {
+    return res.status(500).json({ message: 'Failed to cancel booking', error: error.message });
   }
 };
 
@@ -186,12 +295,12 @@ exports.getOccupiedSeats = async (req, res) => {
       return res.status(400).json({ message: 'Valid showDate and showTime query parameters are required' });
     }
 
-    const query = { movie: movieId, showDate, showTime };
+    const query = { movie: movieId, showDate, showTime, status: { $ne: 'cancelled' } };
 
     try {
       const bookings = await Booking.find(query).select('seats');
       const occupiedSeats = [...new Set(bookings.flatMap((b) => b.seats))];
-      // Also combine with in-memory occupied seats if any
+      // Also combine with in-memory occupied seats
       const inMemSeats = inMemoryStore.getOccupiedSeats(movieId, showDate, showTime);
       const combined = [...new Set([...occupiedSeats, ...inMemSeats])];
       return res.status(200).json({ occupiedSeats: combined });

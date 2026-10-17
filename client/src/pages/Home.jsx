@@ -1,22 +1,110 @@
 import React, { useState, useEffect } from 'react';
-import { Search, PlusCircle, Sparkles, X, Clapperboard, Award } from 'lucide-react';
+import {
+  Search,
+  PlusCircle,
+  Sparkles,
+  X,
+  Clapperboard,
+  Award,
+  Play,
+  Globe,
+  MapPin,
+  Calendar,
+  SlidersHorizontal,
+  Ticket,
+  Film,
+  Star,
+  RotateCcw
+} from 'lucide-react';
+import { Link, useSearchParams } from 'react-router-dom';
 import API from '../services/api';
 import MovieCard from '../components/MovieCard';
+import TrailerModal from '../components/TrailerModal';
+import LocationPickerModal from '../components/LocationPickerModal';
 import { useAuth } from '../context/AuthContext';
+import { useLocationContext, COUNTRIES } from '../context/LocationContext';
 
-const GENRES = ['All', 'Action', 'Sci-Fi', 'Drama', 'Adventure', 'Crime', 'Animation', 'Biography'];
+const INDUSTRIES = [
+  { id: 'All', label: 'All Industries (Hollywood & Bollywood)', badge: 'Global' },
+  { id: 'Hollywood', label: 'Hollywood Blockbusters', badge: 'Hollywood' },
+  { id: 'Bollywood', label: 'Bollywood Hindi Cinema', badge: 'Bollywood' }
+];
+
+const GENRES = [
+  'All',
+  'Action',
+  'Sci-Fi',
+  'Drama',
+  'Comedy',
+  'Thriller',
+  'Horror',
+  'Romance',
+  'Animation',
+  'Adventure',
+  'Crime',
+  'Biography',
+  'Sports',
+  'Family',
+  'Fantasy',
+  'Musical',
+  'Mystery',
+  'History',
+  'War'
+];
+
+const LANGUAGES = ['All', 'English', 'Hindi', 'Japanese', 'French', 'Spanish'];
+
+const RATING_DROPDOWN_OPTIONS = [
+  { value: 0, label: 'All Ratings (Any)' },
+  { value: 7.5, label: '7.5+ ⭐ Great' },
+  { value: 8.0, label: '8.0+ ⭐ Very Highly Rated' },
+  { value: 8.5, label: '8.5+ ⭐ Critical Acclaim' },
+  { value: 8.8, label: '8.8+ ⭐ Masterpieces' },
+  { value: 9.0, label: '9.0+ ⭐ Hall of Fame (9.0+)' }
+];
 
 const Home = () => {
   const { user } = useAuth();
+  const { country, city, activeCountry, selectedCinema, cinemas, setCity, formatPrice } =
+    useLocationContext();
+
+  const [searchParams, setSearchParams] = useSearchParams();
+  const [search, setSearch] = useState(searchParams.get('search') || '');
   const [movies, setMovies] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [search, setSearch] = useState('');
+  const [selectedIndustry, setSelectedIndustry] = useState('All');
   const [selectedGenre, setSelectedGenre] = useState('All');
+  const [selectedLanguage, setSelectedLanguage] = useState('All');
+  const [minRating, setMinRating] = useState(0); // Minimum Rating filter (slider + dropdown)
+  const [categoryTab, setCategoryTab] = useState('now_playing'); // 'now_playing', 'upcoming', 'popular', 'all'
+  const [sortBy, setSortBy] = useState('genre'); // 'genre', 'rating', 'releaseDate', 'title', 'duration'
 
-  // Admin Add Movie Modal State
+  // Sync search state if URL parameter changes (e.g., from Navbar search)
+  useEffect(() => {
+    const urlQuery = searchParams.get('search') || '';
+    if (urlQuery !== search) {
+      setSearch(urlQuery);
+    }
+  }, [searchParams]);
+
+  const handleSearchChange = (val) => {
+    setSearch(val);
+    const newParams = new URLSearchParams(searchParams);
+    if (val && val.trim()) {
+      newParams.set('search', val.trim());
+    } else {
+      newParams.delete('search');
+    }
+    setSearchParams(newParams, { replace: true });
+  };
+
+  // Modals
+  const [trailerModal, setTrailerModal] = useState({ isOpen: false, movie: null });
+  const [showLocationModal, setShowLocationModal] = useState(false);
   const [showAddModal, setShowAddModal] = useState(false);
   const [newMovie, setNewMovie] = useState({
     title: '',
+    industry: 'Hollywood',
     description: '',
     genre: 'Action, Sci-Fi',
     duration: 145,
@@ -32,10 +120,16 @@ const Home = () => {
       const { data } = await API.get('/movies', {
         params: {
           search: search || undefined,
-          genre: selectedGenre !== 'All' ? selectedGenre : undefined
+          industry: selectedIndustry !== 'All' ? selectedIndustry : undefined,
+          genre: selectedGenre !== 'All' ? selectedGenre : undefined,
+          minRating: Number(minRating) > 0 ? Number(minRating) : undefined,
+          category: categoryTab !== 'all' ? categoryTab : undefined,
+          language: selectedLanguage !== 'All' ? selectedLanguage : undefined,
+          country: country || undefined,
+          sortBy
         }
       });
-      setMovies(data);
+      setMovies(data || []);
     } catch (error) {
       console.error('Error fetching movies:', error);
     } finally {
@@ -45,7 +139,7 @@ const Home = () => {
 
   useEffect(() => {
     fetchMovies();
-  }, [search, selectedGenre]);
+  }, [search, selectedIndustry, selectedGenre, selectedLanguage, minRating, categoryTab, country, sortBy]);
 
   const handleAddMovie = async (e) => {
     e.preventDefault();
@@ -58,6 +152,7 @@ const Home = () => {
       setShowAddModal(false);
       setNewMovie({
         title: '',
+        industry: 'Hollywood',
         description: '',
         genre: 'Action, Sci-Fi',
         duration: 145,
@@ -73,103 +168,532 @@ const Home = () => {
     }
   };
 
+  const featuredMovie = movies[0] || null;
+
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-10">
-      {/* Luxury Cinematic Hero Banner */}
-      <div className="relative rounded-3xl overflow-hidden bg-gradient-to-r from-[#11141c] via-[#161a24] to-[#11141c] border border-amber-500/20 p-8 sm:p-12 shadow-2xl shadow-black/60 cinema-vignette">
-        {/* Subtle Ambient Gold Glow Top */}
-        <div className="absolute top-0 left-1/4 right-1/4 h-[1px] bg-gradient-to-r from-transparent via-amber-400/50 to-transparent" />
-
-        <div className="max-w-3xl space-y-5">
-          <div className="inline-flex items-center gap-2 text-xs font-semibold tracking-wider text-amber-400 bg-amber-400/10 border border-amber-400/20 px-3 py-1 rounded-md">
-            <Award className="w-3.5 h-3.5 text-amber-400" />
-            Curated Screenings & Recliner Booking
-          </div>
-
-          <h1 className="text-3xl sm:text-5xl font-extrabold text-white tracking-tight leading-tight [text-wrap:balance]">
-            Experience Cinema in <span className="text-transparent bg-clip-text bg-gradient-to-r from-amber-300 via-amber-400 to-amber-500">Unrivaled Luxury.</span>
-          </h1>
-
-          <p className="text-slate-300 text-sm sm:text-base leading-relaxed max-w-2xl">
-            Select handcrafted leather recliners on our real-time auditorium map. Featuring 4K Laser IMAX projection, Dolby Atmos sound, and seamless digital booking passes.
-          </p>
-
-          <div className="pt-2 flex items-center gap-6 text-xs text-slate-400">
-            <span className="flex items-center gap-1.5 text-slate-300">
-              <span className="w-1.5 h-1.5 rounded-full bg-amber-400" />
-              Live Seat Conflict Prevention
+      {/* Worldwide Location & Status Sub-header */}
+      <div className="bg-[#12151d] border border-amber-500/20 rounded-2xl p-4 flex flex-col md:flex-row items-start md:items-center justify-between gap-4 shadow-lg shadow-black/40">
+        <div className="flex flex-wrap items-center gap-3">
+          <button
+            type="button"
+            onClick={() => setShowLocationModal(true)}
+            className="flex items-center gap-2 bg-[#171b26] hover:bg-[#202534] border border-amber-500/30 text-white px-3.5 py-1.5 rounded-xl text-xs font-semibold transition-colors"
+          >
+            <span className="text-base">{activeCountry.flag}</span>
+            <span>
+              {activeCountry.name} · {city}
             </span>
-            <span className="flex items-center gap-1.5 text-slate-300">
-              <span className="w-1.5 h-1.5 rounded-full bg-amber-400" />
-              Instant Perforated Ticket Passes
+            <span className="text-amber-400 font-mono font-bold">({activeCountry.currency})</span>
+          </button>
+
+          {selectedCinema && (
+            <span className="text-xs text-slate-400 flex items-center gap-1.5 hidden sm:inline-flex">
+              <MapPin className="w-3.5 h-3.5 text-amber-400" />
+              <span>
+                Preferred: <strong>{selectedCinema.name}</strong>
+              </span>
             </span>
-          </div>
+          )}
+        </div>
+
+        {/* Live Data Badge */}
+        <div className="flex items-center gap-2 text-xs">
+          <span className="inline-flex items-center gap-1.5 text-[11px] font-bold text-amber-400 bg-amber-500/10 border border-amber-500/25 px-2.5 py-1 rounded-lg">
+            <span className="w-2 h-2 rounded-full bg-amber-400 animate-pulse" />
+            Hollywood & Bollywood VIP Catalog · Live Seat Holds
+          </span>
         </div>
       </div>
 
-      {/* Search, Genre Filter & Admin Controls */}
-      <div className="flex flex-col md:flex-row gap-4 items-stretch md:items-center justify-between">
-        {/* Search Bar */}
-        <div className="relative flex-1 max-w-md">
-          <Search className="w-4 h-4 text-amber-400/70 absolute left-3.5 top-1/2 -translate-y-1/2" />
-          <input
-            type="text"
-            placeholder="Search blockbusters by title..."
-            value={search}
-            onChange={(e) => setSearch(e.target.value)}
-            className="w-full bg-[#12151d] border border-amber-500/20 focus:border-amber-400 rounded-xl pl-10 pr-4 py-2.5 text-sm text-white placeholder-slate-500 focus:outline-none transition-colors shadow-inner"
-          />
+      {/* Featured Hero Banner */}
+      {featuredMovie && (
+        <div className="relative rounded-3xl overflow-hidden bg-gradient-to-r from-[#0d1017] via-[#141924] to-[#0d1017] border border-amber-500/20 p-8 sm:p-12 shadow-2xl shadow-black/80 cinema-vignette">
+          {featuredMovie.backdropUrl && (
+            <div
+              className="absolute inset-0 bg-cover bg-center opacity-20 pointer-events-none mix-blend-luminosity filter blur-[1px]"
+              style={{ backgroundImage: `url(${featuredMovie.backdropUrl})` }}
+            />
+          )}
+
+          <div className="relative z-10 max-w-3xl space-y-5">
+            <div className="flex flex-wrap items-center gap-2">
+              <div className="inline-flex items-center gap-1.5 text-xs font-semibold tracking-wider text-amber-400 bg-amber-400/10 border border-amber-400/20 px-3 py-1 rounded-md">
+                <Award className="w-3.5 h-3.5 text-amber-400" />
+                Featured Premiere · {featuredMovie.industry || 'Worldwide'}
+              </div>
+
+              {featuredMovie.industry === 'Bollywood' && (
+                <span className="text-xs font-bold text-emerald-400 bg-emerald-500/15 border border-emerald-500/30 px-2.5 py-1 rounded-md">
+                  Hindi Cinema Blockbuster
+                </span>
+              )}
+            </div>
+
+            <h1 className="text-3xl sm:text-5xl font-extrabold text-white tracking-tight leading-tight [text-wrap:balance]">
+              {featuredMovie.title}
+            </h1>
+
+            <p className="text-slate-300 text-xs sm:text-sm leading-relaxed max-w-2xl line-clamp-3">
+              {featuredMovie.description}
+            </p>
+
+            <div className="flex flex-wrap items-center gap-4 text-xs text-slate-300 pt-1">
+              <span className="text-amber-400 font-bold bg-[#141822] border border-amber-500/30 px-3 py-1 rounded-md font-mono">
+                {formatPrice(featuredMovie.ticketPrice)} per recliner
+              </span>
+              <span className="text-slate-400">
+                {featuredMovie.duration} mins ·{' '}
+                {Array.isArray(featuredMovie.genre)
+                  ? featuredMovie.genre.join(', ')
+                  : featuredMovie.genre}
+              </span>
+            </div>
+
+            <div className="pt-2 flex flex-wrap items-center gap-3">
+              <Link
+                to={`/movies/${featuredMovie._id}`}
+                className="inline-flex items-center gap-2 bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 text-slate-950 font-black px-6 py-3 rounded-xl text-xs sm:text-sm shadow-xl shadow-amber-500/20 transition-all"
+              >
+                <Ticket className="w-4 h-4 stroke-[2.5]" />
+                <span>Reserve Seats on Interactive Map</span>
+              </Link>
+
+              {featuredMovie.trailerKey && (
+                <button
+                  type="button"
+                  onClick={() => setTrailerModal({ isOpen: true, movie: featuredMovie })}
+                  className="inline-flex items-center gap-2 bg-[#161a24] hover:bg-[#202534] border border-slate-700/80 hover:border-amber-400 text-slate-200 hover:text-white px-5 py-3 rounded-xl text-xs sm:text-sm font-semibold transition-colors"
+                >
+                  <Play className="w-4 h-4 fill-amber-400 stroke-none text-amber-400" />
+                  <span>Watch 4K Trailer</span>
+                </button>
+              )}
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Main Worldwide Discovery Bar: Industry Selector & Categories & Filters */}
+      <div className="space-y-5">
+        {/* Industry Filter Segment (Hollywood vs Bollywood) */}
+        <div className="bg-[#12151d] border border-amber-500/25 rounded-2xl p-2.5 sm:p-3 flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3 shadow-md">
+          <div className="flex items-center gap-1.5 text-xs font-bold text-slate-400 pl-2">
+            <Film className="w-4 h-4 text-amber-400" />
+            <span>Select Industry:</span>
+          </div>
+
+          <div className="flex items-center gap-2 overflow-x-auto pb-1 sm:pb-0">
+            {INDUSTRIES.map((ind) => (
+              <button
+                key={ind.id}
+                type="button"
+                onClick={() => setSelectedIndustry(ind.id)}
+                className={`px-4 py-2 rounded-xl text-xs font-extrabold whitespace-nowrap transition-all flex items-center gap-2 ${
+                  selectedIndustry === ind.id
+                    ? ind.id === 'Bollywood'
+                      ? 'bg-gradient-to-r from-emerald-500 to-teal-600 text-slate-950 shadow-lg shadow-emerald-500/20'
+                      : 'bg-gradient-to-r from-amber-500 to-amber-600 text-slate-950 shadow-lg shadow-amber-500/20'
+                    : 'bg-[#181c26] text-slate-300 hover:text-white border border-slate-800'
+                }`}
+              >
+                <span>{ind.label}</span>
+              </button>
+            ))}
+          </div>
         </div>
 
-        {/* Clean Segmented Genre Tabs */}
-        <div className="flex items-center gap-1.5 overflow-x-auto pb-1 bg-[#10131a] p-1.5 rounded-xl border border-slate-800/80">
-          {GENRES.map((genre) => (
+        {/* Category Tabs: Now Showing | Upcoming | Top Rated */}
+        <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-4 border-b border-slate-800/80 pb-4">
+          <div className="flex items-center gap-2 overflow-x-auto pb-1">
+            {[
+              { id: 'all', label: 'All Screenings' },
+              { id: 'now_playing', label: 'Now Showing' },
+              { id: 'upcoming', label: 'Upcoming Releases' },
+              { id: 'popular', label: 'Top Rated & Blockbusters' }
+            ].map((tab) => (
+              <button
+                key={tab.id}
+                type="button"
+                onClick={() => setCategoryTab(tab.id)}
+                className={`px-4 py-2 rounded-xl text-xs sm:text-sm font-bold whitespace-nowrap transition-all ${
+                  categoryTab === tab.id
+                    ? 'bg-amber-500 text-slate-950 shadow-md shadow-amber-500/20'
+                    : 'bg-[#10131b] text-slate-400 hover:text-white border border-slate-800'
+                }`}
+              >
+                {tab.label}
+              </button>
+            ))}
+          </div>
+
+          {/* Admin Add Film Button */}
+          {user?.role === 'admin' && (
             <button
-              key={genre}
-              onClick={() => setSelectedGenre(genre)}
-              className={`px-3.5 py-1.5 rounded-lg text-xs font-semibold whitespace-nowrap transition-all duration-150 ${
-                selectedGenre === genre
-                  ? 'bg-amber-500 text-slate-950 font-bold shadow-md shadow-amber-500/20'
-                  : 'text-slate-400 hover:text-white hover:bg-slate-800/50'
+              onClick={() => setShowAddModal(true)}
+              className="inline-flex items-center justify-center gap-2 bg-[#1a1e28] hover:bg-[#222734] text-amber-400 border border-amber-500/30 font-bold text-xs px-4 py-2.5 rounded-xl transition-colors shadow-md shrink-0"
+            >
+              <PlusCircle className="w-4 h-4" />
+              Add Film (Admin)
+            </button>
+          )}
+        </div>
+
+        {/* Toolbar: Search input, Language dropdown, and Sorter (with Sort by Genre) */}
+        <div className="flex flex-col lg:flex-row gap-3 items-stretch lg:items-center justify-between">
+          {/* Search Bar with Clear Button */}
+          <div className="relative flex-1 max-w-md">
+            <Search className="w-4 h-4 text-amber-400/80 absolute left-3.5 top-1/2 -translate-y-1/2" />
+            <input
+              type="text"
+              placeholder="Search by movie name, cast, director (e.g. Lapata Ladies, Titanic, Drishyam)..."
+              value={search}
+              onChange={(e) => handleSearchChange(e.target.value)}
+              className="w-full bg-[#12151d] border border-amber-500/25 focus:border-amber-400 rounded-xl pl-10 pr-9 py-2.5 text-xs sm:text-sm text-white placeholder-slate-500 focus:outline-none transition-colors shadow-inner"
+            />
+            {search && (
+              <button
+                type="button"
+                onClick={() => handleSearchChange('')}
+                className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-white p-0.5 rounded-full hover:bg-slate-800 transition-colors"
+                title="Clear search"
+              >
+                <X className="w-3.5 h-3.5" />
+              </button>
+            )}
+          </div>
+
+          <div className="flex flex-wrap items-center gap-2">
+            {/* Language filter */}
+            <select
+              value={selectedLanguage}
+              onChange={(e) => setSelectedLanguage(e.target.value)}
+              className="bg-[#12151d] border border-slate-800 text-xs text-slate-300 rounded-xl px-3 py-2.5 focus:outline-none focus:border-amber-400"
+            >
+              <option value="All">All Languages</option>
+              {LANGUAGES.slice(1).map((lang) => (
+                <option key={lang} value={lang}>
+                  {lang}
+                </option>
+              ))}
+            </select>
+
+            {/* Sort by dropdown - including Sort by Genre! */}
+            <select
+              value={sortBy}
+              onChange={(e) => setSortBy(e.target.value)}
+              className="bg-[#12151d] border border-amber-500/30 text-xs text-amber-300 font-semibold rounded-xl px-3 py-2.5 focus:outline-none focus:border-amber-400"
+            >
+              <option value="genre">Sort by Genre (Grouped A-Z)</option>
+              <option value="rating">Highest Rated (Rating ↓)</option>
+              <option value="releaseDate">Newest Releases</option>
+              <option value="title">Alphabetical (A-Z)</option>
+              <option value="duration">Longest Duration</option>
+            </select>
+          </div>
+        </div>
+
+        {/* Quick Search Suggestions */}
+        <div className="flex items-center gap-1.5 flex-wrap text-[11px] -mt-2">
+          <span className="text-slate-500 font-semibold uppercase tracking-wider text-[10px]">
+            Quick Search:
+          </span>
+          {[
+            'Laapataa Ladies',
+            'Ratatouille',
+            'Drishyam',
+            'Shutter Island',
+            'Kahaani',
+            'Titanic',
+            'Inside Out 2',
+            'Spider-Verse',
+            'Laila Majnu'
+          ].map((title) => (
+            <button
+              key={title}
+              type="button"
+              onClick={() => {
+                handleSearchChange(title);
+              }}
+              className={`px-2 py-0.5 rounded-lg border transition-all ${
+                search.toLowerCase() === title.toLowerCase()
+                  ? 'bg-amber-500 text-slate-950 font-bold border-amber-400 shadow-sm'
+                  : 'bg-[#12151d] text-slate-400 hover:text-amber-300 hover:border-amber-500/40 border-slate-800'
               }`}
             >
-              {genre}
+              {title}
             </button>
           ))}
+          {search && (
+            <button
+              type="button"
+              onClick={() => handleSearchChange('')}
+              className="text-amber-400/80 hover:text-amber-300 hover:underline font-semibold ml-1"
+            >
+              Clear
+            </button>
+          )}
         </div>
 
-        {/* Admin Add Movie Button */}
-        {user?.role === 'admin' && (
-          <button
-            onClick={() => setShowAddModal(true)}
-            className="inline-flex items-center justify-center gap-2 bg-[#1a1e28] hover:bg-[#222734] text-amber-400 border border-amber-500/30 font-bold text-xs px-4 py-2.5 rounded-xl transition-colors shadow-md shrink-0"
-          >
-            <PlusCircle className="w-4 h-4" />
-            Add Film (Admin)
-          </button>
-        )}
+        {/* Dedicated Minimum Rating Slider & Dropdown Control */}
+        <div className="bg-[#12151d] border border-amber-500/25 rounded-2xl p-3.5 sm:p-4 space-y-3 shadow-lg shadow-black/30">
+          <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-3">
+            <div className="flex items-center gap-2 flex-wrap">
+              <span className="flex items-center gap-1.5 text-xs font-bold text-slate-200">
+                <Star className="w-4 h-4 text-amber-400 fill-amber-400" />
+                Minimum Rating:
+              </span>
+              <span
+                className={`inline-flex items-center gap-1 text-xs font-black px-2.5 py-0.5 rounded-lg border font-mono tabular-nums ${
+                  minRating > 0
+                    ? 'bg-amber-400/15 border-amber-400/40 text-amber-400 shadow-sm'
+                    : 'bg-slate-800/60 border-slate-700 text-slate-400'
+                }`}
+              >
+                {minRating > 0 ? `${Number(minRating).toFixed(1)}+ ⭐` : 'Any Rating'}
+              </span>
+
+              {/* Quick Presets */}
+              <div className="flex items-center gap-1 ml-1 flex-wrap">
+                {[
+                  { label: 'All', val: 0 },
+                  { label: '8.0+ ⭐', val: 8.0 },
+                  { label: '8.5+ ⭐', val: 8.5 },
+                  { label: '8.8+ ⭐', val: 8.8 },
+                  { label: '9.0+ ⭐', val: 9.0 }
+                ].map((preset) => (
+                  <button
+                    key={preset.label}
+                    type="button"
+                    onClick={() => setMinRating(preset.val)}
+                    className={`px-2.5 py-1 rounded-lg text-[11px] font-bold transition-all whitespace-nowrap ${
+                      minRating === preset.val
+                        ? 'bg-amber-500 text-slate-950 shadow-sm'
+                        : 'bg-[#181c26] text-slate-400 hover:text-white border border-slate-800'
+                    }`}
+                  >
+                    {preset.label}
+                  </button>
+                ))}
+              </div>
+
+              {minRating > 0 && (
+                <button
+                  type="button"
+                  onClick={() => setMinRating(0)}
+                  className="inline-flex items-center gap-1 text-[11px] text-amber-400/80 hover:text-amber-300 hover:underline pl-1 transition-colors"
+                  title="Reset to All Ratings"
+                >
+                  <RotateCcw className="w-3 h-3" />
+                  <span>Reset</span>
+                </button>
+              )}
+            </div>
+
+            {/* Rating Dropdown selector */}
+            <div className="flex items-center gap-2 self-start lg:self-auto">
+              <label htmlFor="min-rating-select" className="text-xs text-slate-400 whitespace-nowrap hidden sm:inline">
+                Preset Dropdown:
+              </label>
+              <select
+                id="min-rating-select"
+                value={minRating}
+                onChange={(e) => setMinRating(parseFloat(e.target.value))}
+                className="bg-[#181c26] border border-amber-500/30 text-xs text-amber-300 font-semibold rounded-xl px-3 py-1.5 focus:outline-none focus:border-amber-400"
+              >
+                {RATING_DROPDOWN_OPTIONS.map((opt) => (
+                  <option key={opt.value} value={opt.value}>
+                    {opt.label}
+                  </option>
+                ))}
+              </select>
+            </div>
+          </div>
+
+          {/* Interactive Range Slider */}
+          <div className="space-y-1.5 pt-1">
+            <div className="flex items-center gap-3">
+              <span className="text-[11px] font-mono text-slate-500 shrink-0">0.0 (All)</span>
+              <input
+                type="range"
+                min="0"
+                max="9.2"
+                step="0.1"
+                value={minRating}
+                onChange={(e) => setMinRating(parseFloat(e.target.value))}
+                aria-label="Filter movies by minimum rating"
+                className="w-full h-2 bg-slate-800 rounded-lg appearance-none cursor-pointer accent-amber-500 focus:outline-none"
+              />
+              <span className="text-[11px] font-mono text-amber-400 font-bold shrink-0">9.2 ⭐</span>
+            </div>
+            <div className="flex justify-between text-[10px] text-slate-500 px-1 font-mono">
+              <span>All Films</span>
+              <span>7.5+</span>
+              <span className="text-amber-500/80 font-bold">8.0+ Highly Rated</span>
+              <span className="text-amber-400 font-bold">8.5+ Critical Acclaim</span>
+              <span className="text-amber-300 font-extrabold">9.0+ Masterpieces</span>
+            </div>
+          </div>
+        </div>
+
+        {/* Enhanced Genre Filter Pills */}
+        <div>
+          <div className="flex items-center justify-between text-xs text-slate-400 mb-2">
+            <span className="font-semibold uppercase tracking-wider text-[11px] text-slate-500">
+              Filter by Genre:
+            </span>
+            <span className="text-[11px] text-amber-400 font-mono">
+              {movies.length} {movies.length === 1 ? 'film' : 'films'} available
+              {minRating > 0 ? ` (≥ ${minRating.toFixed(1)} rating)` : ''}
+            </span>
+          </div>
+
+          <div className="flex items-center gap-1.5 overflow-x-auto pb-1 bg-[#10131a] p-1.5 rounded-xl border border-slate-800/80">
+            {GENRES.map((genre) => (
+              <button
+                key={genre}
+                type="button"
+                onClick={() => setSelectedGenre(genre)}
+                className={`px-3 py-1.5 rounded-lg text-xs font-semibold whitespace-nowrap transition-all duration-150 ${
+                  selectedGenre === genre
+                    ? 'bg-amber-500 text-slate-950 font-bold shadow-md shadow-amber-500/20'
+                    : 'text-slate-400 hover:text-white hover:bg-slate-800/50'
+                }`}
+              >
+                {genre}
+              </button>
+            ))}
+          </div>
+        </div>
       </div>
 
-      {/* Movie Grid */}
+      {/* Sort by Genre Active Status Banner */}
+      {sortBy === 'genre' && movies.length > 0 && (
+        <div className="flex items-center justify-between bg-[#10131a] border border-amber-500/20 px-4 py-2.5 rounded-xl text-xs text-slate-300 shadow-sm">
+          <div className="flex items-center gap-2">
+            <SlidersHorizontal className="w-4 h-4 text-amber-400 shrink-0" />
+            <span>
+              <strong>Sorted by Genre:</strong> Movies are grouped and ordered alphabetically by genre (Action, Animation, Biography, Comedy, Crime, Drama, Family, Fantasy, History, Horror, Musical, Mystery, Romance, Sci-Fi, Sports, Thriller, War).
+            </span>
+          </div>
+          <span className="text-[11px] text-amber-400 font-mono hidden sm:inline whitespace-nowrap pl-2">
+            A → Z Genres
+          </span>
+        </div>
+      )}
+
+      {/* Active Search Status Banner */}
+      {search && (
+        <div className="flex items-center justify-between bg-[#12151d] border border-amber-500/30 px-4 py-3 rounded-2xl text-xs text-slate-200 shadow-md">
+          <div className="flex items-center gap-2">
+            <Search className="w-4 h-4 text-amber-400 shrink-0" />
+            <span>
+              Search results for <strong>&ldquo;{search}&rdquo;</strong> &mdash;{' '}
+              <span className="text-amber-400 font-bold font-mono">
+                {movies.length} {movies.length === 1 ? 'film' : 'films'} found
+              </span>
+              {selectedIndustry !== 'All' ? ` in ${selectedIndustry}` : ''}
+              {selectedGenre !== 'All' ? ` (${selectedGenre})` : ''}
+              {minRating > 0 ? ` with rating ≥ ${minRating.toFixed(1)}` : ''}
+            </span>
+          </div>
+          <button
+            type="button"
+            onClick={() => handleSearchChange('')}
+            className="text-amber-400 hover:text-amber-300 font-semibold inline-flex items-center gap-1 text-[11px] hover:underline shrink-0 pl-3"
+          >
+            <X className="w-3.5 h-3.5" />
+            <span>Clear Search</span>
+          </button>
+        </div>
+      )}
+
+      {/* Movies Grid */}
       {loading ? (
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-          {[1, 2, 3, 4].map((n) => (
-            <div key={n} className="h-96 rounded-2xl bg-[#12151d] border border-slate-800/60 animate-pulse" />
+          {[1, 2, 3, 4, 5, 6, 7, 8].map((n) => (
+            <div
+              key={n}
+              className="h-96 rounded-2xl bg-[#12151d] border border-slate-800/60 animate-pulse"
+            />
           ))}
         </div>
       ) : movies.length === 0 ? (
-        <div className="text-center py-16 bg-[#12151d]/60 rounded-2xl border border-slate-800 space-y-2">
+        <div className="text-center py-16 bg-[#12151d]/60 rounded-3xl border border-slate-800 space-y-4 max-w-lg mx-auto p-6">
           <Clapperboard className="w-10 h-10 text-slate-600 mx-auto" />
-          <p className="text-slate-300 font-semibold text-base">No movies found matching your selection.</p>
-          <p className="text-xs text-slate-500">Try adjusting your search terms or genre filter.</p>
+          <div className="space-y-1">
+            <p className="text-slate-200 font-bold text-base">
+              No movies found matching your criteria.
+            </p>
+            <p className="text-xs text-slate-400">
+              {search && (selectedIndustry !== 'All' || selectedGenre !== 'All' || minRating > 0)
+                ? `"${search}" was not found with your current industry (${selectedIndustry}), genre (${selectedGenre}), or rating (≥ ${minRating}) filters.`
+                : minRating > 0
+                ? `No ${selectedIndustry !== 'All' ? selectedIndustry : ''} ${selectedGenre !== 'All' ? selectedGenre : ''} movies found with rating ≥ ${minRating.toFixed(1)}.`
+                : 'Try adjusting your Industry selection, Genre filter, or search keywords.'}
+            </p>
+          </div>
+
+          <div className="flex flex-wrap items-center justify-center gap-2 pt-2">
+            {search && (selectedIndustry !== 'All' || selectedGenre !== 'All' || minRating > 0) && (
+              <button
+                type="button"
+                onClick={() => {
+                  setSelectedIndustry('All');
+                  setSelectedGenre('All');
+                  setSelectedLanguage('All');
+                  setMinRating(0);
+                  setCategoryTab('all');
+                }}
+                className="inline-flex items-center gap-1.5 bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 text-slate-950 text-xs font-black px-4 py-2 rounded-xl transition-all shadow-md shadow-amber-500/20"
+              >
+                <Search className="w-3.5 h-3.5 stroke-[2.5]" />
+                <span>Search &ldquo;{search}&rdquo; Across All Categories</span>
+              </button>
+            )}
+
+            <button
+              type="button"
+              onClick={() => {
+                handleSearchChange('');
+                setSelectedIndustry('All');
+                setSelectedGenre('All');
+                setSelectedLanguage('All');
+                setMinRating(0);
+                setCategoryTab('all');
+              }}
+              className="inline-flex items-center gap-2 bg-[#181c26] hover:bg-[#222734] border border-amber-500/30 text-amber-400 text-xs font-bold px-4 py-2 rounded-xl transition-colors shadow-md"
+            >
+              <RotateCcw className="w-3.5 h-3.5" />
+              <span>Reset All Filters</span>
+            </button>
+          </div>
         </div>
       ) : (
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
           {movies.map((movie) => (
-            <MovieCard key={movie._id} movie={movie} />
+            <MovieCard
+              key={movie._id}
+              movie={movie}
+              onWatchTrailer={(m) => setTrailerModal({ isOpen: true, movie: m })}
+            />
           ))}
         </div>
       )}
+
+      {/* 4K Trailer Modal */}
+      <TrailerModal
+        isOpen={trailerModal.isOpen}
+        onClose={() => setTrailerModal({ isOpen: false, movie: null })}
+        trailerKey={trailerModal.movie?.trailerKey}
+        title={trailerModal.movie?.title}
+      />
+
+      {/* Worldwide Region Modal */}
+      <LocationPickerModal
+        isOpen={showLocationModal}
+        onClose={() => setShowLocationModal(false)}
+      />
 
       {/* Admin Add Movie Modal */}
       {showAddModal && (
@@ -184,21 +708,34 @@ const Home = () => {
                 onClick={() => setShowAddModal(false)}
                 className="text-slate-400 hover:text-white transition-colors"
               >
-                <X className="w-5 h-5" />
+                <X className="w-4 h-4" />
               </button>
             </div>
 
             <form onSubmit={handleAddMovie} className="space-y-3.5 text-sm">
-              <div>
-                <label className="block text-slate-300 mb-1 text-xs font-semibold">Movie Title *</label>
-                <input
-                  type="text"
-                  required
-                  value={newMovie.title}
-                  onChange={(e) => setNewMovie({ ...newMovie, title: e.target.value })}
-                  className="w-full bg-[#0a0c10] border border-slate-700/80 focus:border-amber-400 rounded-lg px-3 py-2 text-white focus:outline-none"
-                  placeholder="e.g., Gladiator II"
-                />
+              <div className="grid grid-cols-2 gap-3">
+                <div>
+                  <label className="block text-slate-300 mb-1 text-xs font-semibold">Movie Title *</label>
+                  <input
+                    type="text"
+                    required
+                    value={newMovie.title}
+                    onChange={(e) => setNewMovie({ ...newMovie, title: e.target.value })}
+                    className="w-full bg-[#0a0c10] border border-slate-700/80 focus:border-amber-400 rounded-lg px-3 py-2 text-white focus:outline-none"
+                    placeholder="e.g., Singham Again"
+                  />
+                </div>
+                <div>
+                  <label className="block text-slate-300 mb-1 text-xs font-semibold">Industry *</label>
+                  <select
+                    value={newMovie.industry}
+                    onChange={(e) => setNewMovie({ ...newMovie, industry: e.target.value })}
+                    className="w-full bg-[#0a0c10] border border-slate-700/80 focus:border-amber-400 rounded-lg px-3 py-2 text-white focus:outline-none text-xs"
+                  >
+                    <option value="Hollywood">Hollywood</option>
+                    <option value="Bollywood">Bollywood</option>
+                  </select>
+                </div>
               </div>
 
               <div>
