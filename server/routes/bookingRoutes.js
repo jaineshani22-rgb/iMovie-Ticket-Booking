@@ -3,11 +3,17 @@ const router = express.Router();
 const {
   createBooking,
   getUserBookings,
-  getOccupiedSeats
+  getOccupiedSeats,
+  holdSeats,
+  releaseSeats,
+  cancelBooking
 } = require('../controllers/bookingController');
 const { protect } = require('../middleware/authMiddleware');
 
 router.get('/occupied', getOccupiedSeats);
+router.post('/hold', protect, holdSeats);
+router.post('/release', protect, releaseSeats);
+router.post('/:id/cancel', protect, cancelBooking);
 router.post('/', protect, createBooking);
 router.get('/user', protect, getUserBookings);
 

@@ -35,10 +35,27 @@ async function start() {
   // API Routes
   app.use('/api/auth', require('./server/routes/authRoutes'));
   app.use('/api/movies', require('./server/routes/movieRoutes'));
+  app.use('/api/cinemas', require('./server/routes/cinemaRoutes'));
   app.use('/api/bookings', require('./server/routes/bookingRoutes'));
 
   app.get('/api/health', (req, res) => {
     res.json({ status: 'ok', time: new Date().toISOString() });
+  });
+
+  // Handle database offline errors gracefully
+  app.use((err, req, res, next) => {
+    if (
+      err.name === 'MongooseError' ||
+      err.name === 'MongoNetworkError' ||
+      (err.message && err.message.includes('buffering timed out'))
+    ) {
+      console.warn('[AI Studio] Database offline — returning fallback response');
+      if (req.method === 'GET') {
+        return res.json(req.path.endsWith('s') || req.path.endsWith('s/') ? [] : {});
+      }
+      return res.status(503).json({ error: 'Service temporarily unavailable (database offline)' });
+    }
+    next(err);
   });
 
   const clientDist = path.resolve(__dirname, 'client/dist');

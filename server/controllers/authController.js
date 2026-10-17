@@ -120,3 +120,46 @@ exports.loginUser = async (req, res) => {
     return res.status(500).json({ message: 'Server error during login', error: error.message });
   }
 };
+
+// @desc    Get user profile & booking stats
+// @route   GET /api/auth/profile
+exports.getProfile = async (req, res) => {
+  try {
+    let user = null;
+    try {
+      user = await User.findById(req.user.id).select('-password');
+    } catch (e) {
+      // Ignored
+    }
+    if (!user) {
+      user = inMemoryStore.findUserById(req.user.id);
+    }
+    if (!user) {
+      return res.status(404).json({ message: 'User not found' });
+    }
+
+    const bookings = inMemoryStore.getUserBookings(req.user.id);
+    return res.status(200).json({
+      _id: user._id,
+      username: user.username,
+      email: user.email,
+      role: user.role,
+      totalBookings: bookings.length,
+      favorites: user.favorites || []
+    });
+  } catch (error) {
+    return res.status(500).json({ message: 'Failed to retrieve profile', error: error.message });
+  }
+};
+
+// @desc    Toggle movie in user's favorites
+// @route   POST /api/auth/favorites/:movieId
+exports.toggleFavorite = async (req, res) => {
+  try {
+    const { movieId } = req.params;
+    const favorites = inMemoryStore.toggleFavorite(req.user.id, movieId);
+    return res.status(200).json({ favorites });
+  } catch (error) {
+    return res.status(500).json({ message: 'Failed to toggle favorite', error: error.message });
+  }
+};
