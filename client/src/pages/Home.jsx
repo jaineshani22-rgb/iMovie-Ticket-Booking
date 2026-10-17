@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Search, PlusCircle, Sparkles, X } from 'lucide-react';
+import { Search, PlusCircle, Sparkles, X, Clapperboard, Award } from 'lucide-react';
 import API from '../services/api';
 import MovieCard from '../components/MovieCard';
 import { useAuth } from '../context/AuthContext';
@@ -67,52 +67,70 @@ const Home = () => {
       });
       fetchMovies();
     } catch (error) {
-      alert(error.response?.data?.message || 'Failed to add movie');
+      console.error('Failed to add movie', error);
     } finally {
       setSubmitting(false);
     }
   };
 
   return (
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-8">
-      {/* Hero Banner */}
-      <div className="relative rounded-3xl overflow-hidden bg-gradient-to-r from-slate-900 via-rose-950/40 to-slate-900 border border-slate-800 p-8 sm:p-10 shadow-2xl">
-        <div className="max-w-2xl space-y-4">
-          <div className="inline-flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-rose-400 bg-rose-500/10 border border-rose-500/20 px-3 py-1 rounded-full">
-            <Sparkles className="w-3.5 h-3.5" />
-            Welcome to iMovies
+    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-10">
+      {/* Luxury Cinematic Hero Banner */}
+      <div className="relative rounded-3xl overflow-hidden bg-gradient-to-r from-[#11141c] via-[#161a24] to-[#11141c] border border-amber-500/20 p-8 sm:p-12 shadow-2xl shadow-black/60 cinema-vignette">
+        {/* Subtle Ambient Gold Glow Top */}
+        <div className="absolute top-0 left-1/4 right-1/4 h-[1px] bg-gradient-to-r from-transparent via-amber-400/50 to-transparent" />
+
+        <div className="max-w-3xl space-y-5">
+          <div className="inline-flex items-center gap-2 text-xs font-semibold tracking-wider text-amber-400 bg-amber-400/10 border border-amber-400/20 px-3 py-1 rounded-md">
+            <Award className="w-3.5 h-3.5 text-amber-400" />
+            Curated Screenings & Recliner Booking
           </div>
-          <h1 className="text-3xl sm:text-5xl font-extrabold text-white tracking-tight leading-tight">
-            Book Your Perfect Seat in <span className="text-rose-500">Real Time.</span>
+
+          <h1 className="text-3xl sm:text-5xl font-extrabold text-white tracking-tight leading-tight [text-wrap:balance]">
+            Experience Cinema in <span className="text-transparent bg-clip-text bg-gradient-to-r from-amber-300 via-amber-400 to-amber-500">Unrivaled Luxury.</span>
           </h1>
-          <p className="text-slate-300 text-sm sm:text-base">
-            Browse current blockbusters, inspect live auditorium seat availability, and lock in your IMAX or Dolby Atmos tickets in seconds.
+
+          <p className="text-slate-300 text-sm sm:text-base leading-relaxed max-w-2xl">
+            Select handcrafted leather recliners on our real-time auditorium map. Featuring 4K Laser IMAX projection, Dolby Atmos sound, and seamless digital booking passes.
           </p>
+
+          <div className="pt-2 flex items-center gap-6 text-xs text-slate-400">
+            <span className="flex items-center gap-1.5 text-slate-300">
+              <span className="w-1.5 h-1.5 rounded-full bg-amber-400" />
+              Live Seat Conflict Prevention
+            </span>
+            <span className="flex items-center gap-1.5 text-slate-300">
+              <span className="w-1.5 h-1.5 rounded-full bg-amber-400" />
+              Instant Perforated Ticket Passes
+            </span>
+          </div>
         </div>
       </div>
 
       {/* Search, Genre Filter & Admin Controls */}
       <div className="flex flex-col md:flex-row gap-4 items-stretch md:items-center justify-between">
+        {/* Search Bar */}
         <div className="relative flex-1 max-w-md">
-          <Search className="w-4 h-4 text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2" />
+          <Search className="w-4 h-4 text-amber-400/70 absolute left-3.5 top-1/2 -translate-y-1/2" />
           <input
             type="text"
-            placeholder="Search movies by title..."
+            placeholder="Search blockbusters by title..."
             value={search}
             onChange={(e) => setSearch(e.target.value)}
-            className="w-full bg-slate-900 border border-slate-800 focus:border-rose-500 rounded-xl pl-10 pr-4 py-2.5 text-sm text-white placeholder-slate-500 focus:outline-none transition"
+            className="w-full bg-[#12151d] border border-amber-500/20 focus:border-amber-400 rounded-xl pl-10 pr-4 py-2.5 text-sm text-white placeholder-slate-500 focus:outline-none transition-colors shadow-inner"
           />
         </div>
 
-        <div className="flex items-center gap-2 overflow-x-auto pb-1">
+        {/* Clean Segmented Genre Tabs */}
+        <div className="flex items-center gap-1.5 overflow-x-auto pb-1 bg-[#10131a] p-1.5 rounded-xl border border-slate-800/80">
           {GENRES.map((genre) => (
             <button
               key={genre}
               onClick={() => setSelectedGenre(genre)}
-              className={`px-3.5 py-1.5 rounded-xl text-xs font-semibold whitespace-nowrap transition ${
+              className={`px-3.5 py-1.5 rounded-lg text-xs font-semibold whitespace-nowrap transition-all duration-150 ${
                 selectedGenre === genre
-                  ? 'bg-rose-600 text-white shadow-md shadow-rose-600/25'
-                  : 'bg-slate-900 text-slate-400 hover:text-white border border-slate-800'
+                  ? 'bg-amber-500 text-slate-950 font-bold shadow-md shadow-amber-500/20'
+                  : 'text-slate-400 hover:text-white hover:bg-slate-800/50'
               }`}
             >
               {genre}
@@ -120,30 +138,33 @@ const Home = () => {
           ))}
         </div>
 
+        {/* Admin Add Movie Button */}
         {user?.role === 'admin' && (
           <button
             onClick={() => setShowAddModal(true)}
-            className="inline-flex items-center justify-center gap-2 bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold text-xs px-4 py-2.5 rounded-xl transition shadow-md"
+            className="inline-flex items-center justify-center gap-2 bg-[#1a1e28] hover:bg-[#222734] text-amber-400 border border-amber-500/30 font-bold text-xs px-4 py-2.5 rounded-xl transition-colors shadow-md shrink-0"
           >
             <PlusCircle className="w-4 h-4" />
-            Add Movie (Admin)
+            Add Film (Admin)
           </button>
         )}
       </div>
 
       {/* Movie Grid */}
       {loading ? (
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
           {[1, 2, 3, 4].map((n) => (
-            <div key={n} className="h-96 rounded-2xl bg-slate-900/60 border border-slate-800 animate-pulse" />
+            <div key={n} className="h-96 rounded-2xl bg-[#12151d] border border-slate-800/60 animate-pulse" />
           ))}
         </div>
       ) : movies.length === 0 ? (
-        <div className="text-center py-16 bg-slate-900/40 rounded-2xl border border-slate-800">
-          <p className="text-slate-400 text-base">No movies found matching your filter.</p>
+        <div className="text-center py-16 bg-[#12151d]/60 rounded-2xl border border-slate-800 space-y-2">
+          <Clapperboard className="w-10 h-10 text-slate-600 mx-auto" />
+          <p className="text-slate-300 font-semibold text-base">No movies found matching your selection.</p>
+          <p className="text-xs text-slate-500">Try adjusting your search terms or genre filter.</p>
         </div>
       ) : (
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
           {movies.map((movie) => (
             <MovieCard key={movie._id} movie={movie} />
           ))}
@@ -152,77 +173,83 @@ const Home = () => {
 
       {/* Admin Add Movie Modal */}
       {showAddModal && (
-        <div className="fixed inset-0 z-50 bg-black/75 backdrop-blur-sm flex items-center justify-center p-4">
-          <div className="bg-slate-900 border border-slate-800 rounded-2xl max-w-lg w-full p-6 space-y-4 shadow-2xl">
+        <div className="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm flex items-center justify-center p-4">
+          <div className="bg-[#13161f] border border-amber-500/30 rounded-2xl max-w-lg w-full p-6 space-y-4 shadow-2xl shadow-black/80">
             <div className="flex items-center justify-between border-b border-slate-800 pb-3">
-              <h3 className="text-lg font-bold text-white">Add New Movie (Admin)</h3>
-              <button onClick={() => setShowAddModal(false)} className="text-slate-400 hover:text-white">
+              <h3 className="text-lg font-bold text-white flex items-center gap-2">
+                <PlusCircle className="w-5 h-5 text-amber-400" />
+                Add Film Presentation
+              </h3>
+              <button
+                onClick={() => setShowAddModal(false)}
+                className="text-slate-400 hover:text-white transition-colors"
+              >
                 <X className="w-5 h-5" />
               </button>
             </div>
 
-            <form onSubmit={handleAddMovie} className="space-y-3 text-sm">
+            <form onSubmit={handleAddMovie} className="space-y-3.5 text-sm">
               <div>
-                <label className="block text-slate-300 mb-1">Movie Title *</label>
+                <label className="block text-slate-300 mb-1 text-xs font-semibold">Movie Title *</label>
                 <input
                   type="text"
                   required
                   value={newMovie.title}
                   onChange={(e) => setNewMovie({ ...newMovie, title: e.target.value })}
-                  className="w-full bg-slate-950 border border-slate-800 rounded-lg px-3 py-2 text-white"
-                  placeholder="e.g., Avatar: Fire and Ash"
+                  className="w-full bg-[#0a0c10] border border-slate-700/80 focus:border-amber-400 rounded-lg px-3 py-2 text-white focus:outline-none"
+                  placeholder="e.g., Gladiator II"
                 />
               </div>
 
               <div>
-                <label className="block text-slate-300 mb-1">Description</label>
+                <label className="block text-slate-300 mb-1 text-xs font-semibold">Description</label>
                 <textarea
                   rows="2"
                   value={newMovie.description}
                   onChange={(e) => setNewMovie({ ...newMovie, description: e.target.value })}
-                  className="w-full bg-slate-950 border border-slate-800 rounded-lg px-3 py-2 text-white"
-                  placeholder="Plot synopsis..."
+                  className="w-full bg-[#0a0c10] border border-slate-700/80 focus:border-amber-400 rounded-lg px-3 py-2 text-white focus:outline-none"
+                  placeholder="Official plot synopsis..."
                 />
               </div>
 
               <div className="grid grid-cols-2 gap-3">
                 <div>
-                  <label className="block text-slate-300 mb-1">Genres (comma-separated)</label>
+                  <label className="block text-slate-300 mb-1 text-xs font-semibold">Genres (comma-separated)</label>
                   <input
                     type="text"
                     value={newMovie.genre}
                     onChange={(e) => setNewMovie({ ...newMovie, genre: e.target.value })}
-                    className="w-full bg-slate-950 border border-slate-800 rounded-lg px-3 py-2 text-white"
+                    className="w-full bg-[#0a0c10] border border-slate-700/80 focus:border-amber-400 rounded-lg px-3 py-2 text-white focus:outline-none"
                   />
                 </div>
                 <div>
-                  <label className="block text-slate-300 mb-1">Duration (mins)</label>
+                  <label className="block text-slate-300 mb-1 text-xs font-semibold">Duration (mins)</label>
                   <input
                     type="number"
                     value={newMovie.duration}
                     onChange={(e) => setNewMovie({ ...newMovie, duration: Number(e.target.value) })}
-                    className="w-full bg-slate-950 border border-slate-800 rounded-lg px-3 py-2 text-white"
+                    className="w-full bg-[#0a0c10] border border-slate-700/80 focus:border-amber-400 rounded-lg px-3 py-2 text-white focus:outline-none"
                   />
                 </div>
               </div>
 
               <div className="grid grid-cols-2 gap-3">
                 <div>
-                  <label className="block text-slate-300 mb-1">Ticket Price (₹)</label>
+                  <label className="block text-slate-300 mb-1 text-xs font-semibold">Ticket Price (₹)</label>
                   <input
                     type="number"
                     value={newMovie.ticketPrice}
                     onChange={(e) => setNewMovie({ ...newMovie, ticketPrice: Number(e.target.value) })}
-                    className="w-full bg-slate-950 border border-slate-800 rounded-lg px-3 py-2 text-white"
+                    className="w-full bg-[#0a0c10] border border-slate-700/80 focus:border-amber-400 rounded-lg px-3 py-2 text-white focus:outline-none"
                   />
                 </div>
                 <div>
-                  <label className="block text-slate-300 mb-1">Poster URL</label>
+                  <label className="block text-slate-300 mb-1 text-xs font-semibold">Poster URL</label>
                   <input
                     type="url"
                     value={newMovie.posterUrl}
                     onChange={(e) => setNewMovie({ ...newMovie, posterUrl: e.target.value })}
-                    className="w-full bg-slate-950 border border-slate-800 rounded-lg px-3 py-2 text-white"
+                    className="w-full bg-[#0a0c10] border border-slate-700/80 focus:border-amber-400 rounded-lg px-3 py-2 text-white focus:outline-none"
                     placeholder="https://..."
                   />
                 </div>
@@ -232,16 +259,16 @@ const Home = () => {
                 <button
                   type="button"
                   onClick={() => setShowAddModal(false)}
-                  className="px-4 py-2 rounded-lg bg-slate-800 text-slate-300 hover:text-white"
+                  className="px-4 py-2 rounded-lg bg-[#1a1e28] text-slate-300 hover:text-white text-xs font-medium"
                 >
                   Cancel
                 </button>
                 <button
                   type="submit"
                   disabled={submitting}
-                  className="px-5 py-2 rounded-lg bg-rose-600 hover:bg-rose-500 text-white font-semibold"
+                  className="px-5 py-2 rounded-lg bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 text-slate-950 font-bold text-xs shadow-md"
                 >
-                  {submitting ? 'Saving...' : 'Create Movie'}
+                  {submitting ? 'Saving...' : 'Publish Movie'}
                 </button>
               </div>
             </form>

@@ -13,7 +13,7 @@ const App = () => {
   return (
     <AuthProvider>
       <Router>
-        <div className="min-h-screen bg-slate-950 text-slate-100 flex flex-col">
+        <div className="min-h-screen bg-[#0b0d11] text-slate-100 flex flex-col selection:bg-amber-500 selection:text-slate-950">
           <Navbar />
           <main className="flex-1">
             <Routes>
@@ -31,6 +31,14 @@ const App = () => {
               />
             </Routes>
           </main>
+          <footer className="border-t border-amber-500/10 py-8 bg-[#090b0e] text-xs text-slate-500 text-center">
+            <div className="max-w-7xl mx-auto px-4 flex flex-col sm:flex-row items-center justify-between gap-4">
+              <p className="font-['Cinzel',serif] tracking-wider text-slate-400">
+                i<span className="text-amber-400">Movies</span> VIP Cinema Experience
+              </p>
+              <p>© {new Date().getFullYear()} iMovies. 4K IMAX Laser · Dolby Atmos · Reserve Suites.</p>
+            </div>
+          </footer>
         </div>
       </Router>
     </AuthProvider>

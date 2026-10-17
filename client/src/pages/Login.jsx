@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { Film, Mail, Lock, AlertCircle } from 'lucide-react';
+import { Film, Mail, Lock, AlertCircle, ArrowRight } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 
 const Login = () => {
@@ -20,7 +20,7 @@ const Login = () => {
       await login(email, password);
       navigate('/');
     } catch (err) {
-      setError(err.response?.data?.message || 'Invalid credentials. Please try again.');
+      setError(err.response?.data?.message || 'Invalid credentials. Please verify and try again.');
     } finally {
       setLoading(false);
     }
@@ -29,21 +29,22 @@ const Login = () => {
   const fillDemoCredentials = (demoEmail, demoPass) => {
     setEmail(demoEmail);
     setPassword(demoPass);
+    setError('');
   };
 
   return (
     <div className="min-h-[82vh] flex items-center justify-center px-4 py-10">
-      <div className="max-w-md w-full bg-slate-900/90 border border-slate-800 rounded-2xl p-8 shadow-2xl space-y-6">
+      <div className="max-w-md w-full bg-[#12151d] border border-amber-500/25 rounded-3xl p-8 shadow-2xl shadow-black/80 space-y-6 cinema-vignette">
         <div className="text-center space-y-2">
-          <div className="w-12 h-12 rounded-2xl bg-rose-600/20 border border-rose-500/30 text-rose-500 flex items-center justify-center mx-auto">
-            <Film className="w-6 h-6" />
+          <div className="w-12 h-12 rounded-2xl bg-amber-500/10 border border-amber-500/30 text-amber-400 flex items-center justify-center mx-auto shadow-md">
+            <Film className="w-6 h-6 stroke-[2.2]" />
           </div>
-          <h2 className="text-2xl font-extrabold text-white">Welcome Back</h2>
-          <p className="text-xs text-slate-400">Sign in to book seats and manage your tickets</p>
+          <h2 className="text-2xl font-extrabold text-white font-['Cinzel',serif]">VIP Lounge Sign In</h2>
+          <p className="text-xs text-slate-400">Access your reserved seats and digital booking passes</p>
         </div>
 
         {error && (
-          <div className="flex items-center gap-2 bg-rose-500/10 border border-rose-500/30 text-rose-400 text-xs p-3 rounded-xl">
+          <div className="flex items-center gap-2 bg-amber-500/10 border border-amber-500/30 text-amber-400 text-xs p-3.5 rounded-xl">
             <AlertCircle className="w-4 h-4 shrink-0" />
             <span>{error}</span>
           </div>
@@ -60,7 +61,7 @@ const Login = () => {
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 placeholder="you@example.com"
-                className="w-full bg-slate-950 border border-slate-800 focus:border-rose-500 rounded-xl pl-10 pr-4 py-2.5 text-sm text-white focus:outline-none"
+                className="w-full bg-[#0a0c10] border border-slate-700/80 focus:border-amber-400 rounded-xl pl-10 pr-4 py-2.5 text-sm text-white focus:outline-none shadow-inner transition-colors"
               />
             </div>
           </div>
@@ -75,7 +76,7 @@ const Login = () => {
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 placeholder="••••••••"
-                className="w-full bg-slate-950 border border-slate-800 focus:border-rose-500 rounded-xl pl-10 pr-4 py-2.5 text-sm text-white focus:outline-none"
+                className="w-full bg-[#0a0c10] border border-slate-700/80 focus:border-amber-400 rounded-xl pl-10 pr-4 py-2.5 text-sm text-white focus:outline-none shadow-inner transition-colors"
               />
             </div>
           </div>
@@ -83,37 +84,40 @@ const Login = () => {
           <button
             type="submit"
             disabled={loading}
-            className="w-full bg-rose-600 hover:bg-rose-500 disabled:opacity-50 text-white font-semibold py-2.5 rounded-xl shadow-lg shadow-rose-600/25 transition text-sm"
+            className="w-full bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 disabled:opacity-40 text-slate-950 font-black py-2.5 rounded-xl shadow-lg shadow-amber-500/20 transition-all text-xs sm:text-sm flex items-center justify-center gap-2"
           >
-            {loading ? 'Signing in...' : 'Sign In'}
+            <span>{loading ? 'Authenticating...' : 'Sign In to Lounge'}</span>
+            <ArrowRight className="w-4 h-4 stroke-[2.5]" />
           </button>
         </form>
 
-        {/* One-Click Demo Login Helper */}
-        <div className="pt-4 border-t border-slate-800 space-y-2">
-          <p className="text-[11px] text-slate-400 text-center font-medium">Quick Seeded Demo Accounts:</p>
+        {/* Quick Seeded Demo Accounts */}
+        <div className="pt-4 border-t border-slate-800/80 space-y-2">
+          <p className="text-[11px] text-slate-400 text-center font-semibold uppercase tracking-wider">
+            One-Click Demo Credentials:
+          </p>
           <div className="grid grid-cols-2 gap-2">
             <button
               type="button"
               onClick={() => fillDemoCredentials('user@imovies.com', 'user123')}
-              className="text-xs bg-slate-950 hover:bg-slate-800 border border-slate-800 text-slate-300 py-1.5 rounded-lg transition"
+              className="text-xs bg-[#161a24] hover:bg-[#1f2432] border border-amber-500/20 text-slate-200 py-2 rounded-lg transition-colors font-medium"
             >
-              Fill Customer Login
+              Customer Account
             </button>
             <button
               type="button"
               onClick={() => fillDemoCredentials('admin@imovies.com', 'admin123')}
-              className="text-xs bg-slate-950 hover:bg-slate-800 border border-slate-800 text-amber-400 py-1.5 rounded-lg transition"
+              className="text-xs bg-[#161a24] hover:bg-[#1f2432] border border-amber-500/30 text-amber-400 py-2 rounded-lg transition-colors font-medium"
             >
-              Fill Admin Login
+              Admin Manager
             </button>
           </div>
         </div>
 
         <p className="text-center text-xs text-slate-400">
-          Don't have an account?{' '}
-          <Link to="/register" className="text-rose-400 hover:text-rose-300 font-semibold">
-            Create one now
+          New to iMovies?{' '}
+          <Link to="/register" className="text-amber-400 hover:text-amber-300 font-bold">
+            Create VIP account
           </Link>
         </p>
       </div>

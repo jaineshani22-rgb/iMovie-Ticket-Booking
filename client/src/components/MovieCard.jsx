@@ -1,78 +1,87 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { Clock, Star, Calendar, Ticket } from 'lucide-react';
+import { Clock, Star, Ticket, MapPin, Film } from 'lucide-react';
 
 const MovieCard = ({ movie }) => {
+  const [imgError, setImgError] = useState(false);
   const genres = Array.isArray(movie.genre) ? movie.genre : [movie.genre];
-  const releaseYear = movie.releaseDate
-    ? new Date(movie.releaseDate).getFullYear()
-    : '2026';
+
+  const defaultPoster =
+    'https://images.unsplash.com/photo-1489599849927-2ee91cede3ba?w=600&auto=format&fit=crop&q=80';
 
   return (
-    <div className="group bg-slate-900/80 border border-slate-800/80 rounded-2xl overflow-hidden hover:border-rose-500/50 transition-all duration-300 hover:-translate-y-1 flex flex-col shadow-xl">
-      <div className="relative aspect-[2/3] w-full overflow-hidden bg-slate-950">
-        <img
-          src={
-            movie.posterUrl ||
-            'https://images.unsplash.com/photo-1489599849927-2ee91cede3ba?w=600&auto=format&fit=crop&q=80'
-          }
-          alt={movie.title}
-          className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-        />
-        <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/20 to-transparent" />
+    <div className="group bg-[#12151d] border border-amber-500/15 hover:border-amber-500/40 rounded-2xl overflow-hidden transition-all duration-300 hover:-translate-y-1.5 flex flex-col shadow-lg shadow-black/40 hover:shadow-amber-500/5">
+      {/* Poster Image Container */}
+      <div className="relative aspect-[3/4] w-full overflow-hidden bg-[#0a0c10]">
+        {!imgError ? (
+          <img
+            src={movie.posterUrl || defaultPoster}
+            alt={movie.title}
+            referrerPolicy="no-referrer"
+            onError={() => setImgError(true)}
+            className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500 ease-out"
+          />
+        ) : (
+          <div className="w-full h-full flex flex-col items-center justify-center bg-gradient-to-br from-[#12151d] via-[#1a1f2b] to-[#0d1017] p-6 text-center space-y-3">
+            <div className="w-12 h-12 rounded-xl bg-amber-500/10 border border-amber-500/30 flex items-center justify-center text-amber-400">
+              <Film className="w-6 h-6 stroke-[1.8]" />
+            </div>
+            <p className="text-xs font-bold text-slate-200 line-clamp-2">{movie.title}</p>
+          </div>
+        )}
+        <div className="absolute inset-0 bg-gradient-to-t from-[#12151d] via-[#12151d]/20 to-transparent pointer-events-none" />
 
-        <div className="absolute top-3 right-3 bg-slate-950/85 backdrop-blur-md border border-slate-700/70 px-2.5 py-1 rounded-full flex items-center gap-1 text-xs font-bold text-amber-400">
-          <Star className="w-3.5 h-3.5 fill-amber-400" />
-          {movie.rating || 8.5}
+        {/* Rating Badge */}
+        <div className="absolute top-3 right-3 bg-[#0c0e14]/85 backdrop-blur-md border border-amber-500/30 px-2.5 py-1 rounded-lg flex items-center gap-1.5 text-xs font-bold text-amber-400 shadow-md">
+          <Star className="w-3.5 h-3.5 fill-amber-400 stroke-none" />
+          <span className="font-mono tabular-nums">{movie.rating || 8.5}</span>
         </div>
 
-        <div className="absolute bottom-3 left-3 right-3 flex flex-wrap gap-1.5">
-          {genres.slice(0, 3).map((g, idx) => (
-            <span
-              key={idx}
-              className="text-[11px] font-semibold bg-rose-600/90 text-white px-2.5 py-0.5 rounded-full backdrop-blur-sm"
-            >
-              {g}
-            </span>
-          ))}
+        {/* Theater Tag */}
+        <div className="absolute bottom-3 left-3 right-3">
+          <p className="text-[11px] font-medium text-amber-400/90 flex items-center gap-1.5 drop-shadow">
+            <MapPin className="w-3 h-3 text-amber-400 shrink-0" />
+            <span className="truncate">{movie.theater || 'iMovies IMAX Laser'}</span>
+          </p>
         </div>
       </div>
 
-      <div className="p-4 flex-1 flex flex-col justify-between space-y-4">
+      {/* Movie Details */}
+      <div className="p-5 flex-1 flex flex-col justify-between space-y-4">
         <div>
-          <h3 className="text-lg font-bold text-white group-hover:text-rose-400 transition line-clamp-1">
+          <h3 className="text-lg font-bold text-white group-hover:text-amber-400 transition-colors line-clamp-1">
             {movie.title}
           </h3>
-          <p className="text-xs text-slate-400 mt-1 line-clamp-2">
-            {movie.description || 'Experience this blockbuster in stunning IMAX laser projection and Dolby Atmos sound.'}
-          </p>
 
-          <div className="flex items-center gap-4 mt-3 text-xs text-slate-400">
+          {/* Zero-Pill Unboxed Metadata */}
+          <div className="flex items-center gap-2 text-xs text-slate-400 mt-1.5 flex-wrap">
+            <span>{genres.slice(0, 2).join(', ')}</span>
+            <span aria-hidden="true" className="text-slate-600">·</span>
             <span className="flex items-center gap-1">
-              <Clock className="w-3.5 h-3.5 text-rose-500" />
-              {movie.duration || 120} min
-            </span>
-            <span className="flex items-center gap-1">
-              <Calendar className="w-3.5 h-3.5 text-rose-500" />
-              {releaseYear}
+              <Clock className="w-3 h-3 text-amber-500" />
+              <span className="font-mono tabular-nums">{movie.duration || 120} min</span>
             </span>
           </div>
+
+          <p className="text-xs text-slate-400 mt-2.5 line-clamp-2 leading-relaxed">
+            {movie.description || 'Experience this feature presentation in premium auditorium seating with Dolby Atmos.'}
+          </p>
         </div>
 
-        <div className="pt-3 border-t border-slate-800/80 flex items-center justify-between">
+        <div className="pt-3.5 border-t border-slate-800/80 flex items-center justify-between gap-3">
           <div>
-            <span className="text-[11px] text-slate-400 block">Tickets from</span>
-            <span className="text-base font-extrabold text-white">
+            <span className="text-[10px] text-slate-500 block uppercase tracking-wider font-semibold">Reserved from</span>
+            <span className="text-base font-extrabold text-white font-mono tabular-nums">
               ₹{movie.ticketPrice || 250}
             </span>
           </div>
 
           <Link
             to={`/movies/${movie._id}`}
-            className="inline-flex items-center gap-1.5 bg-rose-600 hover:bg-rose-500 text-white text-xs font-semibold px-4 py-2.5 rounded-xl shadow-md shadow-rose-600/20 transition"
+            className="inline-flex items-center gap-1.5 bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 text-slate-950 text-xs font-bold px-3.5 py-2 rounded-lg shadow-md shadow-amber-500/10 transition-all duration-200"
           >
             <Ticket className="w-3.5 h-3.5" />
-            Book Seats
+            Select Seats
           </Link>
         </div>
       </div>

@@ -1,11 +1,14 @@
 const User = require('../models/User');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
+const inMemoryStore = require('../config/inMemoryStore');
+
+const getJwtSecret = () => process.env.JWT_SECRET || 'imovies_default_super_secret_jwt_key_32_chars_min';
 
 const generateToken = (user) => {
   return jwt.sign(
     { id: user._id, role: user.role, username: user.username, email: user.email },
-    process.env.JWT_SECRET,
+    getJwtSecret(),
     { expiresIn: '7d' }
   );
 };
@@ -20,7 +23,16 @@ exports.registerUser = async (req, res) => {
       return res.status(400).json({ message: 'Please provide username, email, and password' });
     }
 
-    const userExists = await User.findOne({ email: email.toLowerCase() });
+    let userExists = null;
+    let usingFallback = false;
+
+    try {
+      userExists = await User.findOne({ email: email.toLowerCase() });
+    } catch (err) {
+      usingFallback = true;
+      userExists = inMemoryStore.findUserByEmail(email);
+    }
+
     if (userExists) {
       return res.status(400).json({ message: 'User already exists with this email' });
     }
@@ -28,14 +40,33 @@ exports.registerUser = async (req, res) => {
     const salt = await bcrypt.genSalt(10);
     const hashedPassword = await bcrypt.hash(password, salt);
 
-    const user = await User.create({
-      username,
-      email: email.toLowerCase(),
-      password: hashedPassword,
-      role: 'user'
-    });
+    let user;
+    if (!usingFallback) {
+      try {
+        user = await User.create({
+          username,
+          email: email.toLowerCase(),
+          password: hashedPassword,
+          role: 'user'
+        });
+      } catch (err) {
+        user = inMemoryStore.createUser({
+          username,
+          email: email.toLowerCase(),
+          password: hashedPassword,
+          role: 'user'
+        });
+      }
+    } else {
+      user = inMemoryStore.createUser({
+        username,
+        email: email.toLowerCase(),
+        password: hashedPassword,
+        role: 'user'
+      });
+    }
 
-    res.status(201).json({
+    return res.status(201).json({
       _id: user._id,
       username: user.username,
       email: user.email,
@@ -43,7 +74,7 @@ exports.registerUser = async (req, res) => {
       token: generateToken(user)
     });
   } catch (error) {
-    res.status(500).json({ message: 'Server error during registration', error: error.message });
+    return res.status(500).json({ message: 'Server error during registration', error: error.message });
   }
 };
 
@@ -57,7 +88,18 @@ exports.loginUser = async (req, res) => {
       return res.status(400).json({ message: 'Please provide email and password' });
     }
 
-    const user = await User.findOne({ email: email.toLowerCase() });
+    let user = null;
+    try {
+      user = await User.findOne({ email: email.toLowerCase() });
+    } catch (err) {
+      user = inMemoryStore.findUserByEmail(email);
+    }
+
+    // Also check in-memory store if not found in db
+    if (!user) {
+      user = inMemoryStore.findUserByEmail(email);
+    }
+
     if (!user) {
       return res.status(401).json({ message: 'Invalid email or password' });
     }
@@ -67,7 +109,7 @@ exports.loginUser = async (req, res) => {
       return res.status(401).json({ message: 'Invalid email or password' });
     }
 
-    res.status(200).json({
+    return res.status(200).json({
       _id: user._id,
       username: user.username,
       email: user.email,
@@ -75,6 +117,6 @@ exports.loginUser = async (req, res) => {
       token: generateToken(user)
     });
   } catch (error) {
-    res.status(500).json({ message: 'Server error during login', error: error.message });
+    return res.status(500).json({ message: 'Server error during login', error: error.message });
   }
 };
