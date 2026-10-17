@@ -1,10 +1,11 @@
 const Movie = require('../models/Movie');
+const inMemoryStore = require('../config/inMemoryStore');
 
 // @desc    Fetch all active movies
 // @route   GET /api/movies
 exports.getMovies = async (req, res) => {
+  const { search, genre } = req.query;
   try {
-    const { search, genre } = req.query;
     const query = {};
 
     if (search) {
@@ -15,9 +16,11 @@ exports.getMovies = async (req, res) => {
     }
 
     const movies = await Movie.find(query).sort({ releaseDate: -1 });
-    res.status(200).json(movies);
+    return res.status(200).json(movies);
   } catch (error) {
-    res.status(500).json({ message: 'Failed to fetch movies', error: error.message });
+    // In-memory fallback if MongoDB is not connected
+    const movies = inMemoryStore.getMovies(search, genre);
+    return res.status(200).json(movies);
   }
 };
 
@@ -27,36 +30,43 @@ exports.getMovieById = async (req, res) => {
   try {
     const movie = await Movie.findById(req.params.id);
     if (!movie) {
+      // Check in-memory store in case it was created there
+      const fallbackMovie = inMemoryStore.getMovieById(req.params.id);
+      if (fallbackMovie) return res.status(200).json(fallbackMovie);
       return res.status(404).json({ message: 'Movie not found' });
     }
-    res.status(200).json(movie);
+    return res.status(200).json(movie);
   } catch (error) {
-    res.status(500).json({ message: 'Failed to fetch movie details', error: error.message });
+    const movie = inMemoryStore.getMovieById(req.params.id);
+    if (!movie) {
+      return res.status(404).json({ message: 'Movie not found' });
+    }
+    return res.status(200).json(movie);
   }
 };
 
 // @desc    Add a new movie (Admin)
 // @route   POST /api/movies
 exports.addMovie = async (req, res) => {
+  const {
+    title,
+    description,
+    genre,
+    duration,
+    posterUrl,
+    releaseDate,
+    ticketPrice,
+    theater,
+    rating,
+    language,
+    showtimes
+  } = req.body;
+
+  if (!title) {
+    return res.status(400).json({ message: 'Movie title is required' });
+  }
+
   try {
-    const {
-      title,
-      description,
-      genre,
-      duration,
-      posterUrl,
-      releaseDate,
-      ticketPrice,
-      theater,
-      rating,
-      language,
-      showtimes
-    } = req.body;
-
-    if (!title) {
-      return res.status(400).json({ message: 'Movie title is required' });
-    }
-
     const movie = await Movie.create({
       title,
       description,
@@ -73,8 +83,9 @@ exports.addMovie = async (req, res) => {
         : ['10:30 AM', '02:00 PM', '06:30 PM', '09:45 PM']
     });
 
-    res.status(201).json(movie);
+    return res.status(201).json(movie);
   } catch (error) {
-    res.status(500).json({ message: 'Failed to add movie', error: error.message });
+    const movie = inMemoryStore.createMovie(req.body);
+    return res.status(201).json(movie);
   }
 };

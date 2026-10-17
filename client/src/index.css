@@ -1,14 +1,63 @@
-
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
-/* Custom glowing cinema screen effect */
-.cinema-screen {
-  height: 55px;
+@layer base {
+  body {
+    background-color: #0b0d11;
+    color: #f1f5f9;
+  }
+}
+
+/* Luxury VIP Curved Cinema Screen with Projection Aura */
+.cinema-screen-vip {
+  height: 52px;
   width: 100%;
-  background: linear-gradient(to bottom, rgba(244, 63, 94, 0.45), rgba(244, 63, 94, 0.02));
-  border-top: 4px solid #f43f5e;
+  background: linear-gradient(to bottom, rgba(245, 158, 11, 0.45), rgba(212, 175, 55, 0.02));
+  border-top: 3px solid #f59e0b;
   border-radius: 50% 50% 0 0 / 100% 100% 0 0;
-  box-shadow: 0 -12px 30px rgba(244, 63, 94, 0.35);
+  box-shadow: 0 -16px 36px rgba(245, 158, 11, 0.3);
+  position: relative;
+}
+
+.cinema-screen-vip::after {
+  content: '';
+  position: absolute;
+  top: -2px;
+  left: 25%;
+  right: 25%;
+  height: 2px;
+  background: #fef08a;
+  filter: blur(1px);
+}
+
+/* Compatibility alias for existing class */
+.cinema-screen {
+  height: 52px;
+  width: 100%;
+  background: linear-gradient(to bottom, rgba(245, 158, 11, 0.45), rgba(212, 175, 55, 0.02));
+  border-top: 3px solid #f59e0b;
+  border-radius: 50% 50% 0 0 / 100% 100% 0 0;
+  box-shadow: 0 -16px 36px rgba(245, 158, 11, 0.3);
+}
+
+/* Cinema Armchair Seat Shapes */
+.seat-vip {
+  transition: all 0.15s cubic-bezier(0.16, 1, 0.3, 1);
+  position: relative;
+}
+
+.seat-vip:not(:disabled):hover {
+  transform: translateY(-2px) scale(1.06);
+}
+
+/* Subtle Cinema Noise & Vignette Overlay */
+.cinema-vignette {
+  background: radial-gradient(circle at 50% 0%, rgba(245, 158, 11, 0.08) 0%, transparent 70%);
+}
+
+/* Gold Metallic Foil Border */
+.border-gold-glow {
+  border-color: rgba(245, 158, 11, 0.3);
+  box-shadow: 0 0 20px rgba(245, 158, 11, 0.08);
 }
