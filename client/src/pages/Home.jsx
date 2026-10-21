@@ -56,11 +56,11 @@ const LANGUAGES = ['All', 'English', 'Hindi', 'Japanese', 'French', 'Spanish'];
 
 const RATING_DROPDOWN_OPTIONS = [
   { value: 0, label: 'All Ratings (Any)' },
-  { value: 7.5, label: '7.5+ ⭐ Great' },
-  { value: 8.0, label: '8.0+ ⭐ Very Highly Rated' },
-  { value: 8.5, label: '8.5+ ⭐ Critical Acclaim' },
-  { value: 8.8, label: '8.8+ ⭐ Masterpieces' },
-  { value: 9.0, label: '9.0+ ⭐ Hall of Fame (9.0+)' }
+  { value: 7.5, label: '7.5+ Great' },
+  { value: 8.0, label: '8.0+ Very Highly Rated' },
+  { value: 8.5, label: '8.5+ Critical Acclaim' },
+  { value: 8.8, label: '8.8+ Masterpieces' },
+  { value: 9.0, label: '9.0+ Hall of Fame (9.0+)' }
 ];
 
 const Home = () => {
@@ -180,7 +180,7 @@ const Home = () => {
             onClick={() => setShowLocationModal(true)}
             className="flex items-center gap-2 bg-[#171b26] hover:bg-[#202534] border border-amber-500/30 text-white px-3.5 py-1.5 rounded-xl text-xs font-semibold transition-colors"
           >
-            <span className="text-base">{activeCountry.flag}</span>
+            <Globe className="w-4 h-4 text-[#00F2FE]" aria-hidden="true" />
             <span>
               {activeCountry.name} · {city}
             </span>
@@ -450,17 +450,17 @@ const Home = () => {
                     : 'bg-slate-800/60 border-slate-700 text-slate-400'
                 }`}
               >
-                {minRating > 0 ? `${Number(minRating).toFixed(1)}+ ⭐` : 'Any Rating'}
+                {minRating > 0 ? `${Number(minRating).toFixed(1)}+` : 'Any Rating'}
               </span>
 
               {/* Quick Presets */}
               <div className="flex items-center gap-1 ml-1 flex-wrap">
                 {[
                   { label: 'All', val: 0 },
-                  { label: '8.0+ ⭐', val: 8.0 },
-                  { label: '8.5+ ⭐', val: 8.5 },
-                  { label: '8.8+ ⭐', val: 8.8 },
-                  { label: '9.0+ ⭐', val: 9.0 }
+                  { label: '8.0+', val: 8.0 },
+                  { label: '8.5+', val: 8.5 },
+                  { label: '8.8+', val: 8.8 },
+                  { label: '9.0+', val: 9.0 }
                 ].map((preset) => (
                   <button
                     key={preset.label}
@@ -524,7 +524,7 @@ const Home = () => {
                 aria-label="Filter movies by minimum rating"
                 className="w-full h-2 bg-slate-800 rounded-lg appearance-none cursor-pointer accent-amber-500 focus:outline-none"
               />
-              <span className="text-[11px] font-mono text-amber-400 font-bold shrink-0">9.2 ⭐</span>
+              <span className="text-[11px] font-mono text-amber-400 font-bold shrink-0">9.2</span>
             </div>
             <div className="flex justify-between text-[10px] text-slate-500 px-1 font-mono">
               <span>All Films</span>

@@ -79,7 +79,7 @@ const LocationPickerModal = ({ isOpen, onClose }) => {
                     }`}
                   >
                     <div className="flex items-center gap-2 truncate">
-                      <span className="text-base">{c.flag}</span>
+                      <span className="text-[10px] font-mono font-bold text-[#00F2FE]">{c.code}</span>
                       <span className="font-semibold truncate">{c.name}</span>
                     </div>
                     <span className="text-[10px] font-mono text-amber-400/90 font-bold ml-1 shrink-0">
@@ -158,7 +158,7 @@ const LocationPickerModal = ({ isOpen, onClose }) => {
             onClick={onClose}
             className="px-6 py-2 rounded-xl bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 text-slate-950 font-bold text-xs shadow-md shadow-amber-500/20"
           >
-            Apply Location ({currentCountryObj.flag} {city})
+            Apply Location ({city})
           </button>
         </div>
       </div>

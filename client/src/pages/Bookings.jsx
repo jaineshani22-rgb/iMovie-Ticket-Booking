@@ -280,7 +280,7 @@ const Bookings = () => {
                   </div>
 
                   <div className="flex items-center gap-2 pt-2 md:pt-4">
-                    <div className="bg-white p-1 rounded-md shadow-md">
+                    <div className="bg-[#F1F5F9] p-1 rounded-md">
                       <QrCode className="w-7 h-7 text-slate-950" />
                     </div>
                     <div className="text-right">

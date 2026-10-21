@@ -2,21 +2,139 @@
 @tailwind components;
 @tailwind utilities;
 
+/* Midnight Obsidian — one shared visual language across discovery and checkout. */
+:root {
+  color-scheme: dark;
+  --midnight-base: #0b0f19;
+  --midnight-elevated: #161c2a;
+  --midnight-active: #1e293b;
+  --midnight-teal: #00f2fe;
+  --midnight-pink: #ff007a;
+  --midnight-ice: #f1f5f9;
+  --midnight-muted: #94a3b8;
+  --midnight-border: rgba(51, 65, 85, 0.2);
+  --midnight-glass: rgba(22, 28, 42, 0.75);
+  --font-display: "Space Grotesk", "Plus Jakarta Sans", sans-serif;
+}
+
 @layer base {
+  html {
+    background: var(--midnight-base);
+  }
+
   body {
-    background-color: #0b0d11;
-    color: #f1f5f9;
+    background-color: var(--midnight-base);
+    color: var(--midnight-ice);
+    font-family: "Plus Jakarta Sans", sans-serif;
+  }
+
+  ::selection {
+    background: rgba(0, 242, 254, 0.28);
+    color: var(--midnight-ice);
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--midnight-teal);
+    outline-offset: 2px;
   }
 }
 
-/* Luxury VIP Curved Cinema Screen with Projection Aura */
+/* Compatibility mapping for existing screens; no component or data behavior changes. */
+[class*="bg-[#0b0d11]"],
+[class*="bg-[#090b0e]"],
+[class*="bg-[#090b10]"],
+[class*="bg-[#080a0f]"],
+[class*="bg-[#0a0c10]"],
+[class*="bg-[#0a0d14]"],
+[class*="bg-[#0a0d13]"],
+[class*="bg-[#0b0e14]"],
+[class*="bg-[#0b0e15]"],
+[class*="bg-[#0b0d12]"],
+[class*="bg-[#0c0e14]"],
+[class*="bg-[#0d1016]"],
+[class*="bg-[#0d1017]"],
+[class*="bg-[#0e121a]"],
+[class*="bg-[#0e1118]"],
+[class*="bg-[#10131a]"],
+[class*="bg-[#10131b]"],
+[class*="bg-[#11141c]"] {
+  background-color: var(--midnight-base) !important;
+}
+
+[class*="bg-[#12151d]"],
+[class*="bg-[#12151f]"],
+[class*="bg-[#131620]"],
+[class*="bg-[#131722]"],
+[class*="bg-[#141822]"],
+[class*="bg-[#141824]"],
+[class*="bg-[#141722]"],
+[class*="bg-[#151926]"],
+[class*="bg-[#161b26]"],
+[class*="bg-[#161a24]"],
+[class*="bg-[#161a25]"],
+[class*="bg-[#161922]"],
+[class*="bg-[#161a23]"],
+[class*="bg-[#171b26]"],
+[class*="bg-[#181c26]"],
+[class*="bg-[#181b22]"],
+[class*="bg-[#1a1d26]"],
+[class*="bg-[#1a1e28]"] {
+  background-color: var(--midnight-elevated) !important;
+}
+
+[class*="bg-[#1c2230]"],
+[class*="bg-[#1d2332]"],
+[class*="bg-[#1f2431]"],
+[class*="bg-[#202534]"],
+[class*="bg-[#222734]"] {
+  background-color: var(--midnight-active) !important;
+}
+
+/* Old card gradients use the new card surface without flattening poster overlays. */
+[class*="from-[#0d1017]"][class*="rounded-3xl"],
+[class*="from-[#12151d]"][class*="rounded-3xl"],
+[class*="via-[#141924]"][class*="rounded-3xl"],
+[class*="via-[#151923]"][class*="rounded-3xl"],
+[class*="via-[#151924]"][class*="rounded-3xl"] {
+  background-image: none !important;
+  background-color: var(--midnight-elevated) !important;
+}
+
+.text-white {
+  color: var(--midnight-ice) !important;
+}
+
+[class*="border-slate-800"] {
+  border-color: var(--midnight-border) !important;
+}
+
+/* The former black shadows added visual weight that obscured poster artwork. */
+[class*="shadow-"] {
+  box-shadow: none !important;
+}
+
+[class*="drop-shadow-"] {
+  filter: none !important;
+}
+
+header[class*="bg-"] {
+  background-color: var(--midnight-glass) !important;
+  -webkit-backdrop-filter: blur(12px);
+  backdrop-filter: blur(12px);
+  border-color: var(--midnight-border) !important;
+}
+
+[class*="font-['Cinzel']"] {
+  font-family: var(--font-display) !important;
+}
+
+/* Neon-teal screen cue, tuned for an understated auditorium rather than a glow effect. */
 .cinema-screen-vip {
   height: 52px;
   width: 100%;
-  background: linear-gradient(to bottom, rgba(245, 158, 11, 0.45), rgba(212, 175, 55, 0.02));
-  border-top: 3px solid #f59e0b;
+  background: linear-gradient(to bottom, rgba(0, 242, 254, 0.22), rgba(0, 242, 254, 0.015));
+  border-top: 3px solid var(--midnight-teal);
   border-radius: 50% 50% 0 0 / 100% 100% 0 0;
-  box-shadow: 0 -16px 36px rgba(245, 158, 11, 0.3);
   position: relative;
 }
 
@@ -27,21 +145,17 @@
   left: 25%;
   right: 25%;
   height: 2px;
-  background: #fef08a;
-  filter: blur(1px);
+  background: rgba(241, 245, 249, 0.8);
 }
 
-/* Compatibility alias for existing class */
 .cinema-screen {
   height: 52px;
   width: 100%;
-  background: linear-gradient(to bottom, rgba(245, 158, 11, 0.45), rgba(212, 175, 55, 0.02));
-  border-top: 3px solid #f59e0b;
+  background: linear-gradient(to bottom, rgba(0, 242, 254, 0.22), rgba(0, 242, 254, 0.015));
+  border-top: 3px solid var(--midnight-teal);
   border-radius: 50% 50% 0 0 / 100% 100% 0 0;
-  box-shadow: 0 -16px 36px rgba(245, 158, 11, 0.3);
 }
 
-/* Cinema Armchair Seat Shapes */
 .seat-vip {
   transition: all 0.15s cubic-bezier(0.16, 1, 0.3, 1);
   position: relative;
@@ -51,13 +165,10 @@
   transform: translateY(-2px) scale(1.06);
 }
 
-/* Subtle Cinema Noise & Vignette Overlay */
 .cinema-vignette {
-  background: radial-gradient(circle at 50% 0%, rgba(245, 158, 11, 0.08) 0%, transparent 70%);
+  background-image: radial-gradient(circle at 50% 0%, rgba(0, 242, 254, 0.045) 0%, transparent 70%);
 }
 
-/* Gold Metallic Foil Border */
 .border-gold-glow {
-  border-color: rgba(245, 158, 11, 0.3);
-  box-shadow: 0 0 20px rgba(245, 158, 11, 0.08);
+  border-color: rgba(0, 242, 254, 0.32);
 }

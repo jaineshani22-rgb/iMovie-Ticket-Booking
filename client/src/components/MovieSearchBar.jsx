@@ -232,7 +232,7 @@ const MovieSearchBar = ({ className = '', onSearchSubmit }) => {
                     }`}
                   >
                     {/* Poster Thumbnail */}
-                    <div className="w-10 h-14 rounded-lg bg-slate-800 overflow-hidden shrink-0 border border-slate-700/60 relative">
+                    <div className="w-10 h-14 rounded-xl bg-slate-800 overflow-hidden shrink-0 border border-slate-700/60 relative">
                       {movie.posterUrl ? (
                         <img
                           src={movie.posterUrl}
