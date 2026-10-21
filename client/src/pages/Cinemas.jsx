@@ -53,7 +53,7 @@ const Cinemas = () => {
           >
             {COUNTRIES.map((c) => (
               <option key={c.code} value={c.code} className="bg-[#12151d] text-white">
-                {c.flag} {c.name} ({c.currency})
+                {c.code} {c.name} ({c.currency})
               </option>
             ))}
           </select>

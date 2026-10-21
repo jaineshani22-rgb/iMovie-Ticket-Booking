@@ -110,7 +110,7 @@ const Navbar = () => {
               className="flex items-center gap-1.5 text-xs text-slate-200 bg-[#141822] hover:bg-[#1c2230] border border-amber-500/25 px-2.5 sm:px-3 py-1.5 rounded-xl transition-all shadow-sm"
               title="Change country & cinema city"
             >
-              <span className="text-sm">{activeCountry?.flag || '🌐'}</span>
+              <Globe className="w-3.5 h-3.5 text-[#00F2FE]" aria-hidden="true" />
               <span className="font-semibold text-white max-w-[80px] sm:max-w-[100px] truncate">
                 {city}
               </span>
@@ -153,7 +153,7 @@ const Navbar = () => {
                 </Link>
                 <Link
                   to="/register"
-                  className="text-xs sm:text-sm font-semibold bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 text-slate-950 px-3 sm:px-4 py-1.5 rounded-xl shadow-md shadow-amber-500/15 transition-all whitespace-nowrap"
+                  className="text-xs sm:text-sm font-semibold bg-[#FF007A] hover:bg-[#e90070] text-slate-950 px-3 sm:px-4 py-1.5 rounded-xl transition-all whitespace-nowrap"
                 >
                   Join VIP
                 </Link>
