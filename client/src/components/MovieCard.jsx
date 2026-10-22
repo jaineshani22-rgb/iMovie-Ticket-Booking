@@ -44,10 +44,15 @@ const MovieCard = ({ movie, onWatchTrailer }) => {
 
         <div className="absolute inset-0 bg-gradient-to-t from-[#12151d] via-[#12151d]/25 to-transparent pointer-events-none" />
 
-        {/* Rating Badge */}
-        <div className="absolute top-3 right-3 bg-[#0c0e14]/85 backdrop-blur-md border border-amber-500/30 px-2.5 py-1 rounded-lg flex items-center gap-1.5 text-xs font-bold text-amber-400 shadow-md">
+        {/* Rating & Votes Badge */}
+        <div className="absolute top-3 right-3 bg-[#0c0e14]/90 backdrop-blur-md border border-amber-500/35 px-2.5 py-1 rounded-lg flex items-center gap-1.5 text-xs font-bold text-amber-400 shadow-lg">
           <Star className="w-3.5 h-3.5 fill-amber-400 stroke-none" />
           <span className="font-mono tabular-nums">{movie.rating || 8.5}</span>
+          {movie.votes && (
+            <span className="text-[10px] text-slate-300 font-normal">
+              ({movie.votes >= 1000 ? `${(movie.votes / 1000).toFixed(1)}k` : movie.votes})
+            </span>
+          )}
         </div>
 
         {/* Industry and Category Badges */}
@@ -64,14 +69,15 @@ const MovieCard = ({ movie, onWatchTrailer }) => {
             </span>
           )}
           {isUpcoming && (
-            <span className="bg-amber-400 text-slate-950 font-black text-[9px] uppercase tracking-wider px-2 py-0.5 rounded-md shadow-md">
-              Upcoming
+            <span className="bg-gradient-to-r from-amber-400 to-amber-500 text-slate-950 font-black text-[9px] uppercase tracking-wider px-2.5 py-0.5 rounded-md shadow-lg flex items-center gap-1">
+              <Calendar className="w-2.5 h-2.5" />
+              Coming Soon
             </span>
           )}
         </div>
 
-        {/* Trailer Watch Overlay Button */}
-        {movie.trailerKey && onWatchTrailer && (
+        {/* Center Hover Trailer Overlay */}
+        {onWatchTrailer && (
           <button
             type="button"
             onClick={(e) => {
@@ -79,8 +85,8 @@ const MovieCard = ({ movie, onWatchTrailer }) => {
               e.stopPropagation();
               onWatchTrailer(movie);
             }}
-            className="absolute inset-0 m-auto w-12 h-12 rounded-full bg-black/60 hover:bg-amber-500 hover:text-slate-950 text-white border border-white/20 hover:border-amber-400 flex items-center justify-center transition-all duration-200 opacity-0 group-hover:opacity-100 shadow-xl backdrop-blur-sm transform scale-90 group-hover:scale-100"
-            title="Watch 4K Trailer"
+            className="absolute inset-0 m-auto w-12 h-12 rounded-full bg-black/60 hover:bg-amber-500 hover:text-slate-950 text-white border border-white/20 hover:border-amber-400 flex items-center justify-center transition-all duration-200 opacity-0 group-hover:opacity-100 shadow-xl backdrop-blur-sm transform scale-90 group-hover:scale-100 cursor-pointer"
+            title={movie.trailerKey ? "Watch Official 4K Trailer" : "View Official Trailer Status"}
           >
             <Play className="w-5 h-5 fill-current ml-0.5" />
           </button>
@@ -98,11 +104,13 @@ const MovieCard = ({ movie, onWatchTrailer }) => {
       {/* Movie Details */}
       <div className="p-5 flex-1 flex flex-col justify-between space-y-4">
         <div>
-          <h3 className="text-base sm:text-lg font-bold text-white group-hover:text-amber-400 transition-colors line-clamp-1">
-            {movie.title}
-          </h3>
+          <div className="flex items-start justify-between gap-2">
+            <h3 className="text-base sm:text-lg font-bold text-white group-hover:text-amber-400 transition-colors line-clamp-1">
+              {movie.title}
+            </h3>
+          </div>
 
-          {/* Unboxed Metadata Line */}
+          {/* Unboxed Metadata Line with Votes */}
           <div className="flex items-center gap-2 text-xs text-slate-400 mt-1.5 flex-wrap">
             <span>{genres.slice(0, 2).join(', ')}</span>
             <span aria-hidden="true" className="text-slate-600">·</span>
@@ -112,6 +120,14 @@ const MovieCard = ({ movie, onWatchTrailer }) => {
             </span>
             <span aria-hidden="true" className="text-slate-600">·</span>
             <span className="font-mono text-slate-400">{releaseYear}</span>
+            {movie.votes && (
+              <>
+                <span aria-hidden="true" className="text-slate-600">·</span>
+                <span className="text-amber-400/90 font-medium text-[11px]">
+                  {movie.votes >= 1000 ? `${(movie.votes / 1000).toFixed(1)}k` : movie.votes} votes
+                </span>
+              </>
+            )}
           </div>
 
           <p className="text-xs text-slate-400 mt-2.5 line-clamp-2 leading-relaxed">
@@ -119,23 +135,44 @@ const MovieCard = ({ movie, onWatchTrailer }) => {
           </p>
         </div>
 
-        <div className="pt-3.5 border-t border-slate-800/80 flex items-center justify-between gap-3">
+        <div className="pt-3.5 border-t border-slate-800/80 flex items-center justify-between gap-2">
           <div>
             <span className="text-[10px] text-slate-500 block uppercase tracking-wider font-semibold">
-              Reserved from
+              {isUpcoming ? 'Tickets from' : 'Reserved from'}
             </span>
             <span className="text-base font-extrabold text-white font-mono tabular-nums">
               {formatPrice(movie.ticketPrice || 250)}
             </span>
           </div>
 
-          <Link
-            to={`/movies/${movie._id}`}
-            className="inline-flex items-center gap-1.5 bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 text-slate-950 text-xs font-bold px-3.5 py-2 rounded-xl shadow-md shadow-amber-500/10 transition-all duration-200"
-          >
-            <Ticket className="w-3.5 h-3.5" />
-            Select Seats
-          </Link>
+          <div className="flex items-center gap-2">
+            {onWatchTrailer && (
+              <button
+                type="button"
+                onClick={(e) => {
+                  e.preventDefault();
+                  e.stopPropagation();
+                  onWatchTrailer(movie);
+                }}
+                className="inline-flex items-center justify-center p-2 rounded-xl bg-[#171b26] hover:bg-[#222736] text-amber-400 hover:text-white border border-slate-800 hover:border-amber-500/40 transition-colors cursor-pointer"
+                title={movie.trailerKey ? "Watch Trailer" : "View Official Trailer Status"}
+              >
+                <Play className="w-3.5 h-3.5 fill-current ml-0.5" />
+              </button>
+            )}
+
+            <Link
+              to={`/movies/${movie._id}`}
+              className="inline-flex items-center gap-1.5 bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 text-slate-950 text-xs font-bold px-3.5 py-2 rounded-xl shadow-md shadow-amber-500/10 transition-all duration-200"
+            >
+              <Ticket className="w-3.5 h-3.5" />
+              {movie.category === 'upcoming' && (!movie.showtimes || movie.showtimes.length === 0)
+                ? 'Coming Soon'
+                : isUpcoming
+                ? 'Pre-Book'
+                : 'Select Seats'}
+            </Link>
+          </div>
         </div>
       </div>
     </div>

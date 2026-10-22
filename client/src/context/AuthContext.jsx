@@ -29,12 +29,51 @@ export const AuthProvider = ({ children }) => {
     return data;
   };
 
-  const register = async (username, email, password) => {
-    const { data } = await API.post('/auth/register', { username, email, password });
+  const register = async (username, email, password, locationPrefs = {}) => {
+    const { data } = await API.post('/auth/register', {
+      username,
+      email,
+      password,
+      preferredCountry: locationPrefs.country || 'US',
+      preferredCity: locationPrefs.city || 'New York'
+    });
     localStorage.setItem('token', data.token);
     localStorage.setItem('user', JSON.stringify(data));
     setUser(data);
     return data;
+  };
+
+  const forgotPassword = async (email) => {
+    const { data } = await API.post('/auth/forgot-password', { email });
+    return data;
+  };
+
+  const resetPassword = async (resetToken, newPassword) => {
+    const { data } = await API.post('/auth/reset-password', { resetToken, newPassword });
+    return data;
+  };
+
+  const googleLogin = async (profile) => {
+    const { data } = await API.post('/auth/google', profile);
+    localStorage.setItem('token', data.token);
+    localStorage.setItem('user', JSON.stringify(data));
+    setUser(data);
+    return data;
+  };
+
+  const updateUserLocation = async (country, city) => {
+    try {
+      const { data } = await API.put('/auth/location', { country, city });
+      setUser((prev) => {
+        if (!prev) return prev;
+        const updated = { ...prev, preferredCountry: country, preferredCity: city };
+        localStorage.setItem('user', JSON.stringify(updated));
+        return updated;
+      });
+      return data;
+    } catch {
+      // Ignore if offline
+    }
   };
 
   const logout = () => {
@@ -44,7 +83,19 @@ export const AuthProvider = ({ children }) => {
   };
 
   return (
-    <AuthContext.Provider value={{ user, loading, login, register, logout }}>
+    <AuthContext.Provider
+      value={{
+        user,
+        loading,
+        login,
+        register,
+        forgotPassword,
+        resetPassword,
+        googleLogin,
+        updateUserLocation,
+        logout
+      }}
+    >
       {children}
     </AuthContext.Provider>
   );

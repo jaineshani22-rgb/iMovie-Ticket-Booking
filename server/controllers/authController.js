@@ -1,6 +1,7 @@
 const User = require('../models/User');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
+const crypto = require('crypto');
 const inMemoryStore = require('../config/inMemoryStore');
 
 const getJwtSecret = () => process.env.JWT_SECRET || 'imovies_default_super_secret_jwt_key_32_chars_min';
@@ -13,28 +14,72 @@ const generateToken = (user) => {
   );
 };
 
+// Rate limiting in-memory store for login attempts (IP / Email)
+const loginAttempts = new Map();
+const MAX_ATTEMPTS = 5;
+const LOCKOUT_MS = 2 * 60 * 1000; // 2 minutes
+
+const checkRateLimit = (key) => {
+  const record = loginAttempts.get(key);
+  if (!record) return null;
+  if (record.lockUntil && record.lockUntil > Date.now()) {
+    const remainingSec = Math.ceil((record.lockUntil - Date.now()) / 1000);
+    return `Too many failed login attempts. Account temporarily locked for ${remainingSec} seconds.`;
+  }
+  if (record.lockUntil && record.lockUntil <= Date.now()) {
+    loginAttempts.delete(key);
+  }
+  return null;
+};
+
+const recordFailedAttempt = (key) => {
+  const record = loginAttempts.get(key) || { count: 0, lockUntil: 0 };
+  record.count += 1;
+  if (record.count >= MAX_ATTEMPTS) {
+    record.lockUntil = Date.now() + LOCKOUT_MS;
+  }
+  loginAttempts.set(key, record);
+};
+
+const clearRateLimit = (key) => {
+  loginAttempts.delete(key);
+};
+
+// Email validation helper
+const isValidEmail = (email) => {
+  return typeof email === 'string' && /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.trim());
+};
+
 // @desc    Register a new user
 // @route   POST /api/auth/register
 exports.registerUser = async (req, res) => {
   try {
-    const { username, email, password } = req.body;
+    const { username, email, password, preferredCountry, preferredCity } = req.body;
 
     if (!username || !email || !password) {
       return res.status(400).json({ message: 'Please provide username, email, and password' });
+    }
+
+    if (!isValidEmail(email)) {
+      return res.status(400).json({ message: 'Please provide a valid email address' });
+    }
+
+    if (typeof password !== 'string' || password.length < 6) {
+      return res.status(400).json({ message: 'Password must be at least 6 characters long' });
     }
 
     let userExists = null;
     let usingFallback = false;
 
     try {
-      userExists = await User.findOne({ email: email.toLowerCase() });
+      userExists = await User.findOne({ email: email.toLowerCase().trim() });
     } catch (err) {
       usingFallback = true;
-      userExists = inMemoryStore.findUserByEmail(email);
+      userExists = inMemoryStore.findUserByEmail(email.trim());
     }
 
     if (userExists) {
-      return res.status(400).json({ message: 'User already exists with this email' });
+      return res.status(400).json({ message: 'An account with this email already exists. Please sign in.' });
     }
 
     const salt = await bcrypt.genSalt(10);
@@ -44,25 +89,31 @@ exports.registerUser = async (req, res) => {
     if (!usingFallback) {
       try {
         user = await User.create({
-          username,
-          email: email.toLowerCase(),
+          username: username.trim(),
+          email: email.toLowerCase().trim(),
           password: hashedPassword,
-          role: 'user'
+          role: 'user',
+          preferredCountry: preferredCountry || 'US',
+          preferredCity: preferredCity || 'New York'
         });
       } catch (err) {
         user = inMemoryStore.createUser({
-          username,
-          email: email.toLowerCase(),
+          username: username.trim(),
+          email: email.toLowerCase().trim(),
           password: hashedPassword,
-          role: 'user'
+          role: 'user',
+          preferredCountry: preferredCountry || 'US',
+          preferredCity: preferredCity || 'New York'
         });
       }
     } else {
       user = inMemoryStore.createUser({
-        username,
-        email: email.toLowerCase(),
+        username: username.trim(),
+        email: email.toLowerCase().trim(),
         password: hashedPassword,
-        role: 'user'
+        role: 'user',
+        preferredCountry: preferredCountry || 'US',
+        preferredCity: preferredCity || 'New York'
       });
     }
 
@@ -71,6 +122,8 @@ exports.registerUser = async (req, res) => {
       username: user.username,
       email: user.email,
       role: user.role,
+      preferredCountry: user.preferredCountry || 'US',
+      preferredCity: user.preferredCity || 'New York',
       token: generateToken(user)
     });
   } catch (error) {
@@ -88,25 +141,207 @@ exports.loginUser = async (req, res) => {
       return res.status(400).json({ message: 'Please provide email and password' });
     }
 
+    const trimmedEmail = email.toLowerCase().trim();
+    const rateLimitKey = `${req.ip || 'ip'}_${trimmedEmail}`;
+
+    const lockMessage = checkRateLimit(rateLimitKey);
+    if (lockMessage) {
+      return res.status(429).json({ message: lockMessage });
+    }
+
     let user = null;
     try {
-      user = await User.findOne({ email: email.toLowerCase() });
+      user = await User.findOne({ email: trimmedEmail });
     } catch (err) {
-      user = inMemoryStore.findUserByEmail(email);
+      user = inMemoryStore.findUserByEmail(trimmedEmail);
     }
 
     // Also check in-memory store if not found in db
     if (!user) {
-      user = inMemoryStore.findUserByEmail(email);
+      user = inMemoryStore.findUserByEmail(trimmedEmail);
     }
 
     if (!user) {
+      recordFailedAttempt(rateLimitKey);
       return res.status(401).json({ message: 'Invalid email or password' });
     }
 
     const isMatch = await bcrypt.compare(password, user.password);
     if (!isMatch) {
+      recordFailedAttempt(rateLimitKey);
       return res.status(401).json({ message: 'Invalid email or password' });
+    }
+
+    clearRateLimit(rateLimitKey);
+
+    return res.status(200).json({
+      _id: user._id,
+      username: user.username,
+      email: user.email,
+      role: user.role,
+      preferredCountry: user.preferredCountry || 'US',
+      preferredCity: user.preferredCity || 'New York',
+      token: generateToken(user)
+    });
+  } catch (error) {
+    return res.status(500).json({ message: 'Server error during login', error: error.message });
+  }
+};
+
+// @desc    Initiate password reset (generates token & simulated link)
+// @route   POST /api/auth/forgot-password
+exports.forgotPassword = async (req, res) => {
+  try {
+    const { email } = req.body;
+    if (!email || !isValidEmail(email)) {
+      return res.status(400).json({ message: 'Please provide a valid registered email address' });
+    }
+
+    const trimmedEmail = email.toLowerCase().trim();
+    let user = null;
+    try {
+      user = await User.findOne({ email: trimmedEmail });
+    } catch (e) {
+      user = inMemoryStore.findUserByEmail(trimmedEmail);
+    }
+    if (!user) {
+      user = inMemoryStore.findUserByEmail(trimmedEmail);
+    }
+
+    // For privacy, if user not found, respond with generic success message
+    if (!user) {
+      return res.status(200).json({
+        message: 'If an account with that email exists, password reset instructions have been generated.',
+        simulated: true
+      });
+    }
+
+    const resetToken = crypto.randomBytes(24).toString('hex');
+    const expiresAt = new Date(Date.now() + 3600000); // 1 hour
+
+    try {
+      if (user.save) {
+        user.resetPasswordToken = resetToken;
+        user.resetPasswordExpires = expiresAt;
+        await user.save();
+      } else {
+        inMemoryStore.setResetToken(trimmedEmail, resetToken, expiresAt);
+      }
+    } catch {
+      inMemoryStore.setResetToken(trimmedEmail, resetToken, expiresAt);
+    }
+
+    return res.status(200).json({
+      message: 'Password reset link generated successfully.',
+      resetToken,
+      expiresIn: '1 hour',
+      simulatedNotice: 'In this preview environment, use the reset token directly to set your new password.'
+    });
+  } catch (error) {
+    return res.status(500).json({ message: 'Failed to process password reset request', error: error.message });
+  }
+};
+
+// @desc    Reset password using valid reset token
+// @route   POST /api/auth/reset-password
+exports.resetPassword = async (req, res) => {
+  try {
+    const { resetToken, newPassword } = req.body;
+
+    if (!resetToken) {
+      return res.status(400).json({ message: 'Reset token is required' });
+    }
+
+    if (!newPassword || typeof newPassword !== 'string' || newPassword.length < 6) {
+      return res.status(400).json({ message: 'New password must be at least 6 characters long' });
+    }
+
+    let user = null;
+    const now = new Date();
+
+    try {
+      user = await User.findOne({
+        resetPasswordToken: resetToken,
+        resetPasswordExpires: { $gt: now }
+      });
+    } catch (e) {
+      user = inMemoryStore.findUserByResetToken(resetToken);
+    }
+
+    if (!user) {
+      user = inMemoryStore.findUserByResetToken(resetToken);
+    }
+
+    if (!user) {
+      return res.status(400).json({ message: 'Password reset token is invalid or has expired' });
+    }
+
+    const salt = await bcrypt.genSalt(10);
+    const hashedPassword = await bcrypt.hash(newPassword, salt);
+
+    if (user.save) {
+      user.password = hashedPassword;
+      user.resetPasswordToken = null;
+      user.resetPasswordExpires = null;
+      await user.save();
+    } else {
+      inMemoryStore.resetPasswordWithToken(resetToken, hashedPassword);
+    }
+
+    return res.status(200).json({ message: 'Password has been updated successfully. You can now sign in.' });
+  } catch (error) {
+    return res.status(500).json({ message: 'Failed to reset password', error: error.message });
+  }
+};
+
+// @desc    One-Click Google Authentication
+// @route   POST /api/auth/google
+exports.googleAuth = async (req, res) => {
+  try {
+    const { email, name, googleId } = req.body;
+
+    if (!email) {
+      return res.status(400).json({ message: 'Google account email is required' });
+    }
+
+    const trimmedEmail = email.toLowerCase().trim();
+    const displayName = name ? name.trim() : trimmedEmail.split('@')[0];
+
+    let user = null;
+    try {
+      user = await User.findOne({ email: trimmedEmail });
+    } catch (e) {
+      user = inMemoryStore.findUserByEmail(trimmedEmail);
+    }
+    if (!user) {
+      user = inMemoryStore.findUserByEmail(trimmedEmail);
+    }
+
+    if (!user) {
+      // Create user with a generated secure password
+      const randomPassword = crypto.randomBytes(16).toString('hex');
+      const salt = await bcrypt.genSalt(10);
+      const hashedPassword = await bcrypt.hash(randomPassword, salt);
+
+      try {
+        user = await User.create({
+          username: displayName,
+          email: trimmedEmail,
+          password: hashedPassword,
+          role: 'user',
+          preferredCountry: 'US',
+          preferredCity: 'New York'
+        });
+      } catch (err) {
+        user = inMemoryStore.createUser({
+          username: displayName,
+          email: trimmedEmail,
+          password: hashedPassword,
+          role: 'user',
+          preferredCountry: 'US',
+          preferredCity: 'New York'
+        });
+      }
     }
 
     return res.status(200).json({
@@ -114,10 +349,48 @@ exports.loginUser = async (req, res) => {
       username: user.username,
       email: user.email,
       role: user.role,
+      preferredCountry: user.preferredCountry || 'US',
+      preferredCity: user.preferredCity || 'New York',
       token: generateToken(user)
     });
   } catch (error) {
-    return res.status(500).json({ message: 'Server error during login', error: error.message });
+    return res.status(500).json({ message: 'Google authentication failed', error: error.message });
+  }
+};
+
+// @desc    Update user location preference
+// @route   PUT /api/auth/location
+exports.updateLocation = async (req, res) => {
+  try {
+    const { country, city } = req.body;
+    if (!country || !city) {
+      return res.status(400).json({ message: 'Country and city are required' });
+    }
+
+    let user = null;
+    try {
+      user = await User.findById(req.user.id);
+      if (user) {
+        user.preferredCountry = country;
+        user.preferredCity = city;
+        await user.save();
+      }
+    } catch (e) {
+      // fallback
+    }
+
+    const memUser = inMemoryStore.updateUser(req.user.id, {
+      preferredCountry: country,
+      preferredCity: city
+    });
+
+    return res.status(200).json({
+      preferredCountry: country,
+      preferredCity: city,
+      message: 'Location preference saved'
+    });
+  } catch (error) {
+    return res.status(500).json({ message: 'Failed to update location preference', error: error.message });
   }
 };
 
@@ -144,6 +417,8 @@ exports.getProfile = async (req, res) => {
       username: user.username,
       email: user.email,
       role: user.role,
+      preferredCountry: user.preferredCountry || 'US',
+      preferredCity: user.preferredCity || 'New York',
       totalBookings: bookings.length,
       favorites: user.favorites || []
     });

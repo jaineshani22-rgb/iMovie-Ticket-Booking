@@ -21,6 +21,7 @@ import API from '../services/api';
 import MovieCard from '../components/MovieCard';
 import TrailerModal from '../components/TrailerModal';
 import LocationPickerModal from '../components/LocationPickerModal';
+import NearbyCinemaFinder from '../components/NearbyCinemaFinder';
 import { useAuth } from '../context/AuthContext';
 import { useLocationContext, COUNTRIES } from '../context/LocationContext';
 
@@ -65,7 +66,7 @@ const RATING_DROPDOWN_OPTIONS = [
 
 const Home = () => {
   const { user } = useAuth();
-  const { country, city, activeCountry, selectedCinema, cinemas, setCity, formatPrice } =
+  const { country, state, city, activeCountry, selectedCinema, cinemas, setCity, formatPrice } =
     useLocationContext();
 
   const [searchParams, setSearchParams] = useSearchParams();
@@ -178,13 +179,14 @@ const Home = () => {
           <button
             type="button"
             onClick={() => setShowLocationModal(true)}
-            className="flex items-center gap-2 bg-[#171b26] hover:bg-[#202534] border border-amber-500/30 text-white px-3.5 py-1.5 rounded-xl text-xs font-semibold transition-colors"
+            className="flex items-center gap-2 bg-[#171b26] hover:bg-[#202534] border border-amber-500/30 text-white px-3.5 py-1.5 rounded-xl text-xs font-semibold transition-colors cursor-pointer"
+            title="Click to change Country, State, or City"
           >
             <Globe className="w-4 h-4 text-[#00F2FE]" aria-hidden="true" />
             <span>
-              {activeCountry.name} · {city}
+              {activeCountry?.name} · {city}{state ? `, ${state}` : ''}
             </span>
-            <span className="text-amber-400 font-mono font-bold">({activeCountry.currency})</span>
+            <span className="text-amber-400 font-mono font-bold">({activeCountry?.currency})</span>
           </button>
 
           {selectedCinema && (
@@ -239,6 +241,15 @@ const Home = () => {
             </p>
 
             <div className="flex flex-wrap items-center gap-4 text-xs text-slate-300 pt-1">
+              <span className="flex items-center gap-1.5 text-amber-400 font-bold bg-[#141822] border border-amber-500/30 px-3 py-1 rounded-md font-mono">
+                <Star className="w-3.5 h-3.5 fill-amber-400 stroke-none" />
+                <span>{featuredMovie.rating || 8.5}</span>
+                {featuredMovie.votes && (
+                  <span className="text-[11px] text-slate-300 font-normal">
+                    ({featuredMovie.votes >= 1000 ? `${(featuredMovie.votes / 1000).toFixed(1)}k` : featuredMovie.votes} votes)
+                  </span>
+                )}
+              </span>
               <span className="text-amber-400 font-bold bg-[#141822] border border-amber-500/30 px-3 py-1 rounded-md font-mono">
                 {formatPrice(featuredMovie.ticketPrice)} per recliner
               </span>
@@ -309,8 +320,9 @@ const Home = () => {
             {[
               { id: 'all', label: 'All Screenings' },
               { id: 'now_playing', label: 'Now Showing' },
-              { id: 'upcoming', label: 'Upcoming Releases' },
-              { id: 'popular', label: 'Top Rated & Blockbusters' }
+              { id: 'upcoming', label: '⏳ Coming Soon (Upcoming)' },
+              { id: 'popular', label: 'Top Rated & Blockbusters' },
+              { id: 'nearby_cinemas', label: '📍 Nearby Theatres & Showtimes' }
             ].map((tab) => (
               <button
                 key={tab.id}
@@ -338,9 +350,15 @@ const Home = () => {
             </button>
           )}
         </div>
+      </div>
 
-        {/* Toolbar: Search input, Language dropdown, and Sorter (with Sort by Genre) */}
-        <div className="flex flex-col lg:flex-row gap-3 items-stretch lg:items-center justify-between">
+      {categoryTab === 'nearby_cinemas' ? (
+        <NearbyCinemaFinder />
+      ) : (
+        <>
+          <div className="space-y-5">
+            {/* Toolbar: Search input, Language dropdown, and Sorter (with Sort by Genre) */}
+            <div className="flex flex-col lg:flex-row gap-3 items-stretch lg:items-center justify-between">
           {/* Search Bar with Clear Button */}
           <div className="relative flex-1 max-w-md">
             <Search className="w-4 h-4 text-amber-400/80 absolute left-3.5 top-1/2 -translate-y-1/2" />
@@ -679,6 +697,8 @@ const Home = () => {
             />
           ))}
         </div>
+      )}
+        </>
       )}
 
       {/* 4K Trailer Modal */}

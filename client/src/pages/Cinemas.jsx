@@ -12,11 +12,27 @@ import {
   ExternalLink
 } from 'lucide-react';
 import { useLocationContext, COUNTRIES } from '../context/LocationContext';
+import NearbyCinemaFinder from '../components/NearbyCinemaFinder';
 
 const Cinemas = () => {
   const navigate = useNavigate();
-  const { country, city, cinemas, loadingCinemas, activeCountry, setCountry, setCity, formatPrice } =
-    useLocationContext();
+  const {
+    country,
+    state,
+    city,
+    cinemas,
+    loadingCinemas,
+    activeCountry,
+    currentState,
+    setCountry,
+    setState,
+    setCity,
+    formatPrice,
+    setSelectedCinema,
+    detectCurrentLocation,
+    detectingLocation,
+    locationStatus
+  } = useLocationContext();
 
   const [activeFormatFilter, setActiveFormatFilter] = useState('All');
 
@@ -27,9 +43,15 @@ const Cinemas = () => {
     return c.formats && c.formats.some((f) => f.toLowerCase().includes(activeFormatFilter.toLowerCase()));
   });
 
+  const statesList = activeCountry?.states || [];
+  const citiesList = currentState?.cities || [];
+
   return (
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-8">
-      {/* Header */}
+    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-10">
+      {/* Geolocation Nearby Cinema Finder & Showtimes */}
+      <NearbyCinemaFinder />
+
+      {/* Header for All Theatres Directory */}
       <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-4 border-b border-amber-500/15 pb-6">
         <div>
           <div className="inline-flex items-center gap-2 text-xs font-semibold text-amber-400 bg-amber-500/10 border border-amber-500/20 px-3 py-1 rounded-md mb-2">
@@ -40,37 +62,75 @@ const Cinemas = () => {
             Worldwide Cinema Theatres
           </h1>
           <p className="text-xs sm:text-sm text-slate-400 mt-1 max-w-2xl">
-            Explore world-class auditoriums featuring laser projection, immersive 12-channel Dolby Atmos sound, and motorized leather recliners.
+            Explore world-class auditoriums featuring laser projection, immersive 12-channel Dolby Atmos sound, and motorized leather recliners in {city}, {state ? `${state}, ` : ''}{activeCountry?.name}.
           </p>
         </div>
 
-        {/* Quick Country Switcher */}
-        <div className="flex items-center gap-2 self-stretch md:self-auto bg-[#12151d] border border-slate-800 p-1.5 rounded-2xl">
-          <select
-            value={country}
-            onChange={(e) => setCountry(e.target.value)}
-            className="bg-transparent text-xs text-white font-semibold px-2 py-1 focus:outline-none cursor-pointer"
+        {/* Quick Country Switcher & Use Current Location */}
+        <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2.5 self-stretch md:self-auto">
+          <button
+            type="button"
+            onClick={async () => {
+              try {
+                await detectCurrentLocation();
+              } catch {
+                // handled in status
+              }
+            }}
+            disabled={detectingLocation}
+            className="flex items-center justify-center gap-2 bg-[#00F2FE]/15 hover:bg-[#00F2FE]/25 border border-[#00F2FE]/40 text-[#00F2FE] hover:text-white px-3.5 py-2 rounded-xl text-xs font-bold transition-all shadow-sm cursor-pointer disabled:opacity-50"
+            title="Automatically detect nearby cinema city"
           >
-            {COUNTRIES.map((c) => (
-              <option key={c.code} value={c.code} className="bg-[#12151d] text-white">
-                {c.code} {c.name} ({c.currency})
-              </option>
-            ))}
-          </select>
-          <span className="text-slate-600">|</span>
-          <select
-            value={city}
-            onChange={(e) => setCity(e.target.value)}
-            className="bg-transparent text-xs text-amber-400 font-semibold px-2 py-1 focus:outline-none cursor-pointer"
-          >
-            {activeCountry.cities.map((ct) => (
-              <option key={ct} value={ct} className="bg-[#12151d] text-white">
-                {ct}
-              </option>
-            ))}
-          </select>
+            <Compass className={`w-3.5 h-3.5 ${detectingLocation ? 'animate-spin' : ''}`} />
+            <span>{detectingLocation ? 'Locating...' : 'Use My Current Location'}</span>
+          </button>
+
+          <div className="flex flex-wrap items-center gap-1.5 bg-[#12151d] border border-slate-800 p-1.5 rounded-2xl text-xs">
+            <select
+              value={country}
+              onChange={(e) => setCountry(e.target.value)}
+              className="bg-transparent text-white font-semibold px-1.5 py-1 focus:outline-none cursor-pointer"
+            >
+              {COUNTRIES.map((c) => (
+                <option key={c.code} value={c.code} className="bg-[#12151d] text-white">
+                  {c.code} {c.name}
+                </option>
+              ))}
+            </select>
+            <span className="text-slate-600">|</span>
+            <select
+              value={state}
+              onChange={(e) => setState(e.target.value)}
+              className="bg-transparent text-slate-300 font-medium px-1.5 py-1 focus:outline-none cursor-pointer max-w-[110px] truncate"
+            >
+              {statesList.map((st) => (
+                <option key={st.name} value={st.name} className="bg-[#12151d] text-white">
+                  {st.name}
+                </option>
+              ))}
+            </select>
+            <span className="text-slate-600">|</span>
+            <select
+              value={city}
+              onChange={(e) => setCity(e.target.value)}
+              className="bg-transparent text-amber-400 font-semibold px-1.5 py-1 focus:outline-none cursor-pointer max-w-[110px] truncate"
+            >
+              {citiesList.map((ct) => (
+                <option key={ct} value={ct} className="bg-[#12151d] text-white">
+                  {ct}
+                </option>
+              ))}
+            </select>
+          </div>
         </div>
       </div>
+
+      {locationStatus?.message && (
+        <div className="bg-[#00F2FE]/10 border border-[#00F2FE]/25 text-[#00F2FE] text-xs px-4 py-2 rounded-xl flex items-center gap-2 animate-in fade-in">
+          <CheckCircle className="w-4 h-4 shrink-0" />
+          <span>{locationStatus.message} — displaying nearby cinemas in {city}.</span>
+        </div>
+      )}
 
       {/* Format Filter Bar */}
       <div className="flex items-center gap-2 overflow-x-auto pb-1">

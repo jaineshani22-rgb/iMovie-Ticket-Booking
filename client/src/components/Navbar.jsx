@@ -8,7 +8,7 @@ import MovieSearchBar from './MovieSearchBar';
 
 const Navbar = () => {
   const { user, logout } = useAuth();
-  const { country, city, activeCountry } = useLocationContext();
+  const { country, state, city, activeCountry } = useLocationContext();
   const navigate = useNavigate();
   const location = useLocation();
 
@@ -107,8 +107,8 @@ const Navbar = () => {
             <button
               type="button"
               onClick={() => setShowLocationModal(true)}
-              className="flex items-center gap-1.5 text-xs text-slate-200 bg-[#141822] hover:bg-[#1c2230] border border-amber-500/25 px-2.5 sm:px-3 py-1.5 rounded-xl transition-all shadow-sm"
-              title="Change country & cinema city"
+              className="flex items-center gap-1.5 text-xs text-slate-200 bg-[#141822] hover:bg-[#1c2230] border border-amber-500/25 px-2.5 sm:px-3 py-1.5 rounded-xl transition-all shadow-sm cursor-pointer"
+              title={`Change Country, State & City (${city}, ${state || ''}, ${activeCountry?.name || ''})`}
             >
               <Globe className="w-3.5 h-3.5 text-[#00F2FE]" aria-hidden="true" />
               <span className="font-semibold text-white max-w-[80px] sm:max-w-[100px] truncate">
