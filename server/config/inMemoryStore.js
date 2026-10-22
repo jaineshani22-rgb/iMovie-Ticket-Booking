@@ -4788,6 +4788,13 @@ const INITIAL_MOVIES = [
   }
 ];
 
+// Replace invalid demo poster URLs with working poster sources or the shared fallback.
+const POSTER_OVERRIDES = require('./poster-overrides.json');
+INITIAL_MOVIES.forEach((movie) => {
+  const posterUrl = POSTER_OVERRIDES[movie.title];
+  if (posterUrl) movie.posterUrl = posterUrl;
+});
+
 const today = new Date().toISOString().split('T')[0];
 const INITIAL_BOOKINGS = [
   {

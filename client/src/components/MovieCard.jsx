@@ -4,12 +4,13 @@ import { Clock, Star, Ticket, MapPin, Film, Play, Calendar } from 'lucide-react'
 import { useLocationContext } from '../context/LocationContext';
 
 const MovieCard = ({ movie, onWatchTrailer }) => {
+  const defaultPoster =
+    'https://images.unsplash.com/photo-1489599849927-2ee91cede3ba?w=600&auto=format&fit=crop&q=80';
+  const [posterSrc, setPosterSrc] = useState(movie.posterUrl || defaultPoster);
   const [imgError, setImgError] = useState(false);
   const { formatPrice, selectedCinema } = useLocationContext();
 
   const genres = Array.isArray(movie.genre) ? movie.genre : [movie.genre];
-  const defaultPoster =
-    'https://images.unsplash.com/photo-1489599849927-2ee91cede3ba?w=600&auto=format&fit=crop&q=80';
 
   const releaseYear = movie.releaseDate ? new Date(movie.releaseDate).getFullYear() : '2024';
   const isUpcoming = movie.category === 'upcoming';
@@ -20,10 +21,16 @@ const MovieCard = ({ movie, onWatchTrailer }) => {
       <div className="relative aspect-[3/4] w-full overflow-hidden bg-[#0a0c10]">
         {!imgError ? (
           <img
-            src={movie.posterUrl || defaultPoster}
+            src={posterSrc}
             alt={movie.title}
             referrerPolicy="no-referrer"
-            onError={() => setImgError(true)}
+            onError={() => {
+              if (posterSrc !== defaultPoster) {
+                setPosterSrc(defaultPoster);
+                return;
+              }
+              setImgError(true);
+            }}
             className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500 ease-out"
           />
         ) : (
