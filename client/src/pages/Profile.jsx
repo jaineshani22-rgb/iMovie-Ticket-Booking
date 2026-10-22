@@ -147,6 +147,25 @@ const Profile = () => {
             </div>
           </Link>
         </div>
+
+        {/* User Location Preference Card */}
+        <div className="mt-4 p-4 rounded-2xl bg-[#0a0d14] border border-slate-800/80 flex items-center justify-between gap-4">
+          <div className="space-y-0.5">
+            <span className="text-[10px] uppercase font-bold tracking-wider text-slate-400 block">
+              Default Preferred Region
+            </span>
+            <p className="text-xs font-bold text-white flex items-center gap-2">
+              <span className="text-amber-400">📍</span>
+              <span>{profile?.preferredCity || user?.preferredCity || 'New York'}, {profile?.preferredCountry || user?.preferredCountry || 'US'}</span>
+            </p>
+          </div>
+          <Link
+            to="/cinemas"
+            className="text-xs font-semibold text-amber-400 hover:text-amber-300 underline"
+          >
+            Update City
+          </Link>
+        </div>
       </div>
     </div>
   );

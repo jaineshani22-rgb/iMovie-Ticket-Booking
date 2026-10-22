@@ -255,6 +255,335 @@ const INITIAL_CINEMAS = [
 
 const INITIAL_MOVIES = [
   // ----------------------------------------------------
+  // RECENT TRENDY & UPCOMING BLOCKBUSTERS
+  // ----------------------------------------------------
+  {
+    _id: '65f1b0000000000000000101',
+    title: 'Udta Teer',
+    industry: 'Bollywood',
+    description:
+      'A sharp satirical comedy-drama unraveling how a reckless mishap in a small town spirals into an extraordinary chain of political chaos, underground intrigues, and unheralded local heroes.',
+    genre: ['Comedy', 'Drama', 'Action'],
+    duration: 138,
+    posterUrl: 'https://images.unsplash.com/photo-1517604931442-7e0c8ed2963c?w=780&auto=format&fit=crop&q=80',
+    backdropUrl: 'https://images.unsplash.com/photo-1489599849927-2ee91cede3ba?w=1280&auto=format&fit=crop&q=80',
+    releaseDate: '2025-06-20T00:00:00.000Z',
+    ticketPrice: 310,
+    theater: 'iMovies PVR ICON Lower Parel',
+    rating: 8.5,
+    votes: 38200,
+    language: 'Hindi',
+    trailerKey: '',
+    director: 'Vishal Bhardwaj',
+    category: 'now_playing',
+    cast: [
+      { name: 'Jaideep Ahlawat', character: 'Inspector Rathore', profileUrl: 'https://image.tmdb.org/t/p/w185/jaideep.jpg' },
+      { name: 'Abhishek Banerjee', character: 'Munna', profileUrl: 'https://image.tmdb.org/t/p/w185/abhishek.jpg' },
+      { name: 'Kritika Kamra', character: 'Suhani', profileUrl: 'https://image.tmdb.org/t/p/w185/kritika.jpg' }
+    ],
+    showtimes: ['10:45 AM', '02:15 PM', '06:15 PM', '09:30 PM'],
+    countryAvailability: ['US', 'GB', 'IN', 'CA', 'AU', 'DE', 'JP', 'SG', 'AE']
+  },
+  {
+    _id: '65f1b0000000000000000102',
+    title: 'Ramayana',
+    industry: 'Bollywood',
+    description:
+      'The timeless Indian epic brought to life in monumental cinematic grandeur. Prince Rama embarks on a righteous quest across ancient Bharat to defeat the supreme king of Lanka, Lankesh Ravana.',
+    genre: ['Action', 'Fantasy', 'Adventure', 'History'],
+    duration: 185,
+    posterUrl: 'https://images.unsplash.com/photo-1578632767115-351597cf2477?w=780&auto=format&fit=crop&q=80',
+    backdropUrl: 'https://images.unsplash.com/photo-1534447677768-be436bb09401?w=1280&auto=format&fit=crop&q=80',
+    releaseDate: '2026-11-04T00:00:00.000Z',
+    ticketPrice: 420,
+    theater: 'iMovies 70mm IMAX - Screen 1',
+    rating: 9.6,
+    votes: 148200,
+    language: 'Hindi',
+    trailerKey: '',
+    director: 'Nitesh Tiwari',
+    category: 'upcoming',
+    cast: [
+      { name: 'Ranbir Kapoor', character: 'Lord Rama', profileUrl: 'https://image.tmdb.org/t/p/w185/ranbir.jpg' },
+      { name: 'Sai Pallavi', character: 'Maa Sita', profileUrl: 'https://image.tmdb.org/t/p/w185/saipallavi.jpg' },
+      { name: 'Yash', character: 'Lankesh Ravana', profileUrl: 'https://image.tmdb.org/t/p/w185/yash.jpg' },
+      { name: 'Sunny Deol', character: 'Lord Hanuman', profileUrl: 'https://image.tmdb.org/t/p/w185/sunnydeol.jpg' }
+    ],
+    showtimes: [],
+    countryAvailability: ['US', 'GB', 'IN', 'CA', 'AU', 'DE', 'JP', 'SG', 'AE']
+  },
+  {
+    _id: '65f1b0000000000000000103',
+    title: 'Hanuman Ansh',
+    industry: 'Bollywood',
+    description:
+      'A 2026 Hindi devotional biographical drama celebrating the sacred life, profound teachings, and timeless spiritual compassion of revered saint Neem Karoli Baba, capturing his guidance to disciples and seekers worldwide.',
+    genre: ['Biography', 'Drama', 'History', 'Devotional'],
+    duration: 148,
+    posterUrl: 'https://images.unsplash.com/photo-1544717305-2782549b5136?w=780&auto=format&fit=crop&q=80',
+    backdropUrl: 'https://images.unsplash.com/photo-1519817650390-64a93db51149?w=1280&auto=format&fit=crop&q=80',
+    releaseDate: '2026-09-18T00:00:00.000Z',
+    ticketPrice: 350,
+    theater: 'iMovies Directors Cut Vasant Kunj',
+    rating: 9.3,
+    votes: 96400,
+    language: 'Hindi',
+    trailerKey: '',
+    director: 'Vishal Chaturvedi',
+    category: 'upcoming',
+    cast: [
+      { name: 'Shobhinaw Satyaa', character: 'Neem Karoli Baba', profileUrl: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=185&auto=format&fit=crop&q=80' },
+      { name: 'Vihaan Shedge', character: 'Young Disciple', profileUrl: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=185&auto=format&fit=crop&q=80' },
+      { name: 'Chandan Anand', character: 'Pandit Ramdas', profileUrl: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=185&auto=format&fit=crop&q=80' },
+      { name: 'Purnima Tiwari', character: 'Savitri Devi', profileUrl: 'https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=185&auto=format&fit=crop&q=80' },
+      { name: 'Anil Rastogi', character: 'Mahant Ji', profileUrl: 'https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?w=185&auto=format&fit=crop&q=80' }
+    ],
+    showtimes: [],
+    countryAvailability: ['US', 'GB', 'IN', 'CA', 'AU', 'DE', 'JP', 'SG', 'AE']
+  },
+  {
+    _id: '65f1b0000000000000000104',
+    title: 'Spider-Man: Brand New Day',
+    industry: 'Hollywood',
+    description:
+      'With the entire world forgetting Peter Parker’s existence, Spider-Man embarks on a raw and grounded journey across New York City, balancing anonymous college life with perilous new underworld dangers.',
+    genre: ['Action', 'Sci-Fi', 'Adventure'],
+    duration: 145,
+    posterUrl: 'https://images.unsplash.com/photo-1635805737707-575885ab0820?w=780&auto=format&fit=crop&q=80',
+    backdropUrl: 'https://images.unsplash.com/photo-1607604276583-eef5d076aa5f?w=1280&auto=format&fit=crop&q=80',
+    releaseDate: '2026-07-24T00:00:00.000Z',
+    ticketPrice: 380,
+    theater: 'iMovies Lincoln Square IMAX',
+    rating: 9.5,
+    votes: 210000,
+    language: 'English',
+    trailerKey: '',
+    director: 'Destin Daniel Cretton',
+    category: 'upcoming',
+    cast: [
+      { name: 'Tom Holland', character: 'Peter Parker / Spider-Man', profileUrl: 'https://image.tmdb.org/t/p/w185/holland.jpg' },
+      { name: 'Zendaya', character: 'MJ', profileUrl: 'https://image.tmdb.org/t/p/w185/zendaya.jpg' },
+      { name: 'Mark Ruffalo', character: 'Bruce Banner / Hulk', profileUrl: 'https://image.tmdb.org/t/p/w185/ruffalo.jpg' }
+    ],
+    showtimes: [],
+    countryAvailability: ['US', 'GB', 'IN', 'CA', 'AU', 'DE', 'JP', 'SG', 'AE']
+  },
+  {
+    _id: '65f1b0000000000000000105',
+    title: 'Clayface',
+    industry: 'Hollywood',
+    description:
+      'A psychological body-horror thriller from DC Studios exploring the tragic fall of a disfigured B-movie actor whose reliance on an experimental beauty clay morphs him into Gotham City’s shapeshifting terror.',
+    genre: ['Crime', 'Thriller', 'Horror', 'Drama'],
+    duration: 136,
+    posterUrl: 'https://images.unsplash.com/photo-1509281373149-e957c6296406?w=780&auto=format&fit=crop&q=80',
+    backdropUrl: 'https://images.unsplash.com/photo-1514533450685-4493e01d1fdc?w=1280&auto=format&fit=crop&q=80',
+    releaseDate: '2026-10-09T00:00:00.000Z',
+    ticketPrice: 340,
+    theater: 'iMovies Century City Premiere',
+    rating: 8.9,
+    votes: 74500,
+    language: 'English',
+    trailerKey: '',
+    director: 'Mike Flanagan',
+    category: 'upcoming',
+    cast: [
+      { name: 'Bill Skarsgård', character: 'Basil Karlo / Clayface', profileUrl: 'https://image.tmdb.org/t/p/w185/skarsgard.jpg' },
+      { name: 'Carla Gugino', character: 'Dr. Helen Trent', profileUrl: 'https://image.tmdb.org/t/p/w185/gugino.jpg' }
+    ],
+    showtimes: [],
+    countryAvailability: ['US', 'GB', 'IN', 'CA', 'AU', 'DE', 'JP', 'SG', 'AE']
+  },
+  {
+    _id: '65f1b0000000000000000106',
+    title: 'Nayi Naveli',
+    industry: 'Bollywood',
+    description:
+      'A heartwarming, progressive family drama following a spirited newlywed who turns a traditional rural household upside down with infectious warmth, humor, and courageous modern ideals.',
+    genre: ['Drama', 'Comedy', 'Romance'],
+    duration: 134,
+    posterUrl: 'https://images.unsplash.com/photo-1529156069898-49953e39b3ac?w=780&auto=format&fit=crop&q=80',
+    backdropUrl: 'https://images.unsplash.com/photo-1511285560929-80b456fea0bc?w=1280&auto=format&fit=crop&q=80',
+    releaseDate: '2024-10-10T00:00:00.000Z',
+    ticketPrice: 280,
+    theater: 'iMovies INOX Megaplex Malad',
+    rating: 8.3,
+    votes: 29800,
+    language: 'Hindi',
+    trailerKey: '',
+    director: 'Kiran Rao',
+    category: 'now_playing',
+    cast: [
+      { name: 'Pratibha Ranta', character: 'Jaya', profileUrl: 'https://image.tmdb.org/t/p/w185/pratibha.jpg' },
+      { name: 'Sparsh Shrivastava', character: 'Deepak', profileUrl: 'https://image.tmdb.org/t/p/w185/sparsh.jpg' },
+      { name: 'Nitanshi Goel', character: 'Phool', profileUrl: 'https://image.tmdb.org/t/p/w185/nitanshi.jpg' }
+    ],
+    showtimes: ['10:15 AM', '01:30 PM', '05:15 PM', '08:45 PM'],
+    countryAvailability: ['US', 'GB', 'IN', 'CA', 'AU', 'DE', 'JP', 'SG', 'AE']
+  },
+  {
+    _id: '65f1b0000000000000000107',
+    title: 'Pehla Pyaar Dusri Baar',
+    industry: 'Bollywood',
+    description:
+      'An emotionally stirring romantic drama about second chances, unhealed grief, and two kindred spirits discovering that love can strike twice when you least expect it.',
+    genre: ['Romance', 'Musical', 'Drama'],
+    duration: 142,
+    posterUrl: 'https://images.unsplash.com/photo-1518199266791-5375a83190b7?w=780&auto=format&fit=crop&q=80',
+    backdropUrl: 'https://images.unsplash.com/photo-1492684223066-81342ee5ff30?w=1280&auto=format&fit=crop&q=80',
+    releaseDate: '2025-08-15T00:00:00.000Z',
+    ticketPrice: 290,
+    theater: 'iMovies Directors Cut Vasant Kunj',
+    rating: 8.5,
+    votes: 41200,
+    language: 'Hindi',
+    trailerKey: '',
+    director: 'Sajid Ali',
+    category: 'upcoming',
+    cast: [
+      { name: 'Avinash Tiwary', character: 'Kabir', profileUrl: 'https://image.tmdb.org/t/p/w185/avinash.jpg' },
+      { name: 'Triptii Dimri', character: 'Tara', profileUrl: 'https://image.tmdb.org/t/p/w185/triptii.jpg' }
+    ],
+    showtimes: [],
+    countryAvailability: ['US', 'GB', 'IN', 'CA', 'AU', 'DE', 'JP', 'SG', 'AE']
+  },
+  {
+    _id: '65f1b0000000000000000120',
+    title: 'Drishyam: The Conclusion',
+    industry: 'Bollywood',
+    description:
+      'The monumental final chapter to Vijay Salgaonkar and his family’s relentless psychological confrontation against the police and past secrets. As law enforcement closes in with new forensic evidence, Vijay must make the ultimate calculated move to protect his loved ones.',
+    genre: ['Thriller', 'Crime', 'Drama', 'Mystery'],
+    duration: 155,
+    posterUrl: 'https://images.unsplash.com/photo-1478760329108-5c3ed9d495a0?w=780&auto=format&fit=crop&q=80',
+    backdropUrl: 'https://images.unsplash.com/photo-1509281373149-e957c6296406?w=1280&auto=format&fit=crop&q=80',
+    releaseDate: '2026-11-20T00:00:00.000Z',
+    ticketPrice: 380,
+    theater: 'iMovies PVR ICON Lower Parel',
+    rating: 9.6,
+    votes: 142000,
+    language: 'Hindi',
+    trailerKey: '',
+    director: 'Abhishek Pathak',
+    category: 'upcoming',
+    cast: [
+      { name: 'Ajay Devgn', character: 'Vijay Salgaonkar', profileUrl: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=185&auto=format&fit=crop&q=80' },
+      { name: 'Tabu', character: 'Meera Deshmukh', profileUrl: 'https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=185&auto=format&fit=crop&q=80' },
+      { name: 'Akshaye Khanna', character: 'Tarun Ahlawat', profileUrl: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=185&auto=format&fit=crop&q=80' },
+      { name: 'Shriya Saran', character: 'Nandini Salgaonkar', profileUrl: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=185&auto=format&fit=crop&q=80' }
+    ],
+    showtimes: [],
+    countryAvailability: ['US', 'GB', 'IN', 'CA', 'AU', 'DE', 'JP', 'SG', 'AE']
+  },
+  {
+    _id: '65f1b0000000000000000108',
+    title: 'Avatar: Fire and Ash',
+    industry: 'Hollywood',
+    description:
+      'Jake Sully and Neytiri encounter the Ash People, a volcanic clan of Na’vi whose fierce nature challenges everything the Sully family has learned about the moons ecosystem.',
+    genre: ['Sci-Fi', 'Adventure', 'Action', 'Fantasy'],
+    duration: 195,
+    posterUrl: 'https://image.tmdb.org/t/p/w780/t6HIqrRAclMCA60NsSmeqe9RmNV.jpg',
+    backdropUrl: 'https://image.tmdb.org/t/p/w1280/s16H6tpK2utvwDtzZIMQvRjrqqw.jpg',
+    releaseDate: '2025-12-19T00:00:00.000Z',
+    ticketPrice: 420,
+    theater: 'iMovies IMAX 3D Laser - Screen 1',
+    rating: 9.4,
+    votes: 195000,
+    language: 'English',
+    trailerKey: 'd9MyW72ELq0',
+    director: 'James Cameron',
+    category: 'upcoming',
+    cast: [
+      { name: 'Sam Worthington', character: 'Jake Sully' },
+      { name: 'Zoe Saldaña', character: 'Neytiri' },
+      { name: 'Oona Chaplin', character: 'Varang' }
+    ],
+    showtimes: ['11:00 AM', '03:15 PM', '07:30 PM'],
+    countryAvailability: ['US', 'GB', 'IN', 'CA', 'AU', 'DE', 'JP', 'SG', 'AE']
+  },
+  {
+    _id: '65f1b0000000000000000109',
+    title: 'Avengers: Doomsday',
+    industry: 'Hollywood',
+    description:
+      'Earth’s mightiest heroes collide with the multiverse’s supreme sovereign, Doctor Doom, threatening the complete collapse of reality itself.',
+    genre: ['Action', 'Sci-Fi', 'Adventure'],
+    duration: 180,
+    posterUrl: 'https://image.tmdb.org/t/p/w780/or06FN3Dka5tukK1e9sl16pB3iy.jpg',
+    backdropUrl: 'https://image.tmdb.org/t/p/w1280/7RyHsO4yDXtBv1zUU3mTpHeQ0d5.jpg',
+    releaseDate: '2026-05-01T00:00:00.000Z',
+    ticketPrice: 400,
+    theater: 'iMovies Lincoln Square IMAX',
+    rating: 9.6,
+    votes: 240000,
+    language: 'English',
+    trailerKey: 'TcMBFSGVi1c',
+    director: 'Anthony Russo, Joe Russo',
+    category: 'upcoming',
+    cast: [
+      { name: 'Robert Downey Jr.', character: 'Victor Von Doom / Doctor Doom' },
+      { name: 'Benedict Cumberbatch', character: 'Doctor Strange' },
+      { name: 'Pedro Pascal', character: 'Reed Richards / Mr. Fantastic' }
+    ],
+    showtimes: ['10:30 AM', '02:45 PM', '07:00 PM', '10:45 PM'],
+    countryAvailability: ['US', 'GB', 'IN', 'CA', 'AU', 'DE', 'JP', 'SG', 'AE']
+  },
+  {
+    _id: '65f1b0000000000000000110',
+    title: 'War 2',
+    industry: 'Bollywood',
+    description:
+      'Major Kabir Dhaliwal crosses paths with a lethal new international adversary in an adrenaline-fueled spy clash across Spain, Abu Dhabi, and Mumbai.',
+    genre: ['Action', 'Thriller'],
+    duration: 165,
+    posterUrl: 'https://images.unsplash.com/photo-1536440136628-849c177e76a1?w=780&auto=format&fit=crop&q=80',
+    backdropUrl: 'https://images.unsplash.com/photo-1518709268805-4e9042af9f23?w=1280&auto=format&fit=crop&q=80',
+    releaseDate: '2025-08-14T00:00:00.000Z',
+    ticketPrice: 360,
+    theater: 'iMovies PVR ICON Lower Parel',
+    rating: 9.1,
+    votes: 132000,
+    language: 'Hindi',
+    trailerKey: '6amIq_mP4xM',
+    director: 'Ayan Mukerji',
+    category: 'upcoming',
+    cast: [
+      { name: 'Hrithik Roshan', character: 'Major Kabir Dhaliwal' },
+      { name: 'N.T. Rama Rao Jr.', character: 'Agent Vikram' },
+      { name: 'Kiara Advani', character: 'Ruhi' }
+    ],
+    showtimes: ['11:45 AM', '03:15 PM', '06:45 PM', '10:15 PM'],
+    countryAvailability: ['US', 'GB', 'IN', 'CA', 'AU', 'DE', 'JP', 'SG', 'AE']
+  },
+  {
+    _id: '65f1b0000000000000000111',
+    title: 'The Batman: Part II',
+    industry: 'Hollywood',
+    description:
+      'The Dark Knight delves deeper into the submerged labyrinth of Gotham’s elite corruption while facing a terrifying new adversary lurking in the frozen city shadows.',
+    genre: ['Action', 'Crime', 'Drama', 'Mystery'],
+    duration: 172,
+    posterUrl: 'https://image.tmdb.org/t/p/w780/74xTEgt7R36Fpooo50r9T25onhq.jpg',
+    backdropUrl: 'https://image.tmdb.org/t/p/w1280/b0PlSFdDwbyK0cf5RxwDpaOJQvQ.jpg',
+    releaseDate: '2026-10-02T00:00:00.000Z',
+    ticketPrice: 360,
+    theater: 'iMovies 70mm IMAX - Screen 1',
+    rating: 9.3,
+    votes: 142000,
+    language: 'English',
+    trailerKey: 'mqqft2x_Aa4',
+    director: 'Matt Reeves',
+    category: 'upcoming',
+    cast: [
+      { name: 'Robert Pattinson', character: 'Bruce Wayne / Batman' },
+      { name: 'Colin Farrell', character: 'Oswald Cobblepot / The Penguin' },
+      { name: 'Jeffrey Wright', character: 'Jim Gordon' }
+    ],
+    showtimes: ['12:00 PM', '04:00 PM', '08:00 PM'],
+    countryAvailability: ['US', 'GB', 'IN', 'CA', 'AU', 'DE', 'JP', 'SG', 'AE']
+  },
+  // ----------------------------------------------------
   // HOLLYWOOD BLOCKBUSTERS
   // ----------------------------------------------------
   {
@@ -1399,7 +1728,7 @@ const INITIAL_MOVIES = [
     theater: 'Cinepolis VIP Screens',
     rating: 8.5,
     language: 'Hindi',
-    trailerKey: 'cK6vVp_Z9kM',
+    trailerKey: 'a7jP7L95-s8',
     director: 'Harry Baweja',
     category: 'popular',
     cast: [
@@ -1424,7 +1753,7 @@ const INITIAL_MOVIES = [
     theater: 'PVR ICON Gold Screen 2',
     rating: 7.8,
     language: 'Hindi',
-    trailerKey: 'nK6p0zZ_8jA',
+    trailerKey: '_AHfZvh_1gA',
     director: 'Soumitra Ranade',
     category: 'popular',
     cast: [
@@ -1529,7 +1858,7 @@ const INITIAL_MOVIES = [
     theater: 'PVR ICON Gold Lounge',
     rating: 8.0,
     language: 'Hindi',
-    trailerKey: 'nK6p0zZ_8jA',
+    trailerKey: '_AHfZvh_1gA',
     director: 'Imtiaz Ali',
     category: 'popular',
     cast: [
@@ -1632,7 +1961,7 @@ const INITIAL_MOVIES = [
     theater: 'iMovies Screen 2 Laser',
     rating: 8.1,
     language: 'Hindi',
-    trailerKey: 'y6nK5bVp_Z9',
+    trailerKey: '9_T58u2mUo8',
     director: 'Anurag Basu',
     category: 'popular',
     cast: [
@@ -1764,7 +2093,7 @@ const INITIAL_MOVIES = [
     theater: 'INOX Laser Palladium',
     rating: 8.2,
     language: 'Hindi',
-    trailerKey: '3uICX_mN_1A',
+    trailerKey: 'we3nfltXPEY',
     director: 'Rakeysh Omprakash Mehra',
     category: 'popular',
     cast: [
@@ -1975,7 +2304,7 @@ const INITIAL_MOVIES = [
     theater: 'PVR ICON Dolby Atmos Screen',
     rating: 7.9,
     language: 'Hindi',
-    trailerKey: 'bK6vVp_Z9kM',
+    trailerKey: 'Cv4D8C4yKlo',
     director: 'Imtiaz Ali',
     category: 'popular',
     cast: [
@@ -2344,7 +2673,7 @@ const INITIAL_MOVIES = [
     theater: 'PVR ICON Gold Screen 1',
     rating: 7.3,
     language: 'Hindi',
-    trailerKey: 'wM8e9e1b2K4',
+    trailerKey: 'COv52Qyctws',
     director: 'Rohit Shetty',
     category: 'now_playing',
     cast: [
@@ -2375,7 +2704,7 @@ const INITIAL_MOVIES = [
     theater: 'Cinepolis Heritage Screen',
     rating: 8.2,
     language: 'Hindi',
-    trailerKey: 'bK6vVp_Z9kM',
+    trailerKey: 'Cv4D8C4yKlo',
     director: 'Priyadarshan',
     category: 'popular',
     cast: [
@@ -2735,7 +3064,7 @@ const INITIAL_MOVIES = [
     "theater": "PVR INOX Superplex",
     "rating": 7.3,
     "language": "Hindi",
-    "trailerKey": "wF3zC3n7X4k",
+    "trailerKey": "rs4xWqXj6-E",
     "director": "Sriram Raghavan",
     "category": "now_playing",
     "cast": [
@@ -2977,7 +3306,7 @@ const INITIAL_MOVIES = [
     "theater": "INOX Megaplex",
     "rating": 7,
     "language": "Hindi",
-    "trailerKey": "kYn6A3s2x4Y",
+    "trailerKey": "sN75MPxgvX8",
     "director": "Sujoy Ghosh",
     "category": "now_playing",
     "cast": [
@@ -3404,7 +3733,7 @@ const INITIAL_MOVIES = [
     "theater": "PVR Anupam Cinema",
     "rating": 7.4,
     "language": "Hindi",
-    "trailerKey": "v6Z2M7s_xU8",
+    "trailerKey": "g_8kK8s_B1w",
     "director": "Anurag Kashyap",
     "category": "popular",
     "cast": [
@@ -3460,7 +3789,7 @@ const INITIAL_MOVIES = [
     "theater": "Cinemax Animation Dome",
     "rating": 7,
     "language": "Hindi",
-    "trailerKey": "9r2t4y6u8i0",
+    "trailerKey": "4sj1MT05MQI",
     "director": "Nikhil Advani",
     "category": "popular",
     "cast": [
@@ -3521,7 +3850,7 @@ const INITIAL_MOVIES = [
     "theater": "PVR Heritage Epic Cinema",
     "rating": 7.1,
     "language": "Hindi",
-    "trailerKey": "w8s9d7f6g5h",
+    "trailerKey": "kQDd1AhGIHk",
     "director": "Amaan Khan",
     "category": "popular",
     "cast": [
@@ -3586,7 +3915,7 @@ const INITIAL_MOVIES = [
     "theater": "Miraj Cinemas Family Screen",
     "rating": 7.2,
     "language": "Hindi",
-    "trailerKey": "z4x5c6v7b8n",
+    "trailerKey": "g_8kK8s_B1w",
     "director": "Pankaj Sharma",
     "category": "popular",
     "cast": [
@@ -4928,7 +5257,7 @@ const INITIAL_REVIEWS = [
 class InMemoryStore {
   constructor() {
     this.users = [...INITIAL_USERS];
-    this.movies = [...INITIAL_MOVIES];
+    this.movies = INITIAL_MOVIES.map((m) => ({ votes: m.votes || Math.floor((m.rating || 8.2) * 11500 + 4500), ...m }));
     this.cinemas = [...INITIAL_CINEMAS];
     this.bookings = [...INITIAL_BOOKINGS];
     this.reviews = [...INITIAL_REVIEWS];
@@ -4959,6 +5288,10 @@ class InMemoryStore {
       email: userData.email.toLowerCase(),
       password: userData.password,
       role: userData.role || 'user',
+      preferredCountry: userData.preferredCountry || 'US',
+      preferredCity: userData.preferredCity || 'New York',
+      resetPasswordToken: null,
+      resetPasswordExpires: null,
       favorites: [],
       createdAt: new Date().toISOString()
     };
@@ -4970,6 +5303,36 @@ class InMemoryStore {
     const user = this.findUserById(id);
     if (!user) return null;
     Object.assign(user, updates);
+    return user;
+  }
+
+  findUserByResetToken(token) {
+    if (!token) return null;
+    const now = new Date();
+    return (
+      this.users.find(
+        (u) =>
+          u.resetPasswordToken === token &&
+          u.resetPasswordExpires &&
+          new Date(u.resetPasswordExpires) > now
+      ) || null
+    );
+  }
+
+  setResetToken(email, token, expiresAt) {
+    const user = this.findUserByEmail(email);
+    if (!user) return null;
+    user.resetPasswordToken = token;
+    user.resetPasswordExpires = expiresAt;
+    return user;
+  }
+
+  resetPasswordWithToken(token, newHashedPassword) {
+    const user = this.findUserByResetToken(token);
+    if (!user) return null;
+    user.password = newHashedPassword;
+    user.resetPasswordToken = null;
+    user.resetPasswordExpires = null;
     return user;
   }
 
@@ -5121,6 +5484,7 @@ class InMemoryStore {
       ticketPrice: Number(movieData.ticketPrice) || 250,
       theater: movieData.theater || 'iMovies IMAX Laser - Screen 1',
       rating: Number(movieData.rating) || 8.5,
+      votes: Number(movieData.votes) || 12500,
       language: movieData.language || 'English',
       director: movieData.director || '',
       cast: Array.isArray(movieData.cast) ? movieData.cast : [],

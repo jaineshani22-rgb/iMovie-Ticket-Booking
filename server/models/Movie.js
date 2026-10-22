@@ -12,6 +12,7 @@ const movieSchema = new mongoose.Schema(
     ticketPrice: { type: Number, default: 250 },
     theater: { type: String, default: 'iMovies IMAX Laser - Screen 1' },
     rating: { type: Number, default: 8.5 },
+    votes: { type: Number, default: 12500 },
     language: { type: String, default: 'English' },
     showtimes: {
       type: [String],

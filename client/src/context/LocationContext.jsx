@@ -1,111 +1,46 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import API from '../services/api';
+import {
+  LOCATION_HIERARCHY,
+  CITY_COORDINATES,
+  calculateDistanceKm,
+  findClosestLocation,
+  getCountryByCode
+} from '../data/locations';
 
-export const COUNTRIES = [
-  {
-    code: 'US',
-    name: 'United States',
-    flag: '🇺🇸',
-    currency: 'USD',
-    symbol: '$',
-    rateToUSD: 1.0,
-    cities: ['New York', 'Los Angeles', 'Chicago', 'San Francisco']
-  },
-  {
-    code: 'GB',
-    name: 'United Kingdom',
-    flag: '🇬🇧',
-    currency: 'GBP',
-    symbol: '£',
-    rateToUSD: 0.79,
-    cities: ['London', 'Manchester', 'Birmingham']
-  },
-  {
-    code: 'IN',
-    name: 'India',
-    flag: '🇮🇳',
-    currency: 'INR',
-    symbol: '₹',
-    rateToUSD: 83.5,
-    cities: ['Mumbai', 'Delhi', 'Bengaluru', 'Hyderabad']
-  },
-  {
-    code: 'CA',
-    name: 'Canada',
-    flag: '🇨🇦',
-    currency: 'CAD',
-    symbol: 'CA$',
-    rateToUSD: 1.36,
-    cities: ['Toronto', 'Vancouver', 'Montreal']
-  },
-  {
-    code: 'AU',
-    name: 'Australia',
-    flag: '🇦🇺',
-    currency: 'AUD',
-    symbol: 'A$',
-    rateToUSD: 1.52,
-    cities: ['Sydney', 'Melbourne', 'Brisbane']
-  },
-  {
-    code: 'DE',
-    name: 'Germany',
-    flag: '🇩🇪',
-    currency: 'EUR',
-    symbol: '€',
-    rateToUSD: 0.92,
-    cities: ['Berlin', 'Munich', 'Hamburg']
-  },
-  {
-    code: 'JP',
-    name: 'Japan',
-    flag: '🇯🇵',
-    currency: 'JPY',
-    symbol: '¥',
-    rateToUSD: 155.0,
-    cities: ['Tokyo', 'Osaka', 'Kyoto']
-  },
-  {
-    code: 'SG',
-    name: 'Singapore',
-    flag: '🇸🇬',
-    currency: 'SGD',
-    symbol: 'S$',
-    rateToUSD: 1.35,
-    cities: ['Singapore']
-  },
-  {
-    code: 'AE',
-    name: 'United Arab Emirates',
-    flag: '🇦🇪',
-    currency: 'AED',
-    symbol: 'AED ',
-    rateToUSD: 3.67,
-    cities: ['Dubai', 'Abu Dhabi']
-  }
-];
+export const COUNTRIES = LOCATION_HIERARCHY;
+export { CITY_COORDINATES, calculateDistanceKm };
 
 export const LocationContext = createContext();
 
 export const LocationProvider = ({ children }) => {
-  const [country, setCountry] = useState(() => localStorage.getItem('imovies_country') || 'US');
-  const [city, setCity] = useState(() => localStorage.getItem('imovies_city') || 'New York');
+  // Read persisted location, defaulting intelligently (e.g. India / Maharashtra / Mumbai or previous selection)
+  const [country, setCountryState] = useState(() => localStorage.getItem('imovies_country') || 'IN');
+  const [stateName, setStateName] = useState(() => localStorage.getItem('imovies_state') || 'Maharashtra');
+  const [city, setCityState] = useState(() => localStorage.getItem('imovies_city') || 'Mumbai');
+
   const [cinemas, setCinemas] = useState([]);
   const [selectedCinema, setSelectedCinema] = useState(null);
   const [loadingCinemas, setLoadingCinemas] = useState(false);
+  const [detectingLocation, setDetectingLocation] = useState(false);
+  const [locationStatus, setLocationStatus] = useState(null);
 
-  const activeCountry = COUNTRIES.find((c) => c.code === country) || COUNTRIES[0];
+  const activeCountry = getCountryByCode(country);
+  const currentStateObj =
+    activeCountry.states?.find((s) => s.name.toLowerCase() === stateName.toLowerCase()) ||
+    activeCountry.states?.[0] || { name: stateName, cities: [city] };
 
-  // Fetch cinemas when country or city changes
+  // Fetch cinemas whenever country, state, or city updates
   useEffect(() => {
     localStorage.setItem('imovies_country', country);
+    localStorage.setItem('imovies_state', stateName);
     localStorage.setItem('imovies_city', city);
 
     const fetchCinemas = async () => {
       try {
         setLoadingCinemas(true);
         const { data } = await API.get('/cinemas', {
-          params: { country, city }
+          params: { country, city, state: stateName }
         });
         setCinemas(data || []);
         if (data && data.length > 0) {
@@ -114,33 +49,135 @@ export const LocationProvider = ({ children }) => {
           setSelectedCinema(null);
         }
       } catch (err) {
-        console.error('Failed to load cinemas:', err);
+        console.error('Failed to load cinemas for location:', err);
       } finally {
         setLoadingCinemas(false);
       }
     };
 
     fetchCinemas();
-  }, [country, city]);
+  }, [country, stateName, city]);
 
+  // Hierarchical country change: resets state and city to first available in chosen country
   const handleCountryChange = (newCountryCode) => {
-    const targetCountry = COUNTRIES.find((c) => c.code === newCountryCode);
+    const targetCountry = getCountryByCode(newCountryCode);
     if (targetCountry) {
-      setCountry(newCountryCode);
-      setCity(targetCountry.cities[0]);
+      setCountryState(targetCountry.code);
+      const firstState = targetCountry.states?.[0];
+      const newState = firstState ? firstState.name : '';
+      const newCity = firstState?.cities?.[0] || 'Main City';
+      setStateName(newState);
+      setCityState(newCity);
     }
+  };
+
+  // Hierarchical state change: resets city to first available in chosen state
+  const handleStateChange = (newStateName) => {
+    setStateName(newStateName);
+    const targetState = activeCountry.states?.find(
+      (s) => s.name.toLowerCase() === newStateName.toLowerCase()
+    );
+    if (targetState && targetState.cities.length > 0) {
+      setCityState(targetState.cities[0]);
+    }
+  };
+
+  const handleCityChange = (newCityName) => {
+    setCityState(newCityName);
+  };
+
+  // Browser Geolocation: With automatic country, state, city detection and India preselection
+  const detectCurrentLocation = () => {
+    return new Promise((resolve, reject) => {
+      if (!navigator.geolocation) {
+        const err = 'Geolocation is not supported by your browser.';
+        setLocationStatus({ error: err });
+        reject(new Error(err));
+        return;
+      }
+
+      setDetectingLocation(true);
+      setLocationStatus({ loading: true, message: 'Detecting your coordinates...' });
+
+      navigator.geolocation.getCurrentPosition(
+        async (position) => {
+          const userLat = position.coords.latitude;
+          const userLng = position.coords.longitude;
+
+          // Perform reverse geocoding if online, with offline geometric fallback
+          let detected = findClosestLocation(userLat, userLng);
+
+          try {
+            // Lightweight reverse geocoding via OpenStreetMap Nominatim with fast timeout
+            const controller = new AbortController();
+            const timeoutId = setTimeout(() => controller.abort(), 2500);
+            const res = await fetch(
+              `https://nominatim.openstreetmap.org/reverse?lat=${userLat}&lon=${userLng}&format=json`,
+              { signal: controller.signal }
+            );
+            clearTimeout(timeoutId);
+            if (res.ok) {
+              const geoData = await res.json();
+              const addr = geoData.address || {};
+              const detectedCountryCode = (addr.country_code || '').toUpperCase();
+              const detectedCity =
+                addr.city || addr.town || addr.village || addr.suburb || addr.municipality || detected.city;
+              const detectedState = addr.state || detected.state;
+
+              if (detectedCountryCode === 'IN') {
+                detected = {
+                  country: 'IN',
+                  state: detectedState || 'Maharashtra',
+                  city: detectedCity || 'Mumbai',
+                  distanceKm: detected.distanceKm
+                };
+              } else if (detectedCountryCode) {
+                const matchCountry = LOCATION_HIERARCHY.find((c) => c.code === detectedCountryCode);
+                if (matchCountry) {
+                  detected.country = detectedCountryCode;
+                  if (detectedState) detected.state = detectedState;
+                  if (detectedCity) detected.city = detectedCity;
+                }
+              }
+            }
+          } catch {
+            // Safe fallback to mathematical nearest coordinate match
+          }
+
+          setCountryState(detected.country);
+          setStateName(detected.state);
+          setCityState(detected.city);
+          setDetectingLocation(false);
+
+          setLocationStatus({
+            success: true,
+            isIndia: detected.country === 'IN',
+            message: `Detected: ${detected.city}, ${detected.state} (${detected.country})`
+          });
+
+          resolve(detected);
+        },
+        (error) => {
+          setDetectingLocation(false);
+          let errText = 'Location access was denied or timed out.';
+          if (error.code === 1) {
+            errText = 'Location permission denied. Please choose country, state, and city manually.';
+          }
+          setLocationStatus({ error: errText });
+          reject(new Error(errText));
+        },
+        { enableHighAccuracy: false, timeout: 8000, maximumAge: 600000 }
+      );
+    });
   };
 
   // Format price accurately based on active currency
   const formatPrice = (basePriceInInrOrUsd) => {
-    // If country is India, use standard INR pricing
     if (activeCountry.code === 'IN') {
       const val = basePriceInInrOrUsd || 300;
       return `${activeCountry.symbol}${val.toLocaleString()}`;
     }
 
-    // Convert from INR baseline (~300 INR = ~$3.60, ticket typical is $18-$22)
-    // If base price is around ~250-350 INR, calculate realistic localized ticket price
     let usdEquivalent = 18;
     if (basePriceInInrOrUsd > 100) {
       usdEquivalent = (basePriceInInrOrUsd / 300) * 18;
@@ -148,7 +185,7 @@ export const LocationProvider = ({ children }) => {
       usdEquivalent = basePriceInInrOrUsd;
     }
 
-    const localAmount = usdEquivalent * activeCountry.rateToUSD;
+    const localAmount = usdEquivalent * (activeCountry.rateToUSD || 1);
 
     if (activeCountry.code === 'JP') {
       return `${activeCountry.symbol}${Math.round(localAmount / 100) * 100}`;
@@ -160,22 +197,28 @@ export const LocationProvider = ({ children }) => {
   const getRawPrice = (basePriceInInrOrUsd) => {
     if (activeCountry.code === 'IN') return basePriceInInrOrUsd || 300;
     const usdEquivalent = basePriceInInrOrUsd > 100 ? (basePriceInInrOrUsd / 300) * 18 : basePriceInInrOrUsd;
-    return Math.round(usdEquivalent * activeCountry.rateToUSD);
+    return Math.round(usdEquivalent * (activeCountry.rateToUSD || 1));
   };
 
   return (
     <LocationContext.Provider
       value={{
-        countries: COUNTRIES,
+        countries: LOCATION_HIERARCHY,
         country,
+        state: stateName,
         city,
         activeCountry,
+        currentState: currentStateObj,
         cinemas,
         selectedCinema,
         loadingCinemas,
+        detectingLocation,
+        locationStatus,
         setCountry: handleCountryChange,
-        setCity,
+        setState: handleStateChange,
+        setCity: handleCityChange,
         setSelectedCinema,
+        detectCurrentLocation,
         formatPrice,
         getRawPrice
       }}

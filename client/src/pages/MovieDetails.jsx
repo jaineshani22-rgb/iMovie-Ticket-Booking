@@ -106,7 +106,14 @@ const MovieDetails = () => {
 
   const handleStartCheckout = async () => {
     if (!user) {
-      navigate('/login');
+      navigate('/login', {
+        state: {
+          from: {
+            pathname: `/movies/${id}`,
+            search: `?showDate=${showDate}&showTime=${encodeURIComponent(showTime)}`
+          }
+        }
+      });
       return;
     }
     if (selectedSeats.length === 0) {
@@ -220,21 +227,25 @@ const MovieDetails = () => {
             className="w-full h-full object-cover"
           />
 
-          {movie.trailerKey && (
-            <button
-              type="button"
-              onClick={() => setShowTrailer(true)}
-              className="absolute inset-0 m-auto w-12 h-12 rounded-full bg-black/70 hover:bg-amber-500 hover:text-slate-950 text-white border border-white/20 flex items-center justify-center transition-all duration-200 shadow-xl backdrop-blur-sm"
-              title="Watch Trailer"
-            >
-              <Play className="w-5 h-5 fill-current ml-0.5" />
-            </button>
-          )}
+          <button
+            type="button"
+            onClick={() => setShowTrailer(true)}
+            className="absolute inset-0 m-auto w-12 h-12 rounded-full bg-black/70 hover:bg-amber-500 hover:text-slate-950 text-white border border-white/20 flex items-center justify-center transition-all duration-200 shadow-xl backdrop-blur-sm cursor-pointer"
+            title={movie.trailerKey ? "Watch Official 4K Trailer" : "View Official Trailer Status"}
+          >
+            <Play className="w-5 h-5 fill-current ml-0.5" />
+          </button>
         </div>
 
         <div className="relative z-10 flex-1 space-y-4">
           {/* Metadata line */}
           <div className="flex flex-wrap items-center gap-2 text-xs text-slate-400">
+            {movie.category === 'upcoming' && (
+              <span className="bg-gradient-to-r from-amber-400 to-amber-500 text-slate-950 font-black text-[10px] uppercase px-2.5 py-0.5 rounded-md tracking-wider flex items-center gap-1 shadow-md">
+                <Calendar className="w-3 h-3" />
+                Coming Soon
+              </span>
+            )}
             <span className="text-amber-400 font-bold tracking-wide uppercase">
               {movie.language || 'English'}
             </span>
@@ -249,6 +260,11 @@ const MovieDetails = () => {
             >
               <Star className="w-3.5 h-3.5 fill-amber-400 stroke-none" />
               <span className="font-mono tabular-nums">{movie.rating || 8.5} / 10</span>
+              {movie.votes && (
+                <span className="text-[11px] text-amber-300/80 font-normal">
+                  ({movie.votes >= 1000 ? `${(movie.votes / 1000).toFixed(1)}k` : movie.votes} votes)
+                </span>
+              )}
               <span className="text-[10px] text-slate-400 font-normal underline decoration-amber-500/40 group-hover:text-amber-300">Reviews</span>
             </button>
             {movie.director && (
@@ -257,6 +273,15 @@ const MovieDetails = () => {
                 <span>Dir. {movie.director}</span>
               </>
             )}
+            <span aria-hidden="true" className="text-slate-600">·</span>
+            <button
+              type="button"
+              onClick={() => setShowTrailer(true)}
+              className="inline-flex items-center gap-1.5 bg-[#171b26] hover:bg-[#202534] border border-amber-500/40 text-amber-400 hover:text-amber-300 px-2.5 py-1 rounded-md text-[11px] font-bold transition-all shadow-md ml-1 cursor-pointer"
+            >
+              <Play className="w-3 h-3 fill-current" />
+              {movie.trailerKey ? 'Watch 4K Trailer' : 'Official Trailer Status'}
+            </button>
           </div>
 
           <h1 className="text-2xl sm:text-4xl font-extrabold text-white tracking-tight [text-wrap:balance]">
@@ -300,92 +325,139 @@ const MovieDetails = () => {
             </span>
           </div>
 
-          {/* Cinema & Date Selector Module */}
-          <div className="pt-4 border-t border-slate-800/80 space-y-4">
-            {/* Preferred Cinema Selector in city */}
-            {cinemas && cinemas.length > 0 && (
+          {/* Cinema & Date Selector Module or Coming Soon Banner */}
+          {movie.category === 'upcoming' && (!movie.showtimes || movie.showtimes.length === 0) ? (
+            <div className="pt-4 border-t border-slate-800/80">
+              <div className="flex items-center gap-2.5 text-xs text-amber-400 bg-amber-500/10 border border-amber-500/25 px-4 py-3 rounded-xl">
+                <Calendar className="w-4 h-4 shrink-0 text-amber-400" />
+                <span className="font-semibold">
+                  Theatrical Premiere: {movie.releaseDate ? new Date(movie.releaseDate).toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' }) : '2026 Premiere'} · Advance Seat Reservations Open Soon
+                </span>
+              </div>
+            </div>
+          ) : (
+            <div className="pt-4 border-t border-slate-800/80 space-y-4">
+              {/* Preferred Cinema Selector in city */}
+              {cinemas && cinemas.length > 0 && (
+                <div>
+                  <label className="block text-xs font-semibold text-slate-300 mb-1.5 flex items-center gap-1.5">
+                    <Building className="w-3.5 h-3.5 text-amber-400" />
+                    Select Cinema Location in {city}
+                  </label>
+                  <div className="flex flex-wrap gap-2">
+                    {cinemas.map((cin) => {
+                      const isSelected = activeCinema?._id === cin._id;
+                      return (
+                        <button
+                          key={cin._id}
+                          type="button"
+                          onClick={() => setSelectedCinema(cin)}
+                          className={`px-3 py-1.5 rounded-xl text-xs font-semibold transition-all cursor-pointer ${
+                            isSelected
+                              ? 'bg-amber-500 text-slate-950 font-bold shadow-md shadow-amber-500/20'
+                              : 'bg-[#0d1017] border border-slate-800 text-slate-300 hover:text-white'
+                          }`}
+                        >
+                          {cin.name}
+                        </button>
+                      );
+                    })}
+                  </div>
+                </div>
+              )}
+
+              {/* Screening Date Cards */}
               <div>
                 <label className="block text-xs font-semibold text-slate-300 mb-1.5 flex items-center gap-1.5">
-                  <Building className="w-3.5 h-3.5 text-amber-400" />
-                  Select Cinema Location in {city}
+                  <Calendar className="w-3.5 h-3.5 text-amber-400" />
+                  Screening Date
                 </label>
-                <div className="flex flex-wrap gap-2">
-                  {cinemas.map((cin) => {
-                    const isSelected = activeCinema?._id === cin._id;
+                <div className="flex items-center gap-2 overflow-x-auto pb-1">
+                  {availableDates.map((item) => {
+                    const isSelected = showDate === item.dateStr;
                     return (
                       <button
-                        key={cin._id}
+                        key={item.dateStr}
                         type="button"
-                        onClick={() => setSelectedCinema(cin)}
-                        className={`px-3 py-1.5 rounded-xl text-xs font-semibold transition-all ${
+                        onClick={() => setShowDate(item.dateStr)}
+                        className={`px-3.5 py-2 rounded-xl text-center min-w-[72px] transition-all shrink-0 cursor-pointer ${
                           isSelected
-                            ? 'bg-amber-500 text-slate-950 font-bold shadow-md shadow-amber-500/20'
-                            : 'bg-[#0d1017] border border-slate-800 text-slate-300 hover:text-white'
+                            ? 'bg-amber-500 text-slate-950 font-bold shadow-md shadow-amber-500/25'
+                            : 'bg-[#0b0d11] text-slate-400 hover:text-white border border-slate-800'
                         }`}
                       >
-                        {cin.name}
+                        <span className="text-[10px] uppercase font-bold block">{item.dayName}</span>
+                        <span className="text-xs font-bold font-mono block mt-0.5">{item.monthDay}</span>
                       </button>
                     );
                   })}
                 </div>
               </div>
-            )}
 
-            {/* Screening Date Cards */}
-            <div>
-              <label className="block text-xs font-semibold text-slate-300 mb-1.5 flex items-center gap-1.5">
-                <Calendar className="w-3.5 h-3.5 text-amber-400" />
-                Screening Date
-              </label>
-              <div className="flex items-center gap-2 overflow-x-auto pb-1">
-                {availableDates.map((item) => {
-                  const isSelected = showDate === item.dateStr;
-                  return (
+              {/* Showtime Selection */}
+              <div>
+                <label className="block text-xs font-semibold text-slate-300 mb-1.5">
+                  Select Showtime
+                </label>
+                <div className="flex flex-wrap gap-2">
+                  {showtimesList.map((time) => (
                     <button
-                      key={item.dateStr}
+                      key={time}
                       type="button"
-                      onClick={() => setShowDate(item.dateStr)}
-                      className={`px-3.5 py-2 rounded-xl text-center min-w-[72px] transition-all shrink-0 ${
-                        isSelected
-                          ? 'bg-amber-500 text-slate-950 font-bold shadow-md shadow-amber-500/25'
-                          : 'bg-[#0b0d11] text-slate-400 hover:text-white border border-slate-800'
+                      onClick={() => setShowTime(time)}
+                      className={`px-3.5 py-2 rounded-xl text-xs font-bold transition-all duration-150 cursor-pointer ${
+                        showTime === time
+                          ? 'bg-amber-500 text-slate-950 font-black shadow-md shadow-amber-500/25'
+                          : 'bg-[#0b0d11] text-slate-400 hover:text-white border border-slate-800 hover:border-slate-700'
                       }`}
                     >
-                      <span className="text-[10px] uppercase font-bold block">{item.dayName}</span>
-                      <span className="text-xs font-bold font-mono block mt-0.5">{item.monthDay}</span>
+                      {time}
                     </button>
-                  );
-                })}
+                  ))}
+                </div>
               </div>
             </div>
-
-            {/* Showtime Selection */}
-            <div>
-              <label className="block text-xs font-semibold text-slate-300 mb-1.5">
-                Select Showtime
-              </label>
-              <div className="flex flex-wrap gap-2">
-                {showtimesList.map((time) => (
-                  <button
-                    key={time}
-                    type="button"
-                    onClick={() => setShowTime(time)}
-                    className={`px-3.5 py-2 rounded-xl text-xs font-bold transition-all duration-150 ${
-                      showTime === time
-                        ? 'bg-amber-500 text-slate-950 font-black shadow-md shadow-amber-500/25'
-                        : 'bg-[#0b0d11] text-slate-400 hover:text-white border border-slate-800 hover:border-slate-700'
-                    }`}
-                  >
-                    {time}
-                  </button>
-                ))}
-              </div>
-            </div>
-          </div>
+          )}
         </div>
       </div>
 
-      {/* Interactive Auditorium & Checkout Layout */}
+      {/* Interactive Auditorium & Checkout Layout OR Coming Soon Showcase */}
+      {movie.category === 'upcoming' && (!movie.showtimes || movie.showtimes.length === 0) ? (
+        <div className="bg-[#12151d] border border-amber-500/25 rounded-3xl p-8 sm:p-12 text-center space-y-6 shadow-2xl relative overflow-hidden">
+          <div className="w-16 h-16 rounded-2xl bg-amber-500/10 border border-amber-500/30 flex items-center justify-center text-amber-400 mx-auto shadow-lg">
+            <Calendar className="w-8 h-8" />
+          </div>
+          <div className="max-w-xl mx-auto space-y-3">
+            <span className="text-[10px] uppercase font-bold tracking-[0.2em] text-amber-400 bg-amber-500/10 px-3.5 py-1 rounded-full border border-amber-500/25">
+              Theatrical Premiere Showcase
+            </span>
+            <h2 className="text-2xl sm:text-3xl font-extrabold text-white font-['Cinzel',serif]">
+              Coming Soon to Luxury Auditoriums
+            </h2>
+            <p className="text-xs sm:text-sm text-slate-400 leading-relaxed">
+              Advance seat reservations and IMAX laser showtimes for <strong className="text-white">{movie.title}</strong> will open closer to its official premiere date ({movie.releaseDate ? new Date(movie.releaseDate).toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' }) : '2026'}). Real showtimes will be posted once certified by cinema distributors.
+            </p>
+          </div>
+
+          <div className="flex flex-wrap items-center justify-center gap-3.5 pt-2">
+            <button
+              type="button"
+              onClick={() => setShowTrailer(true)}
+              className="inline-flex items-center gap-2 bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 text-slate-950 font-bold px-6 py-3 rounded-xl text-xs sm:text-sm shadow-lg shadow-amber-500/20 transition-all cursor-pointer"
+            >
+              <Play className="w-4 h-4 fill-current" />
+              <span>{movie.trailerKey ? 'Watch Official 4K Trailer' : 'Official Trailer Preview'}</span>
+            </button>
+            <button
+              type="button"
+              onClick={() => navigate('/')}
+              className="inline-flex items-center gap-2 bg-[#171b26] hover:bg-[#202534] border border-slate-700 text-slate-300 hover:text-white font-semibold px-5 py-3 rounded-xl text-xs sm:text-sm transition-colors cursor-pointer"
+            >
+              Browse Now Playing Movies
+            </button>
+          </div>
+        </div>
+      ) : (
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 items-start">
         {/* Auditorium Seat Map */}
         <div id="auditorium-seat-map" className="lg:col-span-2 bg-[#12151d] border border-amber-500/20 rounded-3xl p-4 sm:p-8 space-y-6 sm:space-y-8 shadow-xl shadow-black/50">
@@ -546,6 +618,7 @@ const MovieDetails = () => {
           </button>
         </div>
       </div>
+      )}
 
       {/* Verified Audience Reviews & Ratings Section */}
       <MovieReviews
