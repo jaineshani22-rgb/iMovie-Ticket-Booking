@@ -289,7 +289,7 @@ const Register = () => {
             disabled={loading}
             className="w-full bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 disabled:opacity-40 text-slate-950 font-black py-2.5 rounded-xl shadow-lg shadow-amber-500/20 transition-all text-xs sm:text-sm flex items-center justify-center gap-2 cursor-pointer"
           >
-            <span>{loading ? 'Creating VIP Membership...' : 'Create VIP Account'}</span>
+            <span>{loading ? 'Creating Account...' : 'Create Account'}</span>
             <ArrowRight className="w-4 h-4 stroke-[2.5]" />
           </button>
         </form>

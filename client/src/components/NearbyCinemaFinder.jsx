@@ -41,7 +41,8 @@ const NearbyCinemaFinder = ({ className = '', defaultExpandedCinema = true }) =>
     setState,
     setCity,
     setSelectedCinema,
-    formatPrice
+    formatPrice,
+    detectCurrentLocation
   } = useLocationContext();
 
   const [locating, setLocating] = useState(false);
@@ -66,86 +67,29 @@ const NearbyCinemaFinder = ({ className = '', defaultExpandedCinema = true }) =>
     return { dateStr, label, formatted };
   });
 
-  // Browser Geolocation API call with India preselection and reverse geocoding
-  const handleUseCurrentLocation = () => {
-    if (!navigator.geolocation) {
+  // Browser Geolocation API call with India preselection and dual IP fallback
+  const handleUseCurrentLocation = async () => {
+    try {
+      setLocating(true);
       setGeoStatus({
-        type: 'error',
-        message: 'Geolocation is not supported by your browser.'
+        type: 'info',
+        message: 'Detecting live coordinates & discovering nearest luxury auditoriums...'
       });
-      return;
-    }
-
-    setLocating(true);
-    setGeoStatus({
-      type: 'info',
-      message: 'Accessing GPS coordinates to find your nearest cinema theatres...'
-    });
-
-    navigator.geolocation.getCurrentPosition(
-      async (position) => {
-        const lat = position.coords.latitude;
-        const lng = position.coords.longitude;
-        setUserCoords({ lat, lng });
-
-        let best = findClosestLocation(lat, lng);
-
-        try {
-          const controller = new AbortController();
-          const timeoutId = setTimeout(() => controller.abort(), 2500);
-          const res = await fetch(
-            `https://nominatim.openstreetmap.org/reverse?lat=${lat}&lon=${lng}&format=json`,
-            { signal: controller.signal }
-          );
-          clearTimeout(timeoutId);
-          if (res.ok) {
-            const geoData = await res.json();
-            const addr = geoData.address || {};
-            const code = (addr.country_code || '').toUpperCase();
-            const revCity = addr.city || addr.town || addr.village || addr.suburb || best.city;
-            const revState = addr.state || best.state;
-
-            if (code === 'IN') {
-              best.country = 'IN';
-              if (revState) best.state = revState;
-              if (revCity) best.city = revCity;
-            } else if (code) {
-              const matched = LOCATION_HIERARCHY.find((c) => c.code === code);
-              if (matched) {
-                best.country = code;
-                if (revState) best.state = revState;
-                if (revCity) best.city = revCity;
-              }
-            }
-          }
-        } catch {
-          // mathematical fallback
-        }
-
-        setCountry(best.country);
-        if (best.state) setState(best.state);
-        if (best.city) setCity(best.city);
-        setLocating(false);
-
+      const detected = await detectCurrentLocation();
+      if (detected) {
         setGeoStatus({
           type: 'success',
-          message: `Location verified! Nearest cinema cluster found in ${best.city}, ${best.state} (${best.country}).`
+          message: `Live Location Verified! Nearest cinema cluster found in ${detected.city}, ${detected.state} (${detected.country}).`
         });
-      },
-      (error) => {
-        setLocating(false);
-        let errorMsg = 'Unable to retrieve your location.';
-        if (error.code === 1) {
-          errorMsg = 'Location permission denied. Please choose your country, state, and city from the selectors below.';
-        } else if (error.code === 2) {
-          errorMsg = 'Location information is currently unavailable.';
-        } else if (error.code === 3) {
-          errorMsg = 'Location request timed out. Please try again.';
-        }
-        setGeoStatus({ type: 'error', message: errorMsg });
-      },
-      { timeout: 9000, enableHighAccuracy: false, maximumAge: 300000 }
-    );
+      }
+    } catch (err) {
+      setGeoStatus({
+        type: 'error',
+        message: err.message || 'Unable to retrieve location. Please choose city manually.'
+      });
+    } finally {
+      setLocating(false);
+    }
   };
 
   // Fetch showtimes for a cinema

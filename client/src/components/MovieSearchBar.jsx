@@ -4,12 +4,12 @@ import { Search, X, Star, Film, Sparkles, ArrowRight, Loader2 } from 'lucide-rea
 import API from '../services/api';
 
 const TRENDING_SUGGESTIONS = [
-  { title: 'Laapataa Ladies', genre: 'Mystery / Drama', industry: 'Bollywood' },
-  { title: 'Ratatouille', genre: 'Animation', industry: 'Hollywood' },
-  { title: 'Drishyam', genre: 'Mystery / Crime', industry: 'Bollywood' },
-  { title: 'Shutter Island', genre: 'Mystery / Thriller', industry: 'Hollywood' },
-  { title: 'Inside Out 2', genre: 'Animation', industry: 'Hollywood' },
-  { title: 'Titanic', genre: 'Romance / Drama', industry: 'Hollywood' }
+  { title: 'Pushpa 2: The Rule', genre: 'Action / Crime', industry: 'Bollywood' },
+  { title: 'Munjya', genre: 'Horror / Comedy', industry: 'Bollywood' },
+  { title: 'Bhool Bhulaiyaa 3', genre: 'Comedy / Horror', industry: 'Bollywood' },
+  { title: 'Chhaava', genre: 'History / Action', industry: 'Bollywood' },
+  { title: 'Singham Again', genre: 'Action / Drama', industry: 'Bollywood' },
+  { title: 'Dune: Part Two', genre: 'Sci-Fi / Adventure', industry: 'Hollywood' }
 ];
 
 const MovieSearchBar = ({ className = '', onSearchSubmit }) => {

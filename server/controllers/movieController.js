@@ -140,7 +140,15 @@ exports.getMovies = async (req, res) => {
       query.rating = { $gte: Number(minRating) };
     }
     if (category && category !== 'all') {
-      query.category = category;
+      if (category === 'past') {
+        query.$or = [
+          { category: 'past' },
+          { category: 'popular' },
+          { releaseDate: { $lt: new Date('2024-01-01') } }
+        ];
+      } else {
+        query.category = category;
+      }
     }
     if (language && language !== 'All') {
       query.language = new RegExp(`^${language}$`, 'i');
@@ -154,6 +162,9 @@ exports.getMovies = async (req, res) => {
     if (sortBy === 'rating') sortObj = { rating: -1 };
     if (sortBy === 'title') sortObj = { title: 1 };
     if (sortBy === 'duration') sortObj = { duration: -1 };
+    if (sortBy === 'upcoming_first') sortObj = { releaseDate: -1 };
+    if (sortBy === 'past_first') sortObj = { releaseDate: 1 };
+    if (sortBy === 'releaseDate') sortObj = { releaseDate: -1 };
 
     const movies = await Movie.find(query).sort(sortObj);
     if (movies && movies.length > 0) {

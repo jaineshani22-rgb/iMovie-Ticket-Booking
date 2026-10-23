@@ -11,6 +11,7 @@ import MovieDetails from './pages/MovieDetails';
 import Bookings from './pages/Bookings';
 import Cinemas from './pages/Cinemas';
 import Profile from './pages/Profile';
+import Settings from './pages/Settings';
 
 const App = () => {
   return (
@@ -39,6 +40,14 @@ const App = () => {
                   element={
                     <ProtectedRoute>
                       <Profile />
+                    </ProtectedRoute>
+                  }
+                />
+                <Route
+                  path="/settings"
+                  element={
+                    <ProtectedRoute>
+                      <Settings />
                     </ProtectedRoute>
                   }
                 />

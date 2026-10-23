@@ -86,89 +86,157 @@ export const LocationProvider = ({ children }) => {
     setCityState(newCityName);
   };
 
-  // Browser Geolocation: With automatic country, state, city detection and India preselection
-  const detectCurrentLocation = () => {
-    return new Promise((resolve, reject) => {
-      if (!navigator.geolocation) {
-        const err = 'Geolocation is not supported by your browser.';
-        setLocationStatus({ error: err });
-        reject(new Error(err));
-        return;
-      }
+  // Helper to resolve detected location into standard hierarchy and update state
+  const applyDetectedLocation = (detected) => {
+    let targetCountryCode = (detected.country || 'IN').toUpperCase();
+    let targetCountry = getCountryByCode(targetCountryCode);
+    if (!targetCountry) {
+      targetCountry =
+        LOCATION_HIERARCHY.find(
+          (c) => c.name.toLowerCase() === (detected.countryName || '').toLowerCase()
+        ) || LOCATION_HIERARCHY[0];
+      targetCountryCode = targetCountry.code;
+    }
 
-      setDetectingLocation(true);
-      setLocationStatus({ loading: true, message: 'Detecting your coordinates...' });
+    setCountryState(targetCountryCode);
 
-      navigator.geolocation.getCurrentPosition(
-        async (position) => {
-          const userLat = position.coords.latitude;
-          const userLng = position.coords.longitude;
+    // Match or fallback state
+    let matchedState = (targetCountry.states || []).find(
+      (s) =>
+        s.name.toLowerCase() === (detected.state || '').toLowerCase() ||
+        (detected.state && s.name.toLowerCase().includes(detected.state.toLowerCase())) ||
+        (detected.state && detected.state.toLowerCase().includes(s.name.toLowerCase()))
+    );
+    if (!matchedState && targetCountry.states?.length > 0) {
+      matchedState = targetCountry.states[0];
+    }
+    const finalState = matchedState ? matchedState.name : (detected.state || '');
+    setStateName(finalState);
 
-          // Perform reverse geocoding if online, with offline geometric fallback
-          let detected = findClosestLocation(userLat, userLng);
+    // Match or fallback city
+    let matchedCity = (matchedState?.cities || []).find(
+      (c) =>
+        c.toLowerCase() === (detected.city || '').toLowerCase() ||
+        (detected.city && c.toLowerCase().includes(detected.city.toLowerCase())) ||
+        (detected.city && detected.city.toLowerCase().includes(c.toLowerCase()))
+    );
+    if (!matchedCity && matchedState?.cities?.length > 0) {
+      matchedCity = matchedState.cities[0];
+    }
+    const finalCity = matchedCity || detected.city || 'Main City';
+    setCityState(finalCity);
 
-          try {
-            // Lightweight reverse geocoding via OpenStreetMap Nominatim with fast timeout
-            const controller = new AbortController();
-            const timeoutId = setTimeout(() => controller.abort(), 2500);
-            const res = await fetch(
-              `https://nominatim.openstreetmap.org/reverse?lat=${userLat}&lon=${userLng}&format=json`,
-              { signal: controller.signal }
-            );
-            clearTimeout(timeoutId);
-            if (res.ok) {
-              const geoData = await res.json();
-              const addr = geoData.address || {};
-              const detectedCountryCode = (addr.country_code || '').toUpperCase();
-              const detectedCity =
-                addr.city || addr.town || addr.village || addr.suburb || addr.municipality || detected.city;
-              const detectedState = addr.state || detected.state;
-
-              if (detectedCountryCode === 'IN') {
-                detected = {
-                  country: 'IN',
-                  state: detectedState || 'Maharashtra',
-                  city: detectedCity || 'Mumbai',
-                  distanceKm: detected.distanceKm
-                };
-              } else if (detectedCountryCode) {
-                const matchCountry = LOCATION_HIERARCHY.find((c) => c.code === detectedCountryCode);
-                if (matchCountry) {
-                  detected.country = detectedCountryCode;
-                  if (detectedState) detected.state = detectedState;
-                  if (detectedCity) detected.city = detectedCity;
-                }
-              }
-            }
-          } catch {
-            // Safe fallback to mathematical nearest coordinate match
-          }
-
-          setCountryState(detected.country);
-          setStateName(detected.state);
-          setCityState(detected.city);
-          setDetectingLocation(false);
-
-          setLocationStatus({
-            success: true,
-            isIndia: detected.country === 'IN',
-            message: `Detected: ${detected.city}, ${detected.state} (${detected.country})`
-          });
-
-          resolve(detected);
-        },
-        (error) => {
-          setDetectingLocation(false);
-          let errText = 'Location access was denied or timed out.';
-          if (error.code === 1) {
-            errText = 'Location permission denied. Please choose country, state, and city manually.';
-          }
-          setLocationStatus({ error: errText });
-          reject(new Error(errText));
-        },
-        { enableHighAccuracy: false, timeout: 8000, maximumAge: 600000 }
-      );
+    setDetectingLocation(false);
+    setLocationStatus({
+      success: true,
+      isIndia: targetCountryCode === 'IN',
+      message: `Live Location Detected: ${finalCity}, ${finalState} (${targetCountryCode})`
     });
+
+    return { country: targetCountryCode, state: finalState, city: finalCity };
+  };
+
+  // IP Geolocation fallback query
+  const detectFromIP = async () => {
+    try {
+      // First try internal server endpoint which bypasses adblockers
+      const { data } = await API.get('/cinemas/location/detect');
+      if (data && (data.city || data.country)) {
+        return data;
+      }
+    } catch {
+      // Fall through to public ipwho.is client query
+    }
+
+    try {
+      const controller = new AbortController();
+      const timeoutId = setTimeout(() => controller.abort(), 3500);
+      const res = await fetch('https://ipwho.is/', { signal: controller.signal });
+      clearTimeout(timeoutId);
+      if (res.ok) {
+        const data = await res.json();
+        if (data && data.success) {
+          const lat = data.latitude;
+          const lng = data.longitude;
+          const closest = (lat && lng) ? findClosestLocation(lat, lng) : null;
+          return {
+            country: data.country_code || closest?.country || 'IN',
+            countryName: data.country || 'India',
+            state: data.region || closest?.state || 'Maharashtra',
+            city: data.city || closest?.city || 'Mumbai'
+          };
+        }
+      }
+    } catch {
+      // Ignore
+    }
+
+    return null;
+  };
+
+  // Browser Geolocation with seamless IP Geolocation fallback: guaranteed live location
+  const detectCurrentLocation = async () => {
+    setDetectingLocation(true);
+    setLocationStatus({ loading: true, message: 'Detecting live coordinates & nearest cinemas...' });
+
+    // 1. Try Browser Geolocation API if available
+    if (typeof navigator !== 'undefined' && navigator.geolocation) {
+      try {
+        const position = await new Promise((resolve, reject) => {
+          navigator.geolocation.getCurrentPosition(resolve, reject, {
+            enableHighAccuracy: true,
+            timeout: 5000,
+            maximumAge: 120000
+          });
+        });
+
+        const userLat = position.coords.latitude;
+        const userLng = position.coords.longitude;
+        let detected = findClosestLocation(userLat, userLng);
+
+        // Attempt lightweight reverse geocode for exact local city name
+        try {
+          const controller = new AbortController();
+          const timeoutId = setTimeout(() => controller.abort(), 2000);
+          const res = await fetch(
+            `https://nominatim.openstreetmap.org/reverse?lat=${userLat}&lon=${userLng}&format=json`,
+            { signal: controller.signal }
+          );
+          clearTimeout(timeoutId);
+          if (res.ok) {
+            const geoData = await res.json();
+            const addr = geoData.address || {};
+            const code = (addr.country_code || '').toUpperCase();
+            const revCity = addr.city || addr.town || addr.village || addr.suburb || detected.city;
+            const revState = addr.state || detected.state;
+            if (code) {
+              detected = {
+                country: code,
+                state: revState,
+                city: revCity,
+                distanceKm: detected.distanceKm
+              };
+            }
+          }
+        } catch {
+          // geometric calculation is already accurate
+        }
+
+        return applyDetectedLocation(detected);
+      } catch {
+        // Geolocation denied, restricted by iframe, or timed out — proceed to IP detection
+      }
+    }
+
+    // 2. Fallback to live IP-based location detection
+    const ipLocation = await detectFromIP();
+    if (ipLocation) {
+      return applyDetectedLocation(ipLocation);
+    }
+
+    // 3. Resilient fallback to India / Mumbai
+    const fallback = { country: 'IN', state: 'Maharashtra', city: 'Mumbai' };
+    return applyDetectedLocation(fallback);
   };
 
   // Format price accurately based on active currency

@@ -17,8 +17,16 @@ const MovieCard = ({ movie, onWatchTrailer }) => {
 
   return (
     <div className="group bg-[#12151d] border border-amber-500/15 hover:border-amber-500/40 rounded-2xl overflow-hidden transition-all duration-300 hover:-translate-y-1.5 flex flex-col shadow-lg shadow-black/40 hover:shadow-amber-500/5">
-      {/* Poster Image Container */}
-      <div className="relative aspect-[3/4] w-full overflow-hidden bg-[#0a0c10]">
+      {/* Poster Image Container - 100% Visible & Uncropped */}
+      <div className="relative aspect-[2/3] w-full overflow-hidden bg-[#07090e] flex items-center justify-center">
+        {/* Ambient blurred backdrop so any aspect ratio fills the frame seamlessly without harsh letterbox bars */}
+        {!imgError && (
+          <div
+            className="absolute inset-0 bg-cover bg-center blur-md opacity-30 scale-110 pointer-events-none"
+            style={{ backgroundImage: `url(${posterSrc})` }}
+          />
+        )}
+
         {!imgError ? (
           <img
             src={posterSrc}
@@ -31,10 +39,10 @@ const MovieCard = ({ movie, onWatchTrailer }) => {
               }
               setImgError(true);
             }}
-            className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500 ease-out"
+            className="relative z-10 w-full h-full object-contain group-hover:scale-[1.03] transition-transform duration-500 ease-out"
           />
         ) : (
-          <div className="w-full h-full flex flex-col items-center justify-center bg-gradient-to-br from-[#12151d] via-[#1a1f2b] to-[#0d1017] p-6 text-center space-y-3">
+          <div className="relative z-10 w-full h-full flex flex-col items-center justify-center bg-gradient-to-br from-[#12151d] via-[#1a1f2b] to-[#0d1017] p-6 text-center space-y-3">
             <div className="w-12 h-12 rounded-xl bg-amber-500/10 border border-amber-500/30 flex items-center justify-center text-amber-400">
               <Film className="w-6 h-6 stroke-[1.8]" />
             </div>
@@ -42,10 +50,8 @@ const MovieCard = ({ movie, onWatchTrailer }) => {
           </div>
         )}
 
-        <div className="absolute inset-0 bg-gradient-to-t from-[#12151d] via-[#12151d]/25 to-transparent pointer-events-none" />
-
         {/* Rating & Votes Badge */}
-        <div className="absolute top-3 right-3 bg-[#0c0e14]/90 backdrop-blur-md border border-amber-500/35 px-2.5 py-1 rounded-lg flex items-center gap-1.5 text-xs font-bold text-amber-400 shadow-lg">
+        <div className="absolute top-2.5 right-2.5 z-20 bg-[#0c0e14]/90 backdrop-blur-md border border-amber-500/35 px-2 py-0.5 rounded-lg flex items-center gap-1.5 text-xs font-bold text-amber-400 shadow-lg">
           <Star className="w-3.5 h-3.5 fill-amber-400 stroke-none" />
           <span className="font-mono tabular-nums">{movie.rating || 8.5}</span>
           {movie.votes && (
@@ -56,7 +62,7 @@ const MovieCard = ({ movie, onWatchTrailer }) => {
         </div>
 
         {/* Industry and Category Badges */}
-        <div className="absolute top-3 left-3 flex flex-col gap-1 items-start">
+        <div className="absolute top-2.5 left-2.5 z-20 flex flex-col gap-1 items-start">
           {movie.industry && (
             <span
               className={`text-[9px] uppercase font-black tracking-wider px-2 py-0.5 rounded-md shadow-md backdrop-blur-md ${
@@ -69,7 +75,7 @@ const MovieCard = ({ movie, onWatchTrailer }) => {
             </span>
           )}
           {isUpcoming && (
-            <span className="bg-gradient-to-r from-amber-400 to-amber-500 text-slate-950 font-black text-[9px] uppercase tracking-wider px-2.5 py-0.5 rounded-md shadow-lg flex items-center gap-1">
+            <span className="bg-gradient-to-r from-amber-400 to-amber-500 text-slate-950 font-black text-[9px] uppercase tracking-wider px-2 py-0.5 rounded-md shadow-lg flex items-center gap-1">
               <Calendar className="w-2.5 h-2.5" />
               Coming Soon
             </span>
@@ -85,30 +91,28 @@ const MovieCard = ({ movie, onWatchTrailer }) => {
               e.stopPropagation();
               onWatchTrailer(movie);
             }}
-            className="absolute inset-0 m-auto w-12 h-12 rounded-full bg-black/60 hover:bg-amber-500 hover:text-slate-950 text-white border border-white/20 hover:border-amber-400 flex items-center justify-center transition-all duration-200 opacity-0 group-hover:opacity-100 shadow-xl backdrop-blur-sm transform scale-90 group-hover:scale-100 cursor-pointer"
+            className="absolute inset-0 m-auto z-20 w-12 h-12 rounded-full bg-black/65 hover:bg-amber-500 hover:text-slate-950 text-white border border-white/20 hover:border-amber-400 flex items-center justify-center transition-all duration-200 opacity-0 group-hover:opacity-100 shadow-xl backdrop-blur-sm transform scale-90 group-hover:scale-100 cursor-pointer"
             title={movie.trailerKey ? "Watch Official 4K Trailer" : "View Official Trailer Status"}
           >
             <Play className="w-5 h-5 fill-current ml-0.5" />
           </button>
         )}
-
-        {/* Theater Tag */}
-        <div className="absolute bottom-3 left-3 right-3">
-          <p className="text-[11px] font-medium text-amber-400/95 flex items-center gap-1.5 drop-shadow">
-            <MapPin className="w-3 h-3 text-amber-400 shrink-0" />
-            <span className="truncate">{selectedCinema?.name || movie.theater || 'iMovies IMAX Laser'}</span>
-          </p>
-        </div>
       </div>
 
       {/* Movie Details */}
-      <div className="p-5 flex-1 flex flex-col justify-between space-y-4">
+      <div className="p-4 sm:p-5 flex-1 flex flex-col justify-between space-y-4">
         <div>
           <div className="flex items-start justify-between gap-2">
             <h3 className="text-base sm:text-lg font-bold text-white group-hover:text-amber-400 transition-colors line-clamp-1">
               {movie.title}
             </h3>
           </div>
+
+          {/* Theater Information (Moved outside the image to prevent blocking poster) */}
+          <p className="text-[11px] font-medium text-amber-400/90 flex items-center gap-1.5 mt-1 truncate">
+            <MapPin className="w-3 h-3 text-amber-400 shrink-0" />
+            <span className="truncate">{selectedCinema?.name || movie.theater || 'iMovies IMAX Laser'}</span>
+          </p>
 
           {/* Unboxed Metadata Line with Votes */}
           <div className="flex items-center gap-2 text-xs text-slate-400 mt-1.5 flex-wrap">

@@ -78,3 +78,56 @@ exports.getCinemaShowtimes = async (req, res) => {
     return res.status(500).json({ message: 'Failed to retrieve cinema showtimes', error: error.message });
   }
 };
+
+// @desc    Detect user live location based on IP with fallback
+// @route   GET /api/cinemas/location/detect
+exports.detectLocation = async (req, res) => {
+  const ip = req.headers['x-forwarded-for']?.split(',')[0]?.trim() || req.socket?.remoteAddress;
+  try {
+    const https = require('https');
+    const lookupUrl = ip && ip !== '127.0.0.1' && ip !== '::1'
+      ? `https://ipwho.is/${encodeURIComponent(ip)}`
+      : 'https://ipwho.is/';
+
+    const data = await new Promise((resolve, reject) => {
+      const request = https.get(lookupUrl, { timeout: 3000 }, (resp) => {
+        let body = '';
+        resp.on('data', (c) => (body += c));
+        resp.on('end', () => {
+          try {
+            resolve(JSON.parse(body));
+          } catch (e) {
+            reject(e);
+          }
+        });
+      });
+      request.on('error', reject);
+      request.on('timeout', () => {
+        request.destroy();
+        reject(new Error('timeout'));
+      });
+    });
+
+    if (data && data.success) {
+      return res.json({
+        country: data.country_code || 'IN',
+        countryName: data.country || 'India',
+        state: data.region || 'Maharashtra',
+        city: data.city || 'Mumbai',
+        latitude: data.latitude,
+        longitude: data.longitude
+      });
+    }
+  } catch {
+    // Graceful fallback to default India location
+  }
+
+  return res.json({
+    country: 'IN',
+    countryName: 'India',
+    state: 'Maharashtra',
+    city: 'Mumbai',
+    latitude: 19.0760,
+    longitude: 72.8777
+  });
+};

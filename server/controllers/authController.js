@@ -416,14 +416,125 @@ exports.getProfile = async (req, res) => {
       _id: user._id,
       username: user.username,
       email: user.email,
+      phone: user.phone || '',
       role: user.role,
       preferredCountry: user.preferredCountry || 'US',
       preferredCity: user.preferredCity || 'New York',
+      preferredCinema: user.preferredCinema || '',
       totalBookings: bookings.length,
       favorites: user.favorites || []
     });
   } catch (error) {
     return res.status(500).json({ message: 'Failed to retrieve profile', error: error.message });
+  }
+};
+
+// @desc    Update user profile & account settings
+// @route   PUT /api/auth/profile
+exports.updateProfile = async (req, res) => {
+  try {
+    const { username, email, phone, preferredCountry, preferredCity, preferredCinema, currentPassword, newPassword } = req.body;
+
+    let user = null;
+    let isMongo = false;
+    try {
+      user = await User.findById(req.user.id);
+      if (user) isMongo = true;
+    } catch (e) {
+      // fallback
+    }
+    if (!user) {
+      user = inMemoryStore.findUserById(req.user.id);
+    }
+    if (!user) {
+      return res.status(404).json({ message: 'User account not found' });
+    }
+
+    if (email && email.toLowerCase().trim() !== user.email.toLowerCase()) {
+      if (!isValidEmail(email)) {
+        return res.status(400).json({ message: 'Please provide a valid email address' });
+      }
+      let existingWithEmail = null;
+      try {
+        existingWithEmail = await User.findOne({ email: email.toLowerCase().trim() });
+      } catch (e) {
+        existingWithEmail = inMemoryStore.findUserByEmail(email.trim());
+      }
+      if (existingWithEmail && String(existingWithEmail._id) !== String(user._id)) {
+        return res.status(400).json({ message: 'An account with this email address already exists' });
+      }
+      user.email = email.toLowerCase().trim();
+    }
+
+    if (username && username.trim()) {
+      user.username = username.trim();
+    }
+
+    if (phone !== undefined) {
+      user.phone = String(phone).trim();
+    }
+
+    if (preferredCountry) {
+      user.preferredCountry = preferredCountry;
+    }
+
+    if (preferredCity) {
+      user.preferredCity = preferredCity;
+    }
+
+    if (preferredCinema) {
+      user.preferredCinema = preferredCinema;
+    }
+
+    if (newPassword) {
+      if (typeof newPassword !== 'string' || newPassword.length < 6) {
+        return res.status(400).json({ message: 'New password must be at least 6 characters long' });
+      }
+      if (!currentPassword) {
+        return res.status(400).json({ message: 'Please provide your current password to update password' });
+      }
+      const isMatch = await bcrypt.compare(currentPassword, user.password);
+      if (!isMatch) {
+        return res.status(400).json({ message: 'Current password does not match' });
+      }
+      const salt = await bcrypt.genSalt(10);
+      user.password = await bcrypt.hash(newPassword, salt);
+    }
+
+    if (isMongo) {
+      await user.save();
+    }
+
+    inMemoryStore.updateUser(req.user.id, {
+      username: user.username,
+      email: user.email,
+      phone: user.phone,
+      preferredCountry: user.preferredCountry,
+      preferredCity: user.preferredCity,
+      preferredCinema: user.preferredCinema,
+      password: user.password
+    });
+
+    const updatedUser = {
+      _id: user._id,
+      username: user.username,
+      email: user.email,
+      phone: user.phone || '',
+      role: user.role,
+      preferredCountry: user.preferredCountry || 'US',
+      preferredCity: user.preferredCity || 'New York',
+      preferredCinema: user.preferredCinema || ''
+    };
+
+    const token = generateToken(updatedUser);
+
+    return res.status(200).json({
+      message: 'Account details successfully updated',
+      user: updatedUser,
+      token
+    });
+  } catch (error) {
+    return res.status(500).json({ message: 'Failed to update account details', error: error.message });
   }
 };
 
