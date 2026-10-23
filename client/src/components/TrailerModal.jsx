@@ -37,11 +37,9 @@ const TrailerModal = ({ isOpen, onClose, trailerKey, title, isComingSoon }) => {
   )}`;
   const youtubeWatchUrl = videoId ? `https://www.youtube.com/watch?v=${videoId}` : searchUrl;
 
-  // Use YouTube standard privacy-enhanced embed URL
+  // Use YouTube standard embed without restrictive origin parameters that cause video unavailable errors
   const embedUrl = videoId
-    ? `https://www.youtube-nocookie.com/embed/${videoId}?autoplay=1&rel=0&modestbranding=1&enablejsapi=1&origin=${encodeURIComponent(
-        typeof window !== 'undefined' ? window.location.origin : 'http://localhost:3000'
-      )}`
+    ? `https://www.youtube.com/embed/${videoId}?autoplay=1&rel=0&playsinline=1`
     : null;
 
   return (
@@ -97,6 +95,25 @@ const TrailerModal = ({ isOpen, onClose, trailerKey, title, isComingSoon }) => {
             </button>
           </div>
         </div>
+
+        {/* Notice Bar for Embed Restrictions */}
+        {videoId && (
+          <div className="bg-[#181216] border-b border-rose-500/20 px-4 py-2 flex items-center justify-between text-xs text-rose-300">
+            <span className="flex items-center gap-1.5 truncate">
+              <AlertTriangle className="w-3.5 h-3.5 text-amber-400 shrink-0" />
+              <span>If player shows "Video unavailable", studio restricts embedding:</span>
+            </span>
+            <a
+              href={youtubeWatchUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded bg-red-600 hover:bg-red-500 text-white font-bold text-[11px] shrink-0 ml-2 shadow transition-colors"
+            >
+              <Play className="w-3 h-3 fill-white" />
+              <span>Watch on YouTube ↗</span>
+            </a>
+          </div>
+        )}
 
         {/* Video Player or Fallback View */}
         <div className="relative aspect-video w-full bg-black flex items-center justify-center overflow-hidden">

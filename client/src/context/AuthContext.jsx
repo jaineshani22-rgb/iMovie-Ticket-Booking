@@ -76,6 +76,25 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
+  const updateProfile = async (profileData) => {
+    const { data } = await API.put('/auth/profile', profileData);
+    if (data.token) {
+      localStorage.setItem('token', data.token);
+    }
+    if (data.user) {
+      setUser((prev) => {
+        const updated = {
+          ...prev,
+          ...data.user,
+          token: data.token || prev?.token
+        };
+        localStorage.setItem('user', JSON.stringify(updated));
+        return updated;
+      });
+    }
+    return data;
+  };
+
   const logout = () => {
     localStorage.removeItem('token');
     localStorage.removeItem('user');
@@ -93,6 +112,7 @@ export const AuthProvider = ({ children }) => {
         resetPassword,
         googleLogin,
         updateUserLocation,
+        updateProfile,
         logout
       }}
     >

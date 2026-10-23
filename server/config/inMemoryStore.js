@@ -260,26 +260,28 @@ const INITIAL_MOVIES = [
   {
     _id: '65f1b0000000000000000101',
     title: 'Udta Teer',
+    aliases: ['UdtaTeer', 'Udta Teer 2026', 'Ayushmann Khurrana Udta Teer'],
     industry: 'Bollywood',
     description:
-      'A sharp satirical comedy-drama unraveling how a reckless mishap in a small town spirals into an extraordinary chain of political chaos, underground intrigues, and unheralded local heroes.',
-    genre: ['Comedy', 'Drama', 'Action'],
+      'A high-energy Bollywood spy-comedy following Vikrant Thapar, a memory-losing counter-terrorism agent who mistakenly gets embroiled in an exhilarating whirlwind of cross-border espionage intrigues, high-stakes missions, and situational comedy alongside fearless agent Yamini.',
+    genre: ['Action', 'Comedy', 'Spy', 'Thriller'],
     duration: 138,
-    posterUrl: 'https://images.unsplash.com/photo-1517604931442-7e0c8ed2963c?w=780&auto=format&fit=crop&q=80',
-    backdropUrl: 'https://images.unsplash.com/photo-1489599849927-2ee91cede3ba?w=1280&auto=format&fit=crop&q=80',
-    releaseDate: '2025-06-20T00:00:00.000Z',
-    ticketPrice: 310,
+    posterUrl: 'https://img.youtube.com/vi/hN_ZUElLH44/maxresdefault.jpg',
+    backdropUrl: 'https://img.youtube.com/vi/hN_ZUElLH44/maxresdefault.jpg',
+    releaseDate: '2026-10-23T00:00:00.000Z',
+    ticketPrice: 350,
     theater: 'iMovies PVR ICON Lower Parel',
-    rating: 8.5,
-    votes: 38200,
+    rating: 8.8,
+    votes: 48200,
     language: 'Hindi',
-    trailerKey: '',
-    director: 'Vishal Bhardwaj',
+    trailerKey: 'hN_ZUElLH44',
+    director: 'Akash A. Kaushik',
     category: 'now_playing',
     cast: [
-      { name: 'Jaideep Ahlawat', character: 'Inspector Rathore', profileUrl: 'https://image.tmdb.org/t/p/w185/jaideep.jpg' },
-      { name: 'Abhishek Banerjee', character: 'Munna', profileUrl: 'https://image.tmdb.org/t/p/w185/abhishek.jpg' },
-      { name: 'Kritika Kamra', character: 'Suhani', profileUrl: 'https://image.tmdb.org/t/p/w185/kritika.jpg' }
+      { name: 'Ayushmann Khurrana', character: 'Vikrant Thapar', profileUrl: 'https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?w=185&auto=format&fit=crop&q=80' },
+      { name: 'Sara Ali Khan', character: 'Yamini', profileUrl: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=185&auto=format&fit=crop&q=80' },
+      { name: 'Jaideep Ahlawat', character: 'Rathore', profileUrl: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=185&auto=format&fit=crop&q=80' },
+      { name: 'Bhuvan Bam', character: 'Special Appearance', profileUrl: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=185&auto=format&fit=crop&q=80' }
     ],
     showtimes: ['10:45 AM', '02:15 PM', '06:15 PM', '09:30 PM'],
     countryAvailability: ['US', 'GB', 'IN', 'CA', 'AU', 'DE', 'JP', 'SG', 'AE']
@@ -315,30 +317,32 @@ const INITIAL_MOVIES = [
   {
     _id: '65f1b0000000000000000103',
     title: 'Hanuman Ansh',
+    aliases: ['Hanumaan Ansh', 'Hanuman Ansh 2026', 'Neem Karoli Baba', 'Baba Neeb Karori'],
     industry: 'Bollywood',
     description:
-      'A 2026 Hindi devotional biographical drama celebrating the sacred life, profound teachings, and timeless spiritual compassion of revered saint Neem Karoli Baba, capturing his guidance to disciples and seekers worldwide.',
+      'A 2026 biographical devotional drama honoring the sacred life, miracles, and compassionate spiritual journey of revered saint Neem Karoli Baba (Baba Neeb Karori). Witness his inspiring path from his early search for divine truth to his timeless global legacy of unconditional love, selfless service, and spiritual guidance.',
     genre: ['Biography', 'Drama', 'History', 'Devotional'],
     duration: 148,
-    posterUrl: 'https://images.unsplash.com/photo-1544717305-2782549b5136?w=780&auto=format&fit=crop&q=80',
-    backdropUrl: 'https://images.unsplash.com/photo-1519817650390-64a93db51149?w=1280&auto=format&fit=crop&q=80',
+    posterUrl: 'https://img.youtube.com/vi/YyqWmKgHupk/hqdefault.jpg',
+    backdropUrl: 'https://img.youtube.com/vi/YyqWmKgHupk/hqdefault.jpg',
     releaseDate: '2026-09-18T00:00:00.000Z',
     ticketPrice: 350,
     theater: 'iMovies Directors Cut Vasant Kunj',
     rating: 9.3,
     votes: 96400,
     language: 'Hindi',
-    trailerKey: '',
+    trailerKey: 'YyqWmKgHupk',
     director: 'Vishal Chaturvedi',
-    category: 'upcoming',
+    category: 'now_playing',
     cast: [
-      { name: 'Shobhinaw Satyaa', character: 'Neem Karoli Baba', profileUrl: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=185&auto=format&fit=crop&q=80' },
-      { name: 'Vihaan Shedge', character: 'Young Disciple', profileUrl: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=185&auto=format&fit=crop&q=80' },
-      { name: 'Chandan Anand', character: 'Pandit Ramdas', profileUrl: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=185&auto=format&fit=crop&q=80' },
-      { name: 'Purnima Tiwari', character: 'Savitri Devi', profileUrl: 'https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=185&auto=format&fit=crop&q=80' },
-      { name: 'Anil Rastogi', character: 'Mahant Ji', profileUrl: 'https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?w=185&auto=format&fit=crop&q=80' }
+      { name: 'Shobhinaw Satyaa', character: 'Baba Neeb Karori / Neem Karoli Baba', profileUrl: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=185&auto=format&fit=crop&q=80' },
+      { name: 'Chandan Anand', character: 'Dr. Ram Nandan Bhosale', profileUrl: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=185&auto=format&fit=crop&q=80' },
+      { name: 'Purnima Tiwari', character: 'Ram Dulari', profileUrl: 'https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=185&auto=format&fit=crop&q=80' },
+      { name: 'Anil Rastogi', character: 'Mahantji', profileUrl: 'https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?w=185&auto=format&fit=crop&q=80' },
+      { name: 'Vihaan Shedge', character: 'Young Maharaj Ji', profileUrl: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=185&auto=format&fit=crop&q=80' },
+      { name: 'Gulshan Pandey', character: 'Inspector Dharam Singh', profileUrl: 'https://images.unsplash.com/photo-1522075469751-3a6694fb2f61?w=185&auto=format&fit=crop&q=80' }
     ],
-    showtimes: [],
+    showtimes: ['10:15 AM', '01:45 PM', '05:30 PM', '08:45 PM'],
     countryAvailability: ['US', 'GB', 'IN', 'CA', 'AU', 'DE', 'JP', 'SG', 'AE']
   },
   {
@@ -397,28 +401,31 @@ const INITIAL_MOVIES = [
   {
     _id: '65f1b0000000000000000106',
     title: 'Nayi Naveli',
+    aliases: ['Nayyi Navelli', 'Nayi Naveli 2026', 'Yami Gautam Nayi Naveli'],
     industry: 'Bollywood',
     description:
-      'A heartwarming, progressive family drama following a spirited newlywed who turns a traditional rural household upside down with infectious warmth, humor, and courageous modern ideals.',
-    genre: ['Drama', 'Comedy', 'Romance'],
+      'A hilarious comedy-horror spectacle starring Yami Gautam as Mohini. When an unsuspecting newlywed bride arrives at an enigmatic ancestral estate, a cascade of quirky supernatural hauntings, eccentric village folklore, and laugh-out-loud spectral encounters turn everything upside down.',
+    genre: ['Comedy', 'Horror', 'Drama'],
     duration: 134,
-    posterUrl: 'https://images.unsplash.com/photo-1529156069898-49953e39b3ac?w=780&auto=format&fit=crop&q=80',
-    backdropUrl: 'https://images.unsplash.com/photo-1511285560929-80b456fea0bc?w=1280&auto=format&fit=crop&q=80',
-    releaseDate: '2024-10-10T00:00:00.000Z',
-    ticketPrice: 280,
+    posterUrl: 'https://img.youtube.com/vi/NPkMecGOxDc/maxresdefault.jpg',
+    backdropUrl: 'https://img.youtube.com/vi/NPkMecGOxDc/maxresdefault.jpg',
+    releaseDate: '2026-05-15T00:00:00.000Z',
+    ticketPrice: 320,
     theater: 'iMovies INOX Megaplex Malad',
-    rating: 8.3,
-    votes: 29800,
+    rating: 8.8,
+    votes: 68400,
     language: 'Hindi',
-    trailerKey: '',
-    director: 'Kiran Rao',
+    trailerKey: 'NPkMecGOxDc',
+    director: 'Balaji Mohan',
     category: 'now_playing',
     cast: [
-      { name: 'Pratibha Ranta', character: 'Jaya', profileUrl: 'https://image.tmdb.org/t/p/w185/pratibha.jpg' },
-      { name: 'Sparsh Shrivastava', character: 'Deepak', profileUrl: 'https://image.tmdb.org/t/p/w185/sparsh.jpg' },
-      { name: 'Nitanshi Goel', character: 'Phool', profileUrl: 'https://image.tmdb.org/t/p/w185/nitanshi.jpg' }
+      { name: 'Yami Gautam', character: 'Mohini', profileUrl: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=185&auto=format&fit=crop&q=80' },
+      { name: 'Adinath Kothare', character: 'Rohan', profileUrl: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=185&auto=format&fit=crop&q=80' },
+      { name: 'Sunita Rajwar', character: 'Mausi Ji', profileUrl: 'https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=185&auto=format&fit=crop&q=80' },
+      { name: 'Sushmita Mukherjee', character: 'Dadi', profileUrl: 'https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=185&auto=format&fit=crop&q=80' },
+      { name: 'Mita Vashisht', character: 'Amma', profileUrl: 'https://images.unsplash.com/photo-1580489944761-15a19d654956?w=185&auto=format&fit=crop&q=80' }
     ],
-    showtimes: ['10:15 AM', '01:30 PM', '05:15 PM', '08:45 PM'],
+    showtimes: ['11:00 AM', '02:30 PM', '06:00 PM', '09:15 PM'],
     countryAvailability: ['US', 'GB', 'IN', 'CA', 'AU', 'DE', 'JP', 'SG', 'AE']
   },
   {
@@ -989,7 +996,7 @@ const INITIAL_MOVIES = [
     theater: 'iMovies INOX Megaplex Malad',
     rating: 8.5,
     language: 'Hindi',
-    trailerKey: '_AHfZvh_1gA',
+    trailerKey: 'vqu4zbi42us',
     director: 'Amar Kaushik',
     category: 'now_playing',
     cast: [
@@ -1166,16 +1173,17 @@ const INITIAL_MOVIES = [
       'Rooh Baba travels to the royal kingdom of Raktaghat in Bengal, where he encounters two menacing spirits claiming to be the real Manjulika.',
     genre: ['Comedy', 'Horror', 'Mystery'],
     duration: 158,
-    posterUrl: 'https://image.tmdb.org/t/p/w780/q8g7v1.jpg',
-    backdropUrl: 'https://image.tmdb.org/t/p/w1280/bb3backdrop.jpg',
+    posterUrl: 'https://upload.wikimedia.org/wikipedia/en/e/e4/Bhool_Bhulaiyaa_3_poster.jpg',
+    backdropUrl: 'https://img.youtube.com/vi/kN-ScVqz0wU/maxresdefault.jpg',
     releaseDate: '2024-11-01T00:00:00.000Z',
     ticketPrice: 330,
     theater: 'iMovies INOX Megaplex Malad',
-    rating: 8.2,
+    rating: 8.3,
+    votes: 92000,
     language: 'Hindi',
-    trailerKey: 'dGgD-HwS6p0',
+    trailerKey: 'kN-ScVqz0wU',
     director: 'Anees Bazmee',
-    category: 'upcoming',
+    category: 'now_playing',
     cast: [
       { name: 'Kartik Aaryan', character: 'Rooh Baba / Ruhaan', profileUrl: 'https://image.tmdb.org/t/p/w185/kartik.jpg' },
       { name: 'Vidya Balan', character: 'Manjulika', profileUrl: 'https://image.tmdb.org/t/p/w185/vidya.jpg' },
@@ -1753,7 +1761,7 @@ const INITIAL_MOVIES = [
     theater: 'PVR ICON Gold Screen 2',
     rating: 7.8,
     language: 'Hindi',
-    trailerKey: '_AHfZvh_1gA',
+    trailerKey: 'g_8kK8s_B1w',
     director: 'Soumitra Ranade',
     category: 'popular',
     cast: [
@@ -1858,7 +1866,7 @@ const INITIAL_MOVIES = [
     theater: 'PVR ICON Gold Lounge',
     rating: 8.0,
     language: 'Hindi',
-    trailerKey: '_AHfZvh_1gA',
+    trailerKey: 'kY3Su_k-W1c',
     director: 'Imtiaz Ali',
     category: 'popular',
     cast: [
@@ -2105,29 +2113,61 @@ const INITIAL_MOVIES = [
     countryAvailability: ['US', 'GB', 'IN', 'CA', 'AU', 'DE', 'JP', 'SG', 'AE']
   },
   {
-    _id: '65f1b000000000000000003b',
-    title: 'Chandu Champion',
+    _id: '65f1b0000000000000000091',
+    title: 'Pushpa 2: The Rule',
+    aliases: ['Pushpa 2', 'Pushpa The Rule', 'Allu Arjun Pushpa 2'],
     industry: 'Bollywood',
     description:
-      'The extraordinary real-life story of Murlikant Petkar, India’s first Paralympic gold medalist who triumphed through wars, bullet wounds, and sheer indomitable spirit.',
-    genre: ['Biography', 'Sports', 'Drama', 'War'],
-    duration: 143,
-    posterUrl: 'https://image.tmdb.org/t/p/w780/t6S6e5XfXk5L0g3y6T7m9p2c0bA.jpg',
-    backdropUrl: 'https://image.tmdb.org/t/p/w1280/mQvK8jL7p8b2c4e6a8r0t2y5.jpg',
-    releaseDate: '2024-06-14T00:00:00.000Z',
-    ticketPrice: 290,
-    theater: 'PVR P[XL] Audi 1',
-    rating: 8.1,
+      'Pushpa Raj consolidates his syndicate rule across the red sandalwood empire while locked in an escalating, explosive psychological and physical war against fearless SP Bhanwar Singh Shekhawat.',
+    genre: ['Action', 'Crime', 'Drama', 'Thriller'],
+    duration: 200,
+    posterUrl: 'https://upload.wikimedia.org/wikipedia/en/1/11/Pushpa_2-_The_Rule.jpg',
+    backdropUrl: 'https://img.youtube.com/vi/1kVK0MZlbI4/maxresdefault.jpg',
+    releaseDate: '2024-12-05T00:00:00.000Z',
+    ticketPrice: 380,
+    theater: 'iMovies PVR ICON Lower Parel',
+    rating: 9.2,
+    votes: 185000,
     language: 'Hindi',
-    trailerKey: 'IBda9F3hM7U',
-    director: 'Kabir Khan',
+    trailerKey: '1kVK0MZlbI4',
+    director: 'Sukumar',
     category: 'now_playing',
     cast: [
-      { name: 'Kartik Aaryan', character: 'Murlikant Petkar', profileUrl: 'https://image.tmdb.org/t/p/w185/kartik.jpg' },
-      { name: 'Vijay Raaz', character: 'Tiger Ali (Coach)', profileUrl: 'https://image.tmdb.org/t/p/w185/vijayraaz.jpg' },
-      { name: 'Bhuvan Arora', character: 'Garnail Singh', profileUrl: 'https://image.tmdb.org/t/p/w185/bhuvan.jpg' }
+      { name: 'Allu Arjun', character: 'Pushpa Raj', profileUrl: 'https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?w=185&auto=format&fit=crop&q=80' },
+      { name: 'Rashmika Mandanna', character: 'Srivalli', profileUrl: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=185&auto=format&fit=crop&q=80' },
+      { name: 'Fahadh Faasil', character: 'SP Bhanwar Singh Shekhawat', profileUrl: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=185&auto=format&fit=crop&q=80' },
+      { name: 'Sunil', character: 'Mangalam Srinu', profileUrl: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=185&auto=format&fit=crop&q=80' }
     ],
-    showtimes: ['12:00 PM', '03:45 PM', '07:15 PM', '10:15 PM'],
+    showtimes: ['10:15 AM', '02:00 PM', '06:15 PM', '10:00 PM'],
+    countryAvailability: ['US', 'GB', 'IN', 'CA', 'AU', 'DE', 'JP', 'SG', 'AE']
+  },
+  {
+    _id: '65f1b0000000000000000092',
+    title: 'Chhaava',
+    aliases: ['Chhava', 'Chhatrapati Sambhaji Maharaj', 'Vicky Kaushal Chhaava'],
+    industry: 'Bollywood',
+    description:
+      'A monumental historical spectacle chronicling the fearless valor, military brilliance, and heroic sacrifice of Chhatrapati Sambhaji Maharaj, the lionhearted Maratha ruler and son of Shivaji Maharaj.',
+    genre: ['History', 'Action', 'Drama', 'Biography'],
+    duration: 165,
+    posterUrl: 'https://upload.wikimedia.org/wikipedia/en/7/75/Chhaava_film_poster.jpg',
+    backdropUrl: 'https://img.youtube.com/vi/F6dGg2JX8Lc/maxresdefault.jpg',
+    releaseDate: '2025-02-14T00:00:00.000Z',
+    ticketPrice: 350,
+    theater: 'iMovies Lincoln Square IMAX',
+    rating: 9.4,
+    votes: 120000,
+    language: 'Hindi',
+    trailerKey: 'F6dGg2JX8Lc',
+    director: 'Laxman Utekar',
+    category: 'now_playing',
+    cast: [
+      { name: 'Vicky Kaushal', character: 'Chhatrapati Sambhaji Maharaj', profileUrl: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=185&auto=format&fit=crop&q=80' },
+      { name: 'Rashmika Mandanna', character: 'Yesubai Bhonsale', profileUrl: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=185&auto=format&fit=crop&q=80' },
+      { name: 'Akshaye Khanna', character: 'Aurangzeb', profileUrl: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=185&auto=format&fit=crop&q=80' },
+      { name: 'Ashutosh Rana', character: 'Hambirrao Mohite', profileUrl: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=185&auto=format&fit=crop&q=80' }
+    ],
+    showtimes: ['11:00 AM', '02:30 PM', '06:15 PM', '09:45 PM'],
     countryAvailability: ['US', 'GB', 'IN', 'CA', 'AU', 'DE', 'JP', 'SG', 'AE']
   },
   {
@@ -2427,23 +2467,25 @@ const INITIAL_MOVIES = [
     title: 'Munjya',
     industry: 'Bollywood',
     description:
-      'A young man returns to his ancestral Konkan village and inadvertently releases a vengeful spirit named Munjya obsessed with finding a bride.',
+      'A young man returns to his ancestral Konkan village and inadvertently releases a vengeful spirit named Munjya obsessed with finding a bride. Directed by Aditya Sarpotdar and starring Sharvari, Abhay Verma, and Mona Singh.',
     genre: ['Horror', 'Comedy', 'Mystery'],
     duration: 123,
-    posterUrl: 'https://image.tmdb.org/t/p/w780/u6W6rK4v0a8b7c2d5e6f1g3h8j9.jpg',
-    backdropUrl: 'https://image.tmdb.org/t/p/w1280/8pjWFs9bZtgoh5qK4dYcK7bMlhR.jpg',
+    posterUrl: 'https://upload.wikimedia.org/wikipedia/en/3/39/Munjya_2024.jpg',
+    backdropUrl: 'https://img.youtube.com/vi/OAhD_mgWQ_U/maxresdefault.jpg',
     releaseDate: '2024-06-07T00:00:00.000Z',
-    ticketPrice: 270,
-    theater: 'PVR INOX Screen 4',
-    rating: 7.2,
+    ticketPrice: 280,
+    theater: 'iMovies INOX Megaplex Malad',
+    rating: 8.2,
+    votes: 78500,
     language: 'Hindi',
-    trailerKey: 'hQ6X8Zz_qQw',
+    trailerKey: 'OAhD_mgWQ_U',
     director: 'Aditya Sarpotdar',
     category: 'now_playing',
     cast: [
-      { name: 'Abhay Verma', character: 'Bittu', profileUrl: 'https://image.tmdb.org/t/p/w185/abhay.jpg' },
-      { name: 'Sharvari Wagh', character: 'Bela', profileUrl: 'https://image.tmdb.org/t/p/w185/sharvari.jpg' },
-      { name: 'Mona Singh', character: 'Pammi (Bittu’s Mother)', profileUrl: 'https://image.tmdb.org/t/p/w185/monasingh.jpg' }
+      { name: 'Sharvari Wagh', character: 'Bela', profileUrl: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=185&auto=format&fit=crop&q=80' },
+      { name: 'Abhay Verma', character: 'Bittu', profileUrl: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=185&auto=format&fit=crop&q=80' },
+      { name: 'Mona Singh', character: 'Pammi (Bittu’s Mother)', profileUrl: 'https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=185&auto=format&fit=crop&q=80' },
+      { name: 'Sathyaraj', character: 'Elvis Karim Prabhakar', profileUrl: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=185&auto=format&fit=crop&q=80' }
     ],
     showtimes: ['01:30 PM', '04:45 PM', '08:00 PM', '10:45 PM'],
     countryAvailability: ['US', 'GB', 'IN', 'CA', 'AU', 'DE', 'JP', 'SG', 'AE']
@@ -2489,7 +2531,7 @@ const INITIAL_MOVIES = [
     theater: 'BFI Southbank Screen 2',
     rating: 8.4,
     language: 'English',
-    trailerKey: 'S014445HN24',
+    trailerKey: 'erUkT4y5_8Y',
     director: 'Stanley Kubrick',
     category: 'popular',
     cast: [
@@ -2666,21 +2708,22 @@ const INITIAL_MOVIES = [
       'DCP Bajirao Singham unites with DCP Veer Sooryavanshi, Sangram Bhalerao, and Lady Singham Shakti Shetty in an explosive cinematic universe showdown.',
     genre: ['Action', 'Drama', 'Crime'],
     duration: 154,
-    posterUrl: 'https://image.tmdb.org/t/p/w780/nQG1U3zJ2Bf1pWf2c0iPzK2y5aX.jpg',
-    backdropUrl: 'https://image.tmdb.org/t/p/w1280/mQvK8jL7p8b2c4e6a8r0t2y5.jpg',
+    posterUrl: 'https://upload.wikimedia.org/wikipedia/en/0/04/Singham_Again_poster.jpg',
+    backdropUrl: 'https://img.youtube.com/vi/MD7v0-igVIM/maxresdefault.jpg',
     releaseDate: '2024-11-01T00:00:00.000Z',
     ticketPrice: 300,
-    theater: 'PVR ICON Gold Screen 1',
-    rating: 7.3,
+    theater: 'iMovies PVR ICON Lower Parel',
+    rating: 8.1,
+    votes: 86000,
     language: 'Hindi',
-    trailerKey: 'COv52Qyctws',
+    trailerKey: 'MD7v0-igVIM',
     director: 'Rohit Shetty',
     category: 'now_playing',
     cast: [
-      { name: 'Ajay Devgn', character: 'DCP Bajirao Singham', profileUrl: 'https://image.tmdb.org/t/p/w185/ajaydevgn.jpg' },
-      { name: 'Kareena Kapoor', character: 'Avni Kamat', profileUrl: 'https://image.tmdb.org/t/p/w185/kareena.jpg' },
-      { name: 'Ranveer Singh', character: 'Sangram Bhalerao (Simmba)', profileUrl: 'https://image.tmdb.org/t/p/w185/ranveer.jpg' },
-      { name: 'Akshay Kumar', character: 'DCP Veer Sooryavanshi', profileUrl: 'https://image.tmdb.org/t/p/w185/akshay.jpg' }
+      { name: 'Ajay Devgn', character: 'DCP Bajirao Singham', profileUrl: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=185&auto=format&fit=crop&q=80' },
+      { name: 'Kareena Kapoor', character: 'Avni Kamat', profileUrl: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=185&auto=format&fit=crop&q=80' },
+      { name: 'Ranveer Singh', character: 'Sangram Bhalerao (Simmba)', profileUrl: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=185&auto=format&fit=crop&q=80' },
+      { name: 'Akshay Kumar', character: 'DCP Veer Sooryavanshi', profileUrl: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=185&auto=format&fit=crop&q=80' }
     ],
     showtimes: ['10:45 AM', '02:00 PM', '05:30 PM', '09:00 PM'],
     countryAvailability: ['US', 'GB', 'IN', 'CA', 'AU', 'DE', 'JP', 'SG', 'AE']
@@ -2704,7 +2747,7 @@ const INITIAL_MOVIES = [
     theater: 'Cinepolis Heritage Screen',
     rating: 8.2,
     language: 'Hindi',
-    trailerKey: 'Cv4D8C4yKlo',
+    trailerKey: 'mEsmY5o53g8',
     director: 'Priyadarshan',
     category: 'popular',
     cast: [
@@ -4464,7 +4507,7 @@ const INITIAL_MOVIES = [
     "theater": "PVR INOX Palladium",
     "rating": 7.8,
     "language": "Hindi",
-    "trailerKey": "Cv4D8C4yKlo",
+    "trailerKey": "cR3Qy9Yg2bQ",
     "director": "Sajid Ali",
     "category": "popular",
     "cast": [
@@ -5419,7 +5462,14 @@ class InMemoryStore {
     }
 
     if (category && category !== 'all') {
-      list = list.filter((m) => m.category === category);
+      if (category === 'past') {
+        list = list.filter((m) => {
+          const relYear = m.releaseDate ? new Date(m.releaseDate).getFullYear() : 2020;
+          return m.category === 'past' || m.category === 'popular' || relYear < 2024;
+        });
+      } else {
+        list = list.filter((m) => m.category === category);
+      }
     }
 
     if (language && language !== 'All') {
@@ -5431,7 +5481,18 @@ class InMemoryStore {
     }
 
     // Sorting logic
-    if (sortBy === 'genre') {
+    if (sortBy === 'upcoming_first') {
+      list.sort((a, b) => {
+        const isUpA = a.category === 'upcoming' ? 1 : 0;
+        const isUpB = b.category === 'upcoming' ? 1 : 0;
+        if (isUpA !== isUpB) return isUpB - isUpA;
+        return new Date(b.releaseDate) - new Date(a.releaseDate);
+      });
+    } else if (sortBy === 'past_first') {
+      list.sort((a, b) => new Date(a.releaseDate) - new Date(b.releaseDate));
+    } else if (sortBy === 'releaseDate') {
+      list.sort((a, b) => new Date(b.releaseDate) - new Date(a.releaseDate));
+    } else if (sortBy === 'genre') {
       // Sort alphabetically by the primary genre
       list.sort((a, b) => {
         const genreA = (a.genre && a.genre[0]) || '';
@@ -5446,8 +5507,6 @@ class InMemoryStore {
       list.sort((a, b) => (b.duration || 0) - (a.duration || 0));
     } else if (sortBy === 'price_low') {
       list.sort((a, b) => (a.ticketPrice || 0) - (b.ticketPrice || 0));
-    } else if (sortBy === 'releaseDate') {
-      list.sort((a, b) => new Date(b.releaseDate) - new Date(a.releaseDate));
     }
 
     return list;

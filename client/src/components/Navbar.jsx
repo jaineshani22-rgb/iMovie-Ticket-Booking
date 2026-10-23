@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
-import { Film, Ticket, LogOut, User, Crown, Globe, Building, Search } from 'lucide-react';
+import { Film, Ticket, LogOut, User, Crown, Globe, Building, Search, Compass, Settings } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import { useLocationContext } from '../context/LocationContext';
 import LocationPickerModal from './LocationPickerModal';
@@ -8,7 +8,7 @@ import MovieSearchBar from './MovieSearchBar';
 
 const Navbar = () => {
   const { user, logout } = useAuth();
-  const { country, state, city, activeCountry } = useLocationContext();
+  const { country, state, city, activeCountry, detectCurrentLocation, detectingLocation } = useLocationContext();
   const navigate = useNavigate();
   const location = useLocation();
 
@@ -103,6 +103,23 @@ const Navbar = () => {
               <Search className="w-4 h-4" />
             </button>
 
+            {/* Quick Live Location Button */}
+            <button
+              type="button"
+              onClick={async () => {
+                try {
+                  await detectCurrentLocation();
+                } catch (e) {
+                  console.error(e);
+                }
+              }}
+              disabled={detectingLocation}
+              title="Fetch live location automatically"
+              className="w-8 h-8 rounded-xl bg-[#141822] hover:bg-[#1c2230] border border-[#00F2FE]/30 text-[#00F2FE] hover:text-white flex items-center justify-center transition-all shadow-sm cursor-pointer disabled:opacity-50"
+            >
+              <Compass className={`w-3.5 h-3.5 ${detectingLocation ? 'animate-spin' : ''}`} />
+            </button>
+
             {/* Worldwide Location Selector Pill */}
             <button
               type="button"
@@ -120,10 +137,11 @@ const Navbar = () => {
             </button>
 
             {user ? (
-              <div className="flex items-center gap-2">
+              <div className="flex items-center gap-1.5 sm:gap-2">
                 <Link
                   to="/profile"
                   className="flex items-center gap-1.5 sm:gap-2 text-xs text-slate-200 bg-[#161a23] hover:bg-[#1f2431] border border-amber-500/20 px-2.5 sm:px-3 py-1.5 rounded-xl shadow-sm transition-colors"
+                  title="View Profile"
                 >
                   {user.role === 'admin' ? (
                     <Crown className="w-3.5 h-3.5 text-amber-400 shrink-0" />
@@ -135,10 +153,19 @@ const Navbar = () => {
                   </span>
                 </Link>
 
+                <Link
+                  to="/settings"
+                  title="Account Settings"
+                  aria-label="Account Settings"
+                  className="w-8 h-8 sm:w-9 sm:h-9 flex items-center justify-center rounded-xl text-slate-300 hover:text-amber-400 bg-[#161a23] hover:bg-[#1f2431] border border-amber-500/20 transition-colors"
+                >
+                  <Settings className="w-4 h-4" />
+                </Link>
+
                 <button
                   onClick={handleLogout}
                   title="Sign out of account"
-                  className="w-8 h-8 sm:w-9 sm:h-9 flex items-center justify-center rounded-xl text-slate-400 hover:text-amber-400 hover:bg-[#161a23] transition-colors"
+                  className="w-8 h-8 sm:w-9 sm:h-9 flex items-center justify-center rounded-xl text-slate-400 hover:text-amber-400 hover:bg-[#161a23] transition-colors cursor-pointer"
                 >
                   <LogOut className="w-4 h-4" />
                 </button>
@@ -147,15 +174,15 @@ const Navbar = () => {
               <div className="flex items-center gap-2">
                 <Link
                   to="/login"
-                  className="text-xs sm:text-sm font-medium text-slate-300 hover:text-white px-2 py-1.5 transition-colors whitespace-nowrap"
+                  className="text-xs sm:text-sm font-semibold text-slate-200 hover:text-white bg-[#141822] hover:bg-[#1c2232] border border-amber-500/30 px-3 sm:px-3.5 py-1.5 rounded-xl transition-colors whitespace-nowrap"
                 >
-                  Sign In
+                  Log In
                 </Link>
                 <Link
                   to="/register"
-                  className="text-xs sm:text-sm font-semibold bg-[#FF007A] hover:bg-[#e90070] text-slate-950 px-3 sm:px-4 py-1.5 rounded-xl transition-all whitespace-nowrap"
+                  className="text-xs sm:text-sm font-bold bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 text-slate-950 px-3 sm:px-4 py-1.5 rounded-xl shadow-md shadow-amber-500/15 transition-all whitespace-nowrap"
                 >
-                  Join VIP
+                  Create Account
                 </Link>
               </div>
             )}

@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { User, Crown, Ticket, LogOut, Shield, Mail, Calendar, CheckCircle2 } from 'lucide-react';
+import { User, Crown, Ticket, LogOut, Shield, Mail, Calendar, CheckCircle2, Settings, Phone } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import API from '../services/api';
 
@@ -71,21 +71,39 @@ const Profile = () => {
                 </span>
               )}
             </div>
-            <p className="text-xs text-slate-400 flex items-center gap-1.5">
-              <Mail className="w-3.5 h-3.5 text-slate-500" />
-              <span>{user.email}</span>
-            </p>
+            <div className="flex flex-col sm:flex-row sm:items-center gap-1.5 sm:gap-4 text-xs text-slate-400">
+              <p className="flex items-center gap-1.5">
+                <Mail className="w-3.5 h-3.5 text-slate-500" />
+                <span>{profile?.email || user.email}</span>
+              </p>
+              {(profile?.phone || user.phone) && (
+                <p className="flex items-center gap-1.5 text-slate-300">
+                  <Phone className="w-3.5 h-3.5 text-amber-400" />
+                  <span>{profile?.phone || user.phone}</span>
+                </p>
+              )}
+            </div>
           </div>
         </div>
 
-        <button
-          type="button"
-          onClick={handleLogout}
-          className="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white text-xs font-semibold transition-colors"
-        >
-          <LogOut className="w-3.5 h-3.5" />
-          Sign Out
-        </button>
+        <div className="flex items-center gap-2 self-start sm:self-auto">
+          <Link
+            to="/settings"
+            className="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-[#141824] hover:bg-[#1c2232] border border-amber-500/30 text-amber-400 hover:text-white text-xs font-semibold transition-all shadow-sm"
+          >
+            <Settings className="w-3.5 h-3.5" />
+            <span>Settings</span>
+          </Link>
+
+          <button
+            type="button"
+            onClick={handleLogout}
+            className="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white text-xs font-semibold transition-colors cursor-pointer"
+          >
+            <LogOut className="w-3.5 h-3.5" />
+            <span>Sign Out</span>
+          </button>
+        </div>
       </div>
 
       {/* Stats Grid */}
@@ -145,6 +163,20 @@ const Profile = () => {
                 <p className="text-[11px] text-slate-400">Browse locations in US, UK, India & more</p>
               </div>
             </div>
+          </Link>
+
+          <Link
+            to="/settings"
+            className="p-4 rounded-2xl bg-[#0e1118] border border-slate-800 hover:border-amber-500/30 text-white flex items-center justify-between transition-colors sm:col-span-2"
+          >
+            <div className="flex items-center gap-3">
+              <Settings className="w-5 h-5 text-[#00F2FE]" />
+              <div>
+                <p className="text-xs font-bold">Account Settings & Security</p>
+                <p className="text-[11px] text-slate-400">Edit member name, email, phone number, password & notifications</p>
+              </div>
+            </div>
+            <span className="text-xs font-semibold text-amber-400">Manage ↗</span>
           </Link>
         </div>
 

@@ -215,8 +215,14 @@ const MovieDetails = () => {
           />
         )}
 
-        {/* Poster with Trailer Trigger */}
-        <div className="relative w-44 sm:w-56 aspect-[3/4] rounded-2xl overflow-hidden shadow-2xl mx-auto md:mx-0 border border-amber-500/25 shrink-0 group">
+        {/* Poster with Trailer Trigger - Full Theatrical Visibility */}
+        <div className="relative w-44 sm:w-60 aspect-[2/3] rounded-2xl overflow-hidden shadow-2xl mx-auto md:mx-0 border border-amber-500/25 shrink-0 group bg-[#07090e] flex items-center justify-center">
+          {movie.posterUrl && (
+            <div
+              className="absolute inset-0 bg-cover bg-center blur-md opacity-35 scale-110 pointer-events-none"
+              style={{ backgroundImage: `url(${movie.posterUrl})` }}
+            />
+          )}
           <img
             src={
               movie.posterUrl ||
@@ -224,7 +230,7 @@ const MovieDetails = () => {
             }
             alt={movie.title}
             referrerPolicy="no-referrer"
-            className="w-full h-full object-cover"
+            className="relative z-10 w-full h-full object-contain"
           />
 
           <button

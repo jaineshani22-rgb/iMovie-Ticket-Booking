@@ -276,7 +276,7 @@ const Login = () => {
             state={{ from: location.state?.from }}
             className="text-amber-400 hover:text-amber-300 font-bold"
           >
-            Create VIP account
+            Create an account
           </Link>
         </p>
 
