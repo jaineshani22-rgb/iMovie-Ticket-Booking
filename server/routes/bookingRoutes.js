@@ -15,6 +15,7 @@ router.post('/hold', protect, holdSeats);
 router.post('/release', protect, releaseSeats);
 router.post('/:id/cancel', protect, cancelBooking);
 router.post('/', protect, createBooking);
+router.get('/', protect, getUserBookings);
 router.get('/user', protect, getUserBookings);
 
 module.exports = router;

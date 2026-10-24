@@ -266,7 +266,7 @@ const INITIAL_MOVIES = [
       'A high-energy Bollywood spy-comedy following Vikrant Thapar, a memory-losing counter-terrorism agent who mistakenly gets embroiled in an exhilarating whirlwind of cross-border espionage intrigues, high-stakes missions, and situational comedy alongside fearless agent Yamini.',
     genre: ['Action', 'Comedy', 'Spy', 'Thriller'],
     duration: 138,
-    posterUrl: 'https://img.youtube.com/vi/hN_ZUElLH44/maxresdefault.jpg',
+    posterUrl: 'https://upload.wikimedia.org/wikipedia/en/c/c8/Udta_Teer_film_poster.jpg',
     backdropUrl: 'https://img.youtube.com/vi/hN_ZUElLH44/maxresdefault.jpg',
     releaseDate: '2026-10-23T00:00:00.000Z',
     ticketPrice: 350,
@@ -275,7 +275,7 @@ const INITIAL_MOVIES = [
     votes: 48200,
     language: 'Hindi',
     trailerKey: 'hN_ZUElLH44',
-    director: 'Akash A. Kaushik',
+    director: 'Aakash Kaushik',
     category: 'now_playing',
     cast: [
       { name: 'Ayushmann Khurrana', character: 'Vikrant Thapar', profileUrl: 'https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?w=185&auto=format&fit=crop&q=80' },
@@ -326,8 +326,8 @@ const INITIAL_MOVIES = [
       'A 2026 biographical devotional drama honoring the sacred life, miracles, and compassionate spiritual journey of revered saint Neem Karoli Baba (Baba Neeb Karori). Witness his inspiring path from his early search for divine truth to his timeless global legacy of unconditional love, selfless service, and spiritual guidance.',
     genre: ['Biography', 'Drama', 'History', 'Devotional'],
     duration: 148,
-    posterUrl: 'https://img.youtube.com/vi/YyqWmKgHupk/hqdefault.jpg',
-    backdropUrl: 'https://img.youtube.com/vi/YyqWmKgHupk/hqdefault.jpg',
+    posterUrl: 'https://upload.wikimedia.org/wikipedia/commons/7/7d/Hanuman_Ansh_poster_theatrical.jpg',
+    backdropUrl: 'https://img.youtube.com/vi/YyqWmKgHupk/sddefault.jpg',
     releaseDate: '2026-09-18T00:00:00.000Z',
     ticketPrice: 350,
     theater: 'iMovies Directors Cut Vasant Kunj',
@@ -419,7 +419,7 @@ const INITIAL_MOVIES = [
       'A hilarious comedy-horror spectacle starring Yami Gautam as Mohini. When an unsuspecting newlywed bride arrives at an enigmatic ancestral estate, a cascade of quirky supernatural hauntings, eccentric village folklore, and laugh-out-loud spectral encounters turn everything upside down.',
     genre: ['Comedy', 'Horror', 'Drama'],
     duration: 134,
-    posterUrl: 'https://img.youtube.com/vi/NPkMecGOxDc/maxresdefault.jpg',
+    posterUrl: 'https://upload.wikimedia.org/wikipedia/en/e/e3/Nayyi_Navelli_Poster.jpg',
     backdropUrl: 'https://img.youtube.com/vi/NPkMecGOxDc/maxresdefault.jpg',
     releaseDate: '2026-05-15T00:00:00.000Z',
     ticketPrice: 320,
@@ -3108,35 +3108,52 @@ const INITIAL_MOVIES = [
     "genre": [
       "Mystery",
       "Thriller",
+      "Neo-Noir",
       "Romance",
       "Drama"
     ],
     "duration": 142,
-    "posterUrl": "https://image.tmdb.org/t/p/w780/merry_christmas_poster.jpg",
-    "backdropUrl": "https://image.tmdb.org/t/p/w1280/merry_christmas_bg.jpg",
+    "posterUrl": "https://upload.wikimedia.org/wikipedia/en/b/b0/Merry_Christmas_film_poster.jpg",
+    "backdropUrl": "https://img.youtube.com/vi/ugGGNSPMRDk/maxresdefault.jpg",
     "releaseDate": "2024-01-12T00:00:00.000Z",
-    "ticketPrice": 270,
-    "theater": "PVR INOX Superplex",
-    "rating": 7.3,
+    "ticketPrice": 290,
+    "theater": "iMovies INOX Megaplex Malad",
+    "rating": 8.3,
+    "votes": 64500,
     "language": "Hindi",
-    "trailerKey": "rs4xWqXj6-E",
+    "trailerKey": "ugGGNSPMRDk",
     "director": "Sriram Raghavan",
-    "category": "now_playing",
+    "category": "popular",
     "cast": [
       {
         "name": "Katrina Kaif",
         "character": "Maria",
-        "profileUrl": "https://image.tmdb.org/t/p/w185/katrinakaif.jpg"
+        "profileUrl": "https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=185&auto=format&fit=crop&q=80"
       },
       {
         "name": "Vijay Sethupathi",
         "character": "Albert",
-        "profileUrl": "https://image.tmdb.org/t/p/w185/vijaysethupathi.jpg"
+        "profileUrl": "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=185&auto=format&fit=crop&q=80"
       },
       {
         "name": "Sanjay Kapoor",
         "character": "Ronnie",
-        "profileUrl": "https://image.tmdb.org/t/p/w185/sanjaykapoor.jpg"
+        "profileUrl": "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=185&auto=format&fit=crop&q=80"
+      },
+      {
+        "name": "Vinay Pathak",
+        "character": "Inspector Paresh Kamdar",
+        "profileUrl": "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=185&auto=format&fit=crop&q=80"
+      },
+      {
+        "name": "Pratima Kazmi",
+        "character": "Laxmi",
+        "profileUrl": "https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=185&auto=format&fit=crop&q=80"
+      },
+      {
+        "name": "Radhika Apte",
+        "character": "Rosie (Cameo)",
+        "profileUrl": "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=185&auto=format&fit=crop&q=80"
       }
     ],
     "showtimes": [
@@ -3343,10 +3360,13 @@ const INITIAL_MOVIES = [
     "_id": "65f1b000000000000000005f",
     "title": "Jaane Jaan",
     "aliases": [
-      "The Devotion of Suspect X"
+      "Jaane Jaan 2023",
+      "The Devotion of Suspect X",
+      "Jaane Jaan Netflix",
+      "Kareena Kapoor Jaane Jaan"
     ],
     "industry": "Bollywood",
-    "description": "A gifted high school math teacher helps a single mother cover up a sudden murder, sparking a cat-and-mouse game with a relentless police investigator.",
+    "description": "A gifted, reclusive high school mathematics teacher helps his single-mother neighbor cover up the accidental murder of her abusive ex-husband, sparking an intense battle of wits with an astute police investigator.",
     "genre": [
       "Mystery",
       "Thriller",
@@ -3354,31 +3374,42 @@ const INITIAL_MOVIES = [
       "Drama"
     ],
     "duration": 139,
-    "posterUrl": "https://image.tmdb.org/t/p/w780/jaane_jaan_poster.jpg",
-    "backdropUrl": "https://image.tmdb.org/t/p/w1280/jaane_jaan_bg.jpg",
+    "posterUrl": "https://upload.wikimedia.org/wikipedia/en/b/bc/Jaane_Jaan_Poster.jpeg",
+    "backdropUrl": "https://img.youtube.com/vi/QmHvckh2GMw/maxresdefault.jpg",
     "releaseDate": "2023-09-21T00:00:00.000Z",
-    "ticketPrice": 260,
-    "theater": "INOX Megaplex",
-    "rating": 7,
+    "ticketPrice": 280,
+    "theater": "iMovies PVR ICON Lower Parel",
+    "rating": 8.2,
+    "votes": 68400,
     "language": "Hindi",
-    "trailerKey": "sN75MPxgvX8",
+    "trailerKey": "QmHvckh2GMw",
     "director": "Sujoy Ghosh",
-    "category": "now_playing",
+    "category": "popular",
     "cast": [
       {
         "name": "Kareena Kapoor Khan",
         "character": "Maya D'Souza",
-        "profileUrl": "https://image.tmdb.org/t/p/w185/kareenakapoor.jpg"
+        "profileUrl": "https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=185&auto=format&fit=crop&q=80"
       },
       {
         "name": "Jaideep Ahlawat",
         "character": "Naren Vyas",
-        "profileUrl": "https://image.tmdb.org/t/p/w185/jaideep.jpg"
+        "profileUrl": "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=185&auto=format&fit=crop&q=80"
       },
       {
         "name": "Vijay Varma",
         "character": "Inspector Karan Anand",
-        "profileUrl": "https://image.tmdb.org/t/p/w185/vijayvarma.jpg"
+        "profileUrl": "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=185&auto=format&fit=crop&q=80"
+      },
+      {
+        "name": "Saurabh Sachdeva",
+        "character": "Ajit Mhatre",
+        "profileUrl": "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=185&auto=format&fit=crop&q=80"
+      },
+      {
+        "name": "Lin Laishram",
+        "character": "Prema",
+        "profileUrl": "https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=185&auto=format&fit=crop&q=80"
       }
     ],
     "showtimes": [

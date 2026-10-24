@@ -160,7 +160,7 @@ const MovieSearchBar = ({ className = '', onSearchSubmit }) => {
       {/* Search Input Container */}
       <form onSubmit={handleSubmit} className="relative flex items-center">
         <div className="relative w-full">
-          <Search className="w-4 h-4 text-amber-400 absolute left-3.5 top-1/2 -translate-y-1/2 pointer-events-none" />
+          <Search className="w-4 h-4 text-[#E63946] absolute left-3.5 top-1/2 -translate-y-1/2 pointer-events-none" />
           
           <input
             ref={inputRef}
@@ -174,12 +174,12 @@ const MovieSearchBar = ({ className = '', onSearchSubmit }) => {
             onFocus={() => setIsOpen(true)}
             onKeyDown={handleKeyDown}
             placeholder="Search movies, cast, genres (e.g. Lapata Ladies, Ratatouille)..."
-            className="w-full bg-[#11141c] hover:bg-[#141824] focus:bg-[#151926] text-white text-xs sm:text-sm pl-10 pr-16 py-2 rounded-xl border border-amber-500/25 focus:border-amber-400 focus:outline-none transition-all placeholder:text-slate-500 shadow-inner"
+            className="w-full bg-[#FFF9F0] hover:bg-[#FFF6DC] focus:bg-white text-[#2B2B2B] text-xs sm:text-sm pl-10 pr-16 py-2 rounded-xl border border-[#EAE2D5] focus:border-[#E63946] focus:ring-1 focus:ring-[#E63946] focus:outline-none transition-all placeholder:text-[#9CA3AF] shadow-xs"
           />
 
           <div className="absolute right-2.5 top-1/2 -translate-y-1/2 flex items-center gap-1">
             {loading && (
-              <Loader2 className="w-3.5 h-3.5 text-amber-400 animate-spin mr-1" />
+              <Loader2 className="w-3.5 h-3.5 text-[#E63946] animate-spin mr-1" />
             )}
 
             {query ? (
@@ -195,13 +195,13 @@ const MovieSearchBar = ({ className = '', onSearchSubmit }) => {
                     navigate(`/?${params.toString()}`);
                   }
                 }}
-                className="text-slate-400 hover:text-white p-1 rounded-md hover:bg-slate-800/80 transition-colors"
+                className="text-[#9CA3AF] hover:text-[#2B2B2B] p-1 rounded-md hover:bg-[#F3EFE6] transition-colors cursor-pointer"
                 title="Clear search"
               >
                 <X className="w-3.5 h-3.5" />
               </button>
             ) : (
-              <span className="hidden sm:inline-block text-[10px] font-mono font-medium text-slate-500 bg-slate-800/60 border border-slate-700/60 px-1.5 py-0.5 rounded">
+              <span className="hidden sm:inline-block text-[10px] font-mono font-medium text-[#9CA3AF] bg-[#FAF5EE] border border-[#EAE2D5] px-1.5 py-0.5 rounded">
                 /
               </span>
             )}
@@ -211,28 +211,28 @@ const MovieSearchBar = ({ className = '', onSearchSubmit }) => {
 
       {/* Autocomplete Dropdown */}
       {isOpen && (
-        <div className="absolute left-0 right-0 top-full mt-2 bg-[#0e121a] border border-amber-500/30 rounded-2xl shadow-2xl shadow-black/90 overflow-hidden z-50 backdrop-blur-xl animate-in fade-in duration-150 max-h-[420px] overflow-y-auto">
+        <div className="absolute left-0 right-0 top-full mt-2 bg-white border border-[#EAE2D5] rounded-2xl shadow-xl overflow-hidden z-50 backdrop-blur-xl animate-in fade-in duration-150 max-h-[420px] overflow-y-auto">
           {/* If user is typing and has matching suggestions */}
           {query.trim() && suggestions.length > 0 && (
             <div>
-              <div className="px-3.5 py-2 text-[11px] font-semibold text-slate-400 uppercase tracking-wider border-b border-slate-800/80 flex items-center justify-between">
+              <div className="px-3.5 py-2 text-[11px] font-bold text-[#6B7280] uppercase tracking-wider border-b border-[#EAE2D5] flex items-center justify-between bg-[#FFF9F0]">
                 <span>Matching Movies ({suggestions.length})</span>
-                <span className="text-[10px] text-amber-400/80 lowercase">click or press enter</span>
+                <span className="text-[10px] text-[#E63946] lowercase font-medium">click or press enter</span>
               </div>
-              <div className="p-1.5 divide-y divide-slate-800/40">
+              <div className="p-1.5 divide-y divide-[#F0E9DD]">
                 {suggestions.map((movie, idx) => (
                   <button
                     key={movie._id}
                     type="button"
                     onClick={() => handleSelectMovie(movie)}
-                    className={`w-full text-left p-2.5 rounded-xl flex items-center gap-3 transition-colors ${
+                    className={`w-full text-left p-2.5 rounded-xl flex items-center gap-3 transition-colors cursor-pointer ${
                       selectedIndex === idx
-                        ? 'bg-amber-500/15 text-white'
-                        : 'hover:bg-[#161b26] text-slate-200'
+                        ? 'bg-[#FFF6DC] text-[#2B2B2B]'
+                        : 'hover:bg-[#FFF9F0] text-[#2B2B2B]'
                     }`}
                   >
                     {/* Poster Thumbnail */}
-                    <div className="w-10 h-14 rounded-xl bg-slate-800 overflow-hidden shrink-0 border border-slate-700/60 relative">
+                    <div className="w-10 h-14 rounded-xl bg-[#FAF6EE] overflow-hidden shrink-0 border border-[#EAE2D5] relative">
                       {movie.posterUrl ? (
                         <img
                           src={movie.posterUrl}
@@ -245,7 +245,7 @@ const MovieSearchBar = ({ className = '', onSearchSubmit }) => {
                           }}
                         />
                       ) : (
-                        <div className="w-full h-full flex items-center justify-center text-slate-600">
+                        <div className="w-full h-full flex items-center justify-center text-[#9CA3AF]">
                           <Film className="w-4 h-4" />
                         </div>
                       )}
@@ -254,15 +254,15 @@ const MovieSearchBar = ({ className = '', onSearchSubmit }) => {
                     {/* Movie Info */}
                     <div className="flex-1 min-w-0">
                       <div className="flex items-center gap-2">
-                        <span className="font-bold text-xs sm:text-sm text-white truncate">
+                        <span className="font-bold text-xs sm:text-sm text-[#2B2B2B] truncate">
                           {movie.title}
                         </span>
                         {movie.industry && (
                           <span
-                            className={`text-[9px] px-1.5 py-0.5 rounded font-semibold shrink-0 ${
+                            className={`text-[9px] px-1.5 py-0.5 rounded font-bold shrink-0 ${
                               movie.industry === 'Bollywood'
-                                ? 'bg-emerald-500/20 text-emerald-300 border border-emerald-500/30'
-                                : 'bg-blue-500/20 text-blue-300 border border-blue-500/30'
+                                ? 'bg-[#FFF6DC] text-[#7A5B14] border border-[#FFEDB0]'
+                                : 'bg-[#FDECEC] text-[#B81D2D] border border-[#FCD7D7]'
                             }`}
                           >
                             {movie.industry}
@@ -270,7 +270,7 @@ const MovieSearchBar = ({ className = '', onSearchSubmit }) => {
                         )}
                       </div>
 
-                      <div className="flex items-center gap-2 text-[11px] text-slate-400 mt-0.5 truncate">
+                      <div className="flex items-center gap-2 text-[11px] text-[#6B7280] mt-0.5 truncate">
                         <span>
                           {movie.releaseDate
                             ? new Date(movie.releaseDate).getFullYear()
@@ -287,8 +287,8 @@ const MovieSearchBar = ({ className = '', onSearchSubmit }) => {
 
                     {/* Rating */}
                     {movie.rating && (
-                      <div className="flex items-center gap-1 bg-amber-500/10 border border-amber-500/25 px-2 py-1 rounded-lg text-amber-400 font-bold text-xs shrink-0">
-                        <Star className="w-3 h-3 fill-amber-400 text-amber-400" />
+                      <div className="flex items-center gap-1 bg-[#FFF6DC] border border-[#FFEDB0] px-2 py-1 rounded-lg text-[#7A5B14] font-bold text-xs shrink-0">
+                        <Star className="w-3 h-3 fill-[#FFC93C] text-[#FFC93C]" />
                         <span>{Number(movie.rating).toFixed(1)}</span>
                       </div>
                     )}
@@ -297,11 +297,11 @@ const MovieSearchBar = ({ className = '', onSearchSubmit }) => {
               </div>
 
               {/* View all results link */}
-              <div className="p-2 border-t border-slate-800 bg-[#0a0d13]">
+              <div className="p-2 border-t border-[#EAE2D5] bg-[#FFF9F0]">
                 <button
                   type="button"
                   onClick={handleSubmit}
-                  className="w-full py-2 px-3 rounded-xl bg-amber-500/10 hover:bg-amber-500/20 text-amber-400 text-xs font-semibold flex items-center justify-center gap-1.5 transition-colors"
+                  className="w-full py-2 px-3 rounded-xl bg-white hover:bg-[#FDECEC] text-[#E63946] border border-[#EAE2D5] text-xs font-bold flex items-center justify-center gap-1.5 transition-colors cursor-pointer"
                 >
                   <span>View all results for &quot;{query}&quot;</span>
                   <ArrowRight className="w-3.5 h-3.5" />
@@ -312,12 +312,12 @@ const MovieSearchBar = ({ className = '', onSearchSubmit }) => {
 
           {/* If user is typing and no suggestions found */}
           {query.trim() && !loading && suggestions.length === 0 && (
-            <div className="p-6 text-center space-y-2">
-              <Film className="w-8 h-8 text-slate-600 mx-auto" />
-              <div className="text-sm font-semibold text-white">
+            <div className="p-6 text-center space-y-2 bg-white">
+              <Film className="w-8 h-8 text-[#9CA3AF] mx-auto" />
+              <div className="text-sm font-bold text-[#2B2B2B]">
                 No movies found for &quot;{query}&quot;
               </div>
-              <p className="text-xs text-slate-400 max-w-xs mx-auto">
+              <p className="text-xs text-[#6B7280] max-w-xs mx-auto">
                 Try searching by title (e.g. Lapata Ladies, Titanic), genre (Animation, Mystery), or actors.
               </p>
               <div className="pt-2 flex flex-wrap justify-center gap-1.5">
@@ -326,7 +326,7 @@ const MovieSearchBar = ({ className = '', onSearchSubmit }) => {
                     key={item.title}
                     type="button"
                     onClick={() => handleSelectSuggestionQuery(item.title)}
-                    className="text-[11px] bg-[#141822] hover:bg-[#1d2332] text-amber-300 border border-amber-500/20 px-2.5 py-1 rounded-lg transition-colors"
+                    className="text-[11px] bg-[#FFF9F0] hover:bg-[#FFF6DC] text-[#7A5B14] font-medium border border-[#EAE2D5] px-2.5 py-1 rounded-lg transition-colors cursor-pointer"
                   >
                     {item.title}
                   </button>
@@ -337,8 +337,8 @@ const MovieSearchBar = ({ className = '', onSearchSubmit }) => {
 
           {/* When query is empty, show Quick Discovery / Trending */}
           {!query.trim() && (
-            <div className="p-4 space-y-3">
-              <div className="flex items-center gap-1.5 text-[11px] font-bold text-amber-400 uppercase tracking-wider">
+            <div className="p-4 space-y-3 bg-white">
+              <div className="flex items-center gap-1.5 text-[11px] font-bold text-[#E63946] uppercase tracking-wider">
                 <Sparkles className="w-3.5 h-3.5" />
                 <span>Trending & Quick Searches</span>
               </div>
@@ -348,19 +348,19 @@ const MovieSearchBar = ({ className = '', onSearchSubmit }) => {
                     key={item.title}
                     type="button"
                     onClick={() => handleSelectSuggestionQuery(item.title)}
-                    className="text-left p-2 rounded-xl bg-[#131722] hover:bg-[#1c2230] border border-slate-800 hover:border-amber-500/30 transition-all flex items-center justify-between group"
+                    className="text-left p-2.5 rounded-xl bg-[#FFF9F0] hover:bg-[#FFF6DC] border border-[#EAE2D5] hover:border-[#FFEDB0] transition-all flex items-center justify-between group cursor-pointer"
                   >
                     <div>
-                      <div className="text-xs font-semibold text-white group-hover:text-amber-400 transition-colors">
+                      <div className="text-xs font-bold text-[#2B2B2B] group-hover:text-[#E63946] transition-colors">
                         {item.title}
                       </div>
-                      <div className="text-[10px] text-slate-400">{item.genre}</div>
+                      <div className="text-[10px] text-[#6B7280]">{item.genre}</div>
                     </div>
                     <span
-                      className={`text-[9px] px-1.5 py-0.5 rounded font-semibold ${
+                      className={`text-[9px] px-1.5 py-0.5 rounded font-bold ${
                         item.industry === 'Bollywood'
-                          ? 'bg-emerald-500/15 text-emerald-400'
-                          : 'bg-blue-500/15 text-blue-400'
+                          ? 'bg-[#FFF6DC] text-[#7A5B14] border border-[#FFEDB0]'
+                          : 'bg-[#FDECEC] text-[#B81D2D] border border-[#FCD7D7]'
                       }`}
                     >
                       {item.industry}

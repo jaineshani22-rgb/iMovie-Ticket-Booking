@@ -136,29 +136,29 @@ const CheckoutModal = ({
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/85 backdrop-blur-md animate-in fade-in duration-200">
-      <div className="relative w-full max-w-2xl bg-[#12151d] border border-amber-500/30 rounded-3xl overflow-hidden shadow-2xl shadow-black/95 flex flex-col max-h-[92vh]">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-xs animate-in fade-in duration-200">
+      <div className="relative w-full max-w-2xl bg-white border border-[#EAE2D5] rounded-3xl overflow-hidden shadow-2xl flex flex-col max-h-[92vh]">
         {/* Header with Hold Countdown Banner */}
-        <div className="bg-[#161a24] border-b border-amber-500/20 px-6 py-4 flex items-center justify-between">
+        <div className="bg-[#FFF9F0] border-b border-[#EAE2D5] px-6 py-4 flex items-center justify-between">
           <div className="flex items-center gap-3">
-            <div className="w-9 h-9 rounded-xl bg-amber-500/10 border border-amber-500/30 text-amber-400 flex items-center justify-center">
+            <div className="w-9 h-9 rounded-xl bg-[#FDECEC] border border-[#FCD7D7] text-[#E63946] flex items-center justify-center">
               <ShieldCheck className="w-5 h-5" />
             </div>
             <div>
-              <h3 className="text-base font-bold text-white font-['Cinzel',serif] tracking-wide">
+              <h3 className="text-base font-bold text-[#2B2B2B] tracking-tight">
                 Secure Checkout & Payment
               </h3>
-              <p className="text-[11px] text-slate-400">Step {step} of 2 · 256-bit Encrypted Reservation</p>
+              <p className="text-[11px] text-[#6B7280]">Step {step} of 2 · 256-bit Encrypted Reservation</p>
             </div>
           </div>
 
           <div className="flex items-center gap-3">
             {/* Live Hold Timer */}
             <div
-              className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg border text-xs font-mono font-bold ${
+              className={`flex items-center gap-1.5 px-3 py-1.5 rounded-xl border text-xs font-mono font-bold ${
                 timeLeft < 60
-                  ? 'bg-rose-500/20 border-rose-500/50 text-rose-300 animate-pulse'
-                  : 'bg-amber-500/10 border-amber-500/30 text-amber-300'
+                  ? 'bg-[#FDECEC] border-[#FCD7D7] text-[#B81D2D] animate-pulse'
+                  : 'bg-[#FFF6DC] border-[#FFEDB0] text-[#7A5B14]'
               }`}
               title="Seats held exclusively for you"
             >
@@ -168,7 +168,7 @@ const CheckoutModal = ({
 
             <button
               onClick={onClose}
-              className="w-8 h-8 rounded-full bg-slate-800/80 hover:bg-slate-700 text-slate-400 hover:text-white flex items-center justify-center transition-colors"
+              className="w-8 h-8 rounded-full bg-white hover:bg-[#FFF6DC] text-[#6B7280] hover:text-[#2B2B2B] border border-[#EAE2D5] flex items-center justify-center transition-colors cursor-pointer"
             >
               <X className="w-4 h-4" />
             </button>
@@ -176,38 +176,41 @@ const CheckoutModal = ({
         </div>
 
         {/* Scrollable Body */}
-        <div className="p-6 overflow-y-auto space-y-6 flex-1 text-sm">
+        <div className="p-6 overflow-y-auto space-y-6 flex-1 text-sm bg-white">
           {/* Reservation Overview Strip */}
-          <div className="bg-[#0b0e14] border border-slate-800/80 rounded-2xl p-4 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+          <div className="bg-[#FFF9F0] border border-[#EAE2D5] rounded-2xl p-4 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
             <div className="flex items-center gap-3 min-w-0">
               <img
-                src={movie.posterUrl || 'https://images.unsplash.com/photo-1489599849927-2ee91cede3ba?w=200'}
+                src={movie.posterUrl || 'https://images.unsplash.com/photo-1489599849927-2ee91cede3ba?w=400&auto=format&fit=crop&q=85'}
                 alt={movie.title}
-                className="w-12 h-16 rounded-lg object-cover border border-amber-500/25 shrink-0"
+                referrerPolicy="no-referrer"
+                className="w-12 h-16 rounded-xl object-cover object-center border border-[#EAE2D5] shrink-0 shadow-xs"
               />
               <div className="min-w-0">
-                <h4 className="text-sm font-bold text-white truncate">{movie.title}</h4>
-                <p className="text-xs text-slate-400 flex items-center gap-1.5 truncate">
-                  <MapPin className="w-3 h-3 text-amber-400 shrink-0" />
+                <h4 className="text-sm font-bold text-[#2B2B2B] truncate">{movie.title}</h4>
+                <p className="text-xs text-[#6B7280] flex items-center gap-1.5 truncate mt-0.5">
+                  <MapPin className="w-3 h-3 text-[#E63946] shrink-0" />
                   <span>{cinema?.name || movie.theater || 'iMovies VIP Cinema'}</span>
                 </p>
-                <div className="flex items-center gap-3 text-[11px] text-slate-400 mt-1">
+                <div className="flex items-center gap-2 text-[11px] text-[#6B7280] mt-1">
                   <span>{showDate}</span>
                   <span>·</span>
-                  <span className="text-amber-300 font-bold">{showTime}</span>
+                  <span className="text-[#E63946] font-bold">{showTime}</span>
                 </div>
               </div>
             </div>
 
             <div className="text-left sm:text-right shrink-0">
-              <span className="text-[10px] uppercase font-bold text-slate-500 block">Seats</span>
-              <span className="text-sm font-bold font-mono text-amber-400">{selectedSeats.join(', ')}</span>
+              <span className="text-[10px] uppercase font-bold text-[#6B7280] block mb-1">Seats</span>
+              <span className="inline-block px-2.5 py-1 bg-[#FFF6DC] border border-[#FFEDB0] text-[#7A5B14] rounded-lg text-xs font-bold font-mono">
+                {selectedSeats.join(', ')}
+              </span>
             </div>
           </div>
 
           {error && (
-            <div className="flex items-center gap-2 bg-amber-500/10 border border-amber-500/30 text-amber-400 text-xs p-3 rounded-xl">
-              <AlertCircle className="w-4 h-4 shrink-0" />
+            <div className="flex items-center gap-2 bg-[#FDECEC] border border-[#FCD7D7] text-[#B81D2D] text-xs p-3 rounded-xl">
+              <AlertCircle className="w-4 h-4 shrink-0 text-[#E63946]" />
               <span>{error}</span>
             </div>
           )}
@@ -216,85 +219,85 @@ const CheckoutModal = ({
             /* STEP 1: Customer Details & Order Summary */
             <div className="space-y-6">
               <div>
-                <h4 className="text-xs font-bold uppercase tracking-wider text-slate-300 mb-3 flex items-center gap-1.5">
-                  <Ticket className="w-3.5 h-3.5 text-amber-400" />
+                <h4 className="text-xs font-bold uppercase tracking-wider text-[#2B2B2B] mb-3 flex items-center gap-1.5">
+                  <Ticket className="w-3.5 h-3.5 text-[#E63946]" />
                   1. Contact & Boarding Pass Details
                 </h4>
 
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
                   <div>
-                    <label className="block text-xs text-slate-400 mb-1">Primary Patron Name *</label>
+                    <label className="block text-xs font-bold text-[#2B2B2B] mb-1">Primary Patron Name *</label>
                     <input
                       type="text"
                       required
                       value={customerName}
                       onChange={(e) => setCustomerName(e.target.value)}
-                      className="w-full bg-[#0a0c10] border border-slate-700 focus:border-amber-400 rounded-xl px-3.5 py-2 text-white text-xs focus:outline-none"
+                      className="w-full bg-[#FFF9F0] border border-[#DCD3C5] focus:border-[#E63946] focus:ring-2 focus:ring-[#FFC93C]/30 focus:bg-white rounded-xl px-3.5 py-2 text-[#2B2B2B] text-xs focus:outline-none transition-all"
                     />
                   </div>
                   <div>
-                    <label className="block text-xs text-slate-400 mb-1">Pass Delivery Email *</label>
+                    <label className="block text-xs font-bold text-[#2B2B2B] mb-1">Pass Delivery Email *</label>
                     <input
                       type="email"
                       required
                       value={customerEmail}
                       onChange={(e) => setCustomerEmail(e.target.value)}
-                      className="w-full bg-[#0a0c10] border border-slate-700 focus:border-amber-400 rounded-xl px-3.5 py-2 text-white text-xs focus:outline-none"
+                      className="w-full bg-[#FFF9F0] border border-[#DCD3C5] focus:border-[#E63946] focus:ring-2 focus:ring-[#FFC93C]/30 focus:bg-white rounded-xl px-3.5 py-2 text-[#2B2B2B] text-xs focus:outline-none transition-all"
                     />
                   </div>
                   <div className="sm:col-span-2">
-                    <label className="block text-xs text-slate-400 mb-1">Mobile Contact (SMS Confirmation)</label>
+                    <label className="block text-xs font-bold text-[#2B2B2B] mb-1">Mobile Contact (SMS Confirmation)</label>
                     <input
                       type="tel"
                       value={customerPhone}
                       onChange={(e) => setCustomerPhone(e.target.value)}
-                      className="w-full bg-[#0a0c10] border border-slate-700 focus:border-amber-400 rounded-xl px-3.5 py-2 text-white text-xs focus:outline-none"
+                      className="w-full bg-[#FFF9F0] border border-[#DCD3C5] focus:border-[#E63946] focus:ring-2 focus:ring-[#FFC93C]/30 focus:bg-white rounded-xl px-3.5 py-2 text-[#2B2B2B] text-xs focus:outline-none transition-all"
                     />
                   </div>
                 </div>
               </div>
 
               {/* Promo Code Entry */}
-              <div className="bg-[#0e1118] border border-slate-800 rounded-xl p-3.5 flex items-center gap-2">
+              <div className="bg-[#FFFDF5] border border-[#FFEDB0] rounded-2xl p-3.5 flex items-center gap-2">
                 <input
                   type="text"
                   placeholder="Promo code (e.g. VIP15)"
                   value={discountCode}
                   onChange={(e) => setDiscountCode(e.target.value)}
-                  className="flex-1 bg-[#090b10] border border-slate-700/80 rounded-lg px-3 py-1.5 text-xs text-white uppercase tracking-wider focus:outline-none focus:border-amber-400"
+                  className="flex-1 bg-white border border-[#DCD3C5] rounded-xl px-3 py-1.5 text-xs text-[#2B2B2B] uppercase tracking-wider focus:outline-none focus:border-[#E63946] focus:ring-1 focus:ring-[#E63946]"
                 />
                 <button
                   type="button"
                   onClick={handleApplyPromo}
-                  className="px-3 py-1.5 rounded-lg bg-amber-500/20 text-amber-300 hover:bg-amber-500/30 text-xs font-semibold border border-amber-500/30"
+                  className="px-3.5 py-1.5 rounded-xl bg-[#FFC93C] hover:bg-[#E5B129] text-[#1A1D20] text-xs font-bold transition-colors cursor-pointer"
                 >
                   Apply Code
                 </button>
               </div>
 
               {/* Itemized Price Breakdown */}
-              <div className="space-y-2.5 pt-2 border-t border-slate-800/80 text-xs">
-                <div className="flex justify-between text-slate-400">
+              <div className="space-y-2.5 pt-2 border-t border-[#EAE2D5] text-xs">
+                <div className="flex justify-between text-[#6B7280]">
                   <span>
                     Admissions ({selectedSeats.length} × {currencySymbol}
                     {unitPrice})
                   </span>
-                  <span className="font-mono text-white">
+                  <span className="font-mono text-[#2B2B2B] font-bold">
                     {currencySymbol}
                     {subtotal}
                   </span>
                 </div>
-                <div className="flex justify-between text-slate-400">
+                <div className="flex justify-between text-[#6B7280]">
                   <span>Convenience & Laser Projection Surcharge</span>
-                  <span className="font-mono text-white">
+                  <span className="font-mono text-[#2B2B2B] font-bold">
                     {currencySymbol}
                     {bookingFee}
                   </span>
                 </div>
                 {discountApplied && (
-                  <div className="flex justify-between text-emerald-400">
+                  <div className="flex justify-between text-[#047857] font-semibold">
                     <span className="flex items-center gap-1">
-                      <Sparkles className="w-3 h-3" /> VIP Privilege Discount (15%)
+                      <Sparkles className="w-3.5 h-3.5" /> VIP Privilege Discount (15%)
                     </span>
                     <span className="font-mono">
                       -{currencySymbol}
@@ -302,9 +305,9 @@ const CheckoutModal = ({
                     </span>
                   </div>
                 )}
-                <div className="flex justify-between pt-2 border-t border-slate-800 text-sm font-bold text-white">
+                <div className="flex justify-between pt-3 border-t border-[#EAE2D5] text-sm font-bold text-[#2B2B2B]">
                   <span>Total Due ({currencyCode})</span>
-                  <span className="text-base font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-amber-300 to-amber-500 font-mono">
+                  <span className="text-xl font-black text-[#E63946] font-mono">
                     {currencySymbol}
                     {finalTotal}
                   </span>
@@ -314,9 +317,9 @@ const CheckoutModal = ({
           ) : (
             /* STEP 2: Simulated Payment Gateway (Test Mode) */
             <div className="space-y-5">
-              <div className="flex items-center justify-between bg-amber-500/10 border border-amber-500/30 rounded-xl p-3 text-xs text-amber-300">
+              <div className="flex items-center justify-between bg-[#FFF6DC] border border-[#FFEDB0] rounded-2xl p-3 text-xs text-[#7A5B14]">
                 <div className="flex items-center gap-2">
-                  <Zap className="w-4 h-4 text-amber-400 shrink-0" />
+                  <Zap className="w-4 h-4 text-[#E5B129] shrink-0" />
                   <span>
                     <strong>Sandbox Mode:</strong> Testing simulation mode. Zero actual charges.
                   </span>
@@ -324,7 +327,7 @@ const CheckoutModal = ({
                 <button
                   type="button"
                   onClick={fillTestCredentials}
-                  className="text-[11px] underline font-bold hover:text-white shrink-0 ml-2"
+                  className="text-[11px] underline font-bold text-[#B81D2D] hover:text-[#E63946] shrink-0 ml-2 cursor-pointer"
                 >
                   Auto-Fill Test Card
                 </button>
@@ -335,80 +338,80 @@ const CheckoutModal = ({
                 <button
                   type="button"
                   onClick={() => setPaymentMethod('card')}
-                  className={`p-3 rounded-xl border text-left flex items-center gap-3 transition-colors ${
+                  className={`p-3 rounded-2xl border text-left flex items-center gap-3 transition-all cursor-pointer ${
                     paymentMethod === 'card'
-                      ? 'bg-amber-500/15 border-amber-500 text-white'
-                      : 'bg-[#0d1017] border-slate-800 text-slate-400 hover:text-white'
+                      ? 'bg-[#FFF6DC] border-[#FFC93C] text-[#2B2B2B] ring-2 ring-[#FFC93C]/40'
+                      : 'bg-[#FFF9F0] border-[#EAE2D5] text-[#6B7280] hover:text-[#2B2B2B]'
                   }`}
                 >
-                  <CreditCard className="w-4 h-4 text-amber-400" />
+                  <CreditCard className="w-4 h-4 text-[#E63946]" />
                   <div>
                     <p className="text-xs font-bold">Credit / Debit Card</p>
-                    <p className="text-[10px] text-slate-400">Visa, Mastercard, Amex</p>
+                    <p className="text-[10px] text-[#6B7280]">Visa, Mastercard, Amex</p>
                   </div>
                 </button>
 
                 <button
                   type="button"
                   onClick={() => setPaymentMethod('digital')}
-                  className={`p-3 rounded-xl border text-left flex items-center gap-3 transition-colors ${
+                  className={`p-3 rounded-2xl border text-left flex items-center gap-3 transition-all cursor-pointer ${
                     paymentMethod === 'digital'
-                      ? 'bg-amber-500/15 border-amber-500 text-white'
-                      : 'bg-[#0d1017] border-slate-800 text-slate-400 hover:text-white'
+                      ? 'bg-[#FFF6DC] border-[#FFC93C] text-[#2B2B2B] ring-2 ring-[#FFC93C]/40'
+                      : 'bg-[#FFF9F0] border-[#EAE2D5] text-[#6B7280] hover:text-[#2B2B2B]'
                   }`}
                 >
-                  <Sparkles className="w-4 h-4 text-amber-400" />
+                  <Sparkles className="w-4 h-4 text-[#E5B129]" />
                   <div>
                     <p className="text-xs font-bold">Express Digital Pass</p>
-                    <p className="text-[10px] text-slate-400">Apple Pay / Google Pay</p>
+                    <p className="text-[10px] text-[#6B7280]">Apple Pay / Google Pay</p>
                   </div>
                 </button>
               </div>
 
               {paymentMethod === 'card' ? (
-                <div className="space-y-3.5 bg-[#0a0c10] border border-slate-800/80 p-4 rounded-2xl">
+                <div className="space-y-3.5 bg-[#FFF9F0] border border-[#EAE2D5] p-4 rounded-2xl">
                   <div>
-                    <label className="block text-xs text-slate-400 mb-1">Card Number (Sandbox)</label>
+                    <label className="block text-xs font-bold text-[#2B2B2B] mb-1">Card Number (Sandbox)</label>
                     <div className="relative">
-                      <CreditCard className="w-4 h-4 text-slate-500 absolute left-3 top-1/2 -translate-y-1/2" />
+                      <CreditCard className="w-4 h-4 text-[#6B7280] absolute left-3 top-1/2 -translate-y-1/2" />
                       <input
                         type="text"
                         value={cardNumber}
                         onChange={(e) => setCardNumber(e.target.value)}
-                        className="w-full bg-[#12151d] border border-slate-700 rounded-xl pl-9 pr-4 py-2 text-white font-mono text-xs focus:border-amber-400 focus:outline-none"
+                        className="w-full bg-white border border-[#DCD3C5] rounded-xl pl-9 pr-4 py-2 text-[#2B2B2B] font-mono text-xs focus:border-[#E63946] focus:outline-none focus:ring-1 focus:ring-[#E63946]"
                       />
                     </div>
                   </div>
 
                   <div className="grid grid-cols-2 gap-3">
                     <div>
-                      <label className="block text-xs text-slate-400 mb-1">Expiry Date</label>
+                      <label className="block text-xs font-bold text-[#2B2B2B] mb-1">Expiry Date</label>
                       <input
                         type="text"
                         value={cardExpiry}
                         onChange={(e) => setCardExpiry(e.target.value)}
-                        className="w-full bg-[#12151d] border border-slate-700 rounded-xl px-3 py-2 text-white font-mono text-xs focus:border-amber-400 focus:outline-none text-center"
+                        className="w-full bg-white border border-[#DCD3C5] rounded-xl px-3 py-2 text-[#2B2B2B] font-mono text-xs focus:border-[#E63946] focus:outline-none text-center focus:ring-1 focus:ring-[#E63946]"
                       />
                     </div>
                     <div>
-                      <label className="block text-xs text-slate-400 mb-1">CVV / CVC</label>
+                      <label className="block text-xs font-bold text-[#2B2B2B] mb-1">CVV / CVC</label>
                       <input
                         type="password"
                         maxLength={4}
                         value={cardCvc}
                         onChange={(e) => setCardCvc(e.target.value)}
-                        className="w-full bg-[#12151d] border border-slate-700 rounded-xl px-3 py-2 text-white font-mono text-xs focus:border-amber-400 focus:outline-none text-center"
+                        className="w-full bg-white border border-[#DCD3C5] rounded-xl px-3 py-2 text-[#2B2B2B] font-mono text-xs focus:border-[#E63946] focus:outline-none text-center focus:ring-1 focus:ring-[#E63946]"
                       />
                     </div>
                   </div>
                 </div>
               ) : (
-                <div className="bg-[#0a0c10] border border-slate-800 p-6 rounded-2xl text-center space-y-2">
-                  <div className="w-10 h-10 rounded-full bg-amber-500/10 text-amber-400 flex items-center justify-center mx-auto">
-                    <Lock className="w-5 h-5" />
+                <div className="bg-[#FFF9F0] border border-[#EAE2D5] p-6 rounded-2xl text-center space-y-2">
+                  <div className="w-10 h-10 rounded-full bg-[#FFF6DC] border border-[#FFEDB0] text-[#7A5B14] flex items-center justify-center mx-auto">
+                    <Lock className="w-5 h-5 text-[#E5B129]" />
                   </div>
-                  <p className="text-xs font-bold text-white">Biometric Quick Checkout Ready</p>
-                  <p className="text-[11px] text-slate-400 max-w-sm mx-auto">
+                  <p className="text-xs font-bold text-[#2B2B2B]">Biometric Quick Checkout Ready</p>
+                  <p className="text-[11px] text-[#6B7280] max-w-sm mx-auto">
                     Simulated biometric authentication will authorize payment of {currencySymbol}
                     {finalTotal} upon confirmation.
                   </p>
@@ -419,13 +422,13 @@ const CheckoutModal = ({
         </div>
 
         {/* Modal Footer */}
-        <div className="p-4 sm:p-6 border-t border-slate-800/80 bg-[#141822] flex items-center justify-between gap-4">
+        <div className="p-4 sm:p-6 border-t border-[#EAE2D5] bg-[#FFF9F0] flex items-center justify-between gap-4">
           {step === 1 ? (
             <>
               <button
                 type="button"
                 onClick={onClose}
-                className="px-4 py-2.5 rounded-xl bg-slate-800 text-slate-300 hover:text-white text-xs font-semibold"
+                className="px-4 py-2.5 rounded-xl bg-white hover:bg-[#FFF6DC] text-[#2B2B2B] border border-[#EAE2D5] text-xs font-bold transition-colors cursor-pointer"
               >
                 Cancel Hold
               </button>
@@ -433,7 +436,7 @@ const CheckoutModal = ({
                 type="button"
                 onClick={() => setStep(2)}
                 disabled={!customerName || !customerEmail || timeLeft <= 0}
-                className="flex items-center gap-2 bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 disabled:opacity-40 text-slate-950 font-bold px-6 py-2.5 rounded-xl text-xs sm:text-sm shadow-md shadow-amber-500/20"
+                className="flex items-center gap-2 bg-[#E63946] hover:bg-[#D62839] disabled:opacity-40 text-white font-bold px-6 py-2.5 rounded-xl text-xs sm:text-sm shadow-xs transition-colors cursor-pointer"
               >
                 <span>Continue to Payment</span>
                 <ArrowRight className="w-4 h-4 stroke-[2.5]" />
@@ -444,7 +447,7 @@ const CheckoutModal = ({
               <button
                 type="button"
                 onClick={() => setStep(1)}
-                className="px-4 py-2.5 rounded-xl bg-slate-800 text-slate-300 hover:text-white text-xs font-semibold"
+                className="px-4 py-2.5 rounded-xl bg-white hover:bg-[#FFF6DC] text-[#2B2B2B] border border-[#EAE2D5] text-xs font-bold transition-colors cursor-pointer"
               >
                 Back to Details
               </button>
@@ -452,7 +455,7 @@ const CheckoutModal = ({
                 type="button"
                 disabled={submitting || timeLeft <= 0}
                 onClick={handleProcessPayment}
-                className="flex items-center gap-2 bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 disabled:opacity-40 text-slate-950 font-black px-6 py-2.5 rounded-xl text-xs sm:text-sm shadow-lg shadow-amber-500/25"
+                className="flex items-center gap-2 bg-[#E63946] hover:bg-[#D62839] disabled:opacity-40 text-white font-bold px-6 py-2.5 rounded-xl text-xs sm:text-sm shadow-xs transition-colors cursor-pointer"
               >
                 <CheckCircle2 className="w-4 h-4 stroke-[2.5]" />
                 <span>

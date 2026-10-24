@@ -80,21 +80,21 @@ const Bookings = () => {
     <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-8">
       {/* Newly Confirmed VIP Reservation Banner */}
       {showToast && (
-        <div className="bg-gradient-to-r from-amber-500/20 via-amber-500/10 to-transparent border border-amber-500/40 rounded-2xl p-4 sm:p-5 flex items-start sm:items-center justify-between gap-4 shadow-xl shadow-amber-500/5 animate-in fade-in duration-300">
+        <div className="bg-[#FFF6DC] border border-[#FFEDB0] rounded-2xl p-4 sm:p-5 flex items-start sm:items-center justify-between gap-4 shadow-xs animate-in fade-in duration-300">
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-xl bg-amber-500 text-slate-950 flex items-center justify-center shrink-0 shadow-md shadow-amber-500/30">
+            <div className="w-10 h-10 rounded-xl bg-[#FFC93C] text-[#1A1D20] flex items-center justify-center shrink-0 shadow-xs">
               <CheckCircle className="w-5 h-5 stroke-[2.5]" />
             </div>
             <div>
-              <p className="text-sm font-bold text-white flex items-center gap-1.5">
-                <Sparkles className="w-4 h-4 text-amber-400" />
+              <p className="text-sm font-bold text-[#2B2B2B] flex items-center gap-1.5">
+                <Sparkles className="w-4 h-4 text-[#E5B129]" />
                 VIP Reservation Confirmed!
               </p>
-              <p className="text-xs text-slate-300 mt-0.5">
+              <p className="text-xs text-[#6B7280] mt-0.5">
                 {location.state?.movieTitle ? (
                   <>
                     Your seats for{' '}
-                    <span className="text-amber-400 font-semibold">{location.state.movieTitle}</span> (
+                    <span className="text-[#E63946] font-bold">{location.state.movieTitle}</span> (
                     {Array.isArray(location.state.seats)
                       ? location.state.seats.join(', ')
                       : location.state.seats}
@@ -108,7 +108,7 @@ const Bookings = () => {
           </div>
           <button
             onClick={() => setShowToast(false)}
-            className="text-slate-400 hover:text-white p-1 rounded-lg transition-colors shrink-0"
+            className="text-[#6B7280] hover:text-[#2B2B2B] p-1 rounded-lg transition-colors shrink-0 cursor-pointer"
           >
             <X className="w-4 h-4" />
           </button>
@@ -116,35 +116,35 @@ const Bookings = () => {
       )}
 
       {/* Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-amber-500/15 pb-6">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-[#EAE2D5] pb-6">
         <div>
-          <h1 className="text-2xl sm:text-3xl font-extrabold text-white flex items-center gap-3 font-['Cinzel',serif]">
-            <Ticket className="w-7 h-7 text-amber-400" />
+          <h1 className="text-2xl sm:text-3xl font-extrabold text-[#2B2B2B] flex items-center gap-3">
+            <Ticket className="w-7 h-7 text-[#E63946]" />
             Confirmed Digital Passes
           </h1>
-          <p className="text-xs sm:text-sm text-slate-400 mt-1.5">
+          <p className="text-xs sm:text-sm text-[#6B7280] mt-1.5">
             Present this authentic digital boarding pass upon arrival at the auditorium suite
           </p>
         </div>
         <Link
           to="/"
-          className="text-xs font-bold bg-[#141822] hover:bg-[#1c2230] border border-amber-500/25 text-amber-400 px-4 py-2.5 rounded-xl transition-colors self-start sm:self-auto shadow-sm"
+          className="text-xs font-bold bg-white hover:bg-[#FFF6DC] border border-[#EAE2D5] text-[#E63946] px-4 py-2.5 rounded-xl transition-colors self-start sm:self-auto shadow-xs"
         >
           + Reserve Another Film
         </Link>
       </div>
 
       {bookings.length === 0 ? (
-        <div className="bg-[#12151d]/70 border border-slate-800 rounded-3xl p-12 text-center space-y-4 shadow-xl">
-          <Film className="w-12 h-12 text-amber-500/40 mx-auto" />
-          <h3 className="text-lg font-bold text-white font-['Cinzel',serif]">No Passes Reserved Yet</h3>
-          <p className="text-xs text-slate-400 max-w-md mx-auto leading-relaxed">
+        <div className="bg-white border border-[#EAE2D5] rounded-3xl p-12 text-center space-y-4 shadow-xs">
+          <Film className="w-12 h-12 text-[#FFC93C] mx-auto" />
+          <h3 className="text-lg font-bold text-[#2B2B2B]">No Passes Reserved Yet</h3>
+          <p className="text-xs text-[#6B7280] max-w-md mx-auto leading-relaxed">
             You do not currently have any active movie reservations. Explore the worldwide showcase, test the interactive seat map, and confirm your seats.
           </p>
           <div className="pt-2">
             <Link
               to="/"
-              className="inline-block bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 text-slate-950 text-xs font-bold px-6 py-2.5 rounded-xl transition shadow-md shadow-amber-500/15"
+              className="inline-block bg-[#E63946] hover:bg-[#D62839] text-white text-xs font-bold px-6 py-2.5 rounded-xl transition-colors shadow-xs"
             >
               Browse Now Showing
             </Link>
@@ -162,10 +162,10 @@ const Bookings = () => {
             return (
               <div
                 key={booking._id}
-                className={`relative bg-gradient-to-r from-[#12151d] via-[#151923] to-[#12151d] border rounded-3xl overflow-hidden flex flex-col md:flex-row shadow-2xl shadow-black/70 transition-all ${
+                className={`relative bg-white border rounded-3xl overflow-hidden flex flex-col md:flex-row shadow-xs transition-all ${
                   isCancelled
-                    ? 'border-slate-800 opacity-60'
-                    : 'border-amber-500/25 hover:border-amber-500/45'
+                    ? 'border-[#EAE2D5] opacity-60 bg-[#FAFAFA]'
+                    : 'border-[#EAE2D5] hover:border-[#FFC93C]'
                 }`}
               >
                 {/* Main Pass Section */}
@@ -177,49 +177,49 @@ const Bookings = () => {
                     }
                     alt={movie.title || 'Movie'}
                     referrerPolicy="no-referrer"
-                    className="w-20 sm:w-28 aspect-[3/4] rounded-xl object-cover border border-amber-500/30 shadow-lg shrink-0"
+                    className="w-20 sm:w-28 aspect-[3/4] rounded-xl object-cover border border-[#EAE2D5] shadow-xs shrink-0"
                   />
 
                   <div className="space-y-2 flex-1 min-w-0">
                     <div className="flex items-center gap-2">
                       {isCancelled ? (
-                        <span className="inline-flex items-center gap-1 text-[10px] font-bold uppercase tracking-wider text-rose-400 bg-rose-500/10 border border-rose-500/25 px-2.5 py-0.5 rounded-md">
+                        <span className="inline-flex items-center gap-1 text-[10px] font-bold uppercase tracking-wider text-[#B81D2D] bg-[#FDECEC] border border-[#FCD7D7] px-2.5 py-0.5 rounded-md">
                           <Ban className="w-3 h-3" />
                           Reservation Cancelled
                         </span>
                       ) : (
-                        <span className="inline-flex items-center gap-1.5 text-[10px] font-bold uppercase tracking-wider text-amber-300 bg-amber-500/10 border border-amber-500/25 px-2.5 py-0.5 rounded-md">
-                          <CheckCircle className="w-3 h-3 text-amber-400" />
+                        <span className="inline-flex items-center gap-1.5 text-[10px] font-bold uppercase tracking-wider text-[#7A5B14] bg-[#FFF6DC] border border-[#FFEDB0] px-2.5 py-0.5 rounded-md">
+                          <CheckCircle className="w-3 h-3 text-[#E5B129]" />
                           Confirmed VIP Admission
                         </span>
                       )}
 
-                      <span className="text-[10px] text-slate-400 font-mono">
-                        Ref: <strong>{bookingRef}</strong>
+                      <span className="text-[10px] text-[#6B7280] font-mono">
+                        Ref: <strong className="text-[#2B2B2B]">{bookingRef}</strong>
                       </span>
                     </div>
 
-                    <h3 className="text-lg sm:text-xl font-bold text-white tracking-tight truncate">
+                    <h3 className="text-lg sm:text-xl font-bold text-[#2B2B2B] tracking-tight truncate">
                       {movie.title || 'Feature Film Presentation'}
                     </h3>
 
-                    <p className="text-xs text-slate-400 flex items-center gap-1.5">
-                      <MapPin className="w-3.5 h-3.5 text-amber-400 shrink-0" />
+                    <p className="text-xs text-[#6B7280] flex items-center gap-1.5">
+                      <MapPin className="w-3.5 h-3.5 text-[#E63946] shrink-0" />
                       <span className="truncate">
                         {booking.cinema || movie.theater || 'iMovies VIP Cinema'}
                       </span>
                     </p>
 
-                    <div className="flex flex-wrap items-center gap-4 sm:gap-6 pt-1 text-xs text-slate-300">
+                    <div className="flex flex-wrap items-center gap-4 sm:gap-6 pt-1 text-xs text-[#6B7280]">
                       <span className="flex items-center gap-1.5">
-                        <Calendar className="w-3.5 h-3.5 text-amber-400" />
-                        <span className="font-mono">
+                        <Calendar className="w-3.5 h-3.5 text-[#E63946]" />
+                        <span className="font-mono text-[#2B2B2B]">
                           {booking.showDate || new Date(booking.bookingDate).toLocaleDateString()}
                         </span>
                       </span>
                       <span className="flex items-center gap-1.5">
-                        <Clock className="w-3.5 h-3.5 text-amber-400" />
-                        <span className="font-semibold text-amber-300">
+                        <Clock className="w-3.5 h-3.5 text-[#E63946]" />
+                        <span className="font-bold text-[#E63946]">
                           {booking.showTime || '06:30 PM'}
                         </span>
                       </span>
@@ -230,7 +230,7 @@ const Bookings = () => {
                       <button
                         type="button"
                         onClick={() => handlePrint(bookingRef)}
-                        className="inline-flex items-center gap-1.5 text-slate-400 hover:text-white transition-colors"
+                        className="inline-flex items-center gap-1.5 text-[#6B7280] hover:text-[#2B2B2B] transition-colors cursor-pointer font-medium"
                       >
                         <Printer className="w-3.5 h-3.5" />
                         <span>Print Pass</span>
@@ -246,7 +246,7 @@ const Bookings = () => {
                               movieTitle: movie.title || 'Movie'
                             })
                           }
-                          className="inline-flex items-center gap-1.5 text-rose-400/80 hover:text-rose-300 transition-colors"
+                          className="inline-flex items-center gap-1.5 text-[#B81D2D] hover:text-[#991B1B] transition-colors cursor-pointer font-medium"
                         >
                           <Ban className="w-3.5 h-3.5" />
                           <span>Cancel Pass</span>
@@ -257,22 +257,22 @@ const Bookings = () => {
                 </div>
 
                 {/* Perforated Stub Divider (Dashed with notches) */}
-                <div className="relative border-t md:border-t-0 md:border-l border-dashed border-amber-500/30 bg-[#0c0e14]/90 p-5 sm:p-6 flex flex-row md:flex-col justify-between items-center md:items-end min-w-[220px]">
+                <div className="relative border-t md:border-t-0 md:border-l border-dashed border-[#EAE2D5] bg-[#FFF9F0] p-5 sm:p-6 flex flex-row md:flex-col justify-between items-center md:items-end min-w-[220px]">
                   {/* Decorative notch cutouts on desktop */}
-                  <div className="hidden md:block absolute -top-3 -left-3 w-6 h-6 rounded-full bg-[#0b0d11] border border-amber-500/25" />
-                  <div className="hidden md:block absolute -bottom-3 -left-3 w-6 h-6 rounded-full bg-[#0b0d11] border border-amber-500/25" />
+                  <div className="hidden md:block absolute -top-3 -left-3 w-6 h-6 rounded-full bg-[#FFF9F0] border border-[#EAE2D5]" />
+                  <div className="hidden md:block absolute -bottom-3 -left-3 w-6 h-6 rounded-full bg-[#FFF9F0] border border-[#EAE2D5]" />
 
                   <div className="text-left md:text-right space-y-1">
-                    <span className="text-[10px] uppercase font-bold tracking-wider text-slate-400 block">
+                    <span className="text-[10px] uppercase font-bold tracking-wider text-[#6B7280] block">
                       Reserved Recliners
                     </span>
-                    <span className="text-base font-black font-mono text-amber-400 block">
+                    <span className="text-base font-black font-mono text-[#2B2B2B] block">
                       {seatsList}
                     </span>
-                    <span className="text-[10px] uppercase font-bold tracking-wider text-slate-500 block pt-1">
+                    <span className="text-[10px] uppercase font-bold tracking-wider text-[#6B7280] block pt-1">
                       {isCancelled ? 'Refund Status' : 'Amount Paid'}
                     </span>
-                    <span className="text-xl font-extrabold text-white font-mono tabular-nums block">
+                    <span className="text-xl font-black text-[#E63946] font-mono tabular-nums block">
                       {isCancelled
                         ? 'Refunded'
                         : `${booking.currency || '₹'} ${booking.totalPrice}`}
@@ -280,14 +280,14 @@ const Bookings = () => {
                   </div>
 
                   <div className="flex items-center gap-2 pt-2 md:pt-4">
-                    <div className="bg-[#F1F5F9] p-1 rounded-md">
-                      <QrCode className="w-7 h-7 text-slate-950" />
+                    <div className="bg-white p-1.5 rounded-xl border border-[#EAE2D5] shadow-xs">
+                      <QrCode className="w-7 h-7 text-[#2B2B2B]" />
                     </div>
                     <div className="text-right">
-                      <span className="text-[9px] uppercase tracking-wider text-slate-500 block">
+                      <span className="text-[9px] uppercase tracking-wider text-[#6B7280] block">
                         Scan at Gate
                       </span>
-                      <span className="text-xs font-mono font-bold text-amber-400">
+                      <span className="text-xs font-mono font-bold text-[#E63946]">
                         #{bookingRef.slice(-6)}
                       </span>
                     </div>
@@ -301,35 +301,35 @@ const Bookings = () => {
 
       {/* Cancellation Confirmation Modal */}
       {cancelModal.isOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm animate-in fade-in duration-200">
-          <div className="bg-[#12151d] border border-rose-500/30 rounded-3xl p-6 max-w-md w-full space-y-4 shadow-2xl">
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-xs animate-in fade-in duration-200">
+          <div className="bg-white border border-[#EAE2D5] rounded-3xl p-6 max-w-md w-full space-y-4 shadow-2xl">
             <div className="flex items-center gap-3">
-              <div className="w-10 h-10 rounded-xl bg-rose-500/10 text-rose-400 flex items-center justify-center shrink-0">
+              <div className="w-10 h-10 rounded-xl bg-[#FDECEC] border border-[#FCD7D7] text-[#E63946] flex items-center justify-center shrink-0">
                 <AlertTriangle className="w-5 h-5" />
               </div>
               <div>
-                <h3 className="text-base font-bold text-white font-['Cinzel',serif]">
+                <h3 className="text-base font-bold text-[#2B2B2B]">
                   Cancel Reservation?
                 </h3>
-                <p className="text-xs text-slate-400">
+                <p className="text-xs text-[#6B7280]">
                   Are you sure you want to cancel your passes for <strong>{cancelModal.movieTitle}</strong>?
                 </p>
               </div>
             </div>
 
-            <p className="text-xs text-slate-400 bg-[#0b0e14] border border-slate-800 p-3 rounded-xl leading-relaxed">
+            <p className="text-xs text-[#6B7280] bg-[#FFF9F0] border border-[#EAE2D5] p-3 rounded-xl leading-relaxed">
               Your reserved seats will immediately be released back into auditorium inventory, and a simulated full refund will be processed to your original test payment method.
             </p>
 
             {cancelMessage && (
-              <p className="text-xs font-bold text-amber-400 text-center">{cancelMessage}</p>
+              <p className="text-xs font-bold text-[#E63946] text-center">{cancelMessage}</p>
             )}
 
             <div className="flex justify-end gap-2 pt-2">
               <button
                 type="button"
                 onClick={() => setCancelModal({ isOpen: false, bookingId: null, movieTitle: '' })}
-                className="px-4 py-2 rounded-xl bg-slate-800 text-slate-300 hover:text-white text-xs font-semibold"
+                className="px-4 py-2 rounded-xl bg-white hover:bg-[#FFF6DC] text-[#2B2B2B] border border-[#EAE2D5] text-xs font-semibold cursor-pointer transition-colors"
               >
                 Keep Reservation
               </button>
@@ -337,7 +337,7 @@ const Bookings = () => {
                 type="button"
                 disabled={cancelling}
                 onClick={handleConfirmCancel}
-                className="px-4 py-2 rounded-xl bg-rose-600 hover:bg-rose-500 text-white font-bold text-xs shadow-md"
+                className="px-4 py-2 rounded-xl bg-[#E63946] hover:bg-[#D62839] text-white font-bold text-xs shadow-xs cursor-pointer transition-colors"
               >
                 {cancelling ? 'Cancelling...' : 'Confirm Cancellation'}
               </button>
