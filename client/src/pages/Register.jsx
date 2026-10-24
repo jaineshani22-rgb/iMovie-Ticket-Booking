@@ -110,24 +110,24 @@ const Register = () => {
 
   return (
     <div className="min-h-[85vh] flex items-center justify-center px-4 py-10">
-      <div className="max-w-md w-full bg-[#12151d] border border-amber-500/25 rounded-3xl p-6 sm:p-8 shadow-2xl shadow-black/80 space-y-6 cinema-vignette">
+      <div className="max-w-md w-full bg-white border border-[#EAE2D5] rounded-3xl p-6 sm:p-8 shadow-xl space-y-6">
         <div className="text-center space-y-2">
-          <div className="w-12 h-12 rounded-2xl bg-amber-500/10 border border-amber-500/30 text-amber-400 flex items-center justify-center mx-auto shadow-md">
+          <div className="w-12 h-12 rounded-2xl bg-[#FDECEC] border border-[#FCD7D7] text-[#E63946] flex items-center justify-center mx-auto shadow-xs">
             <Film className="w-6 h-6 stroke-[2.2]" />
           </div>
-          <h2 className="text-2xl font-extrabold text-white font-['Cinzel',serif]">Join VIP Membership</h2>
-          <p className="text-xs text-slate-400">Unlock luxury seat reservations and instant digital passes</p>
+          <h2 className="text-2xl font-extrabold text-[#2B2B2B] tracking-tight">Join VIP Membership</h2>
+          <p className="text-xs text-[#6B7280]">Unlock luxury seat reservations and instant digital passes</p>
         </div>
 
         {error && (
-          <div className="flex items-center gap-2 bg-rose-500/10 border border-rose-500/30 text-rose-400 text-xs p-3.5 rounded-xl animate-in fade-in">
-            <AlertCircle className="w-4 h-4 shrink-0" />
+          <div className="flex items-center gap-2 bg-[#FDECEC] border border-[#FCD7D7] text-[#B81D2D] text-xs p-3.5 rounded-xl animate-in fade-in">
+            <AlertCircle className="w-4 h-4 shrink-0 text-[#E63946]" />
             <span>{error}</span>
           </div>
         )}
 
         {success && (
-          <div className="flex items-center gap-2 bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 text-xs p-3.5 rounded-xl animate-in fade-in">
+          <div className="flex items-center gap-2 bg-[#ECFDF5] border border-[#A7F3D0] text-[#047857] text-xs p-3.5 rounded-xl animate-in fade-in">
             <CheckCircle2 className="w-4 h-4 shrink-0" />
             <span>{success}</span>
           </div>
@@ -138,7 +138,7 @@ const Register = () => {
           type="button"
           onClick={handleGoogleSignIn}
           disabled={loading}
-          className="w-full bg-[#161a24] hover:bg-[#1e2330] border border-slate-700/80 text-white font-semibold py-2.5 rounded-xl transition-all text-xs flex items-center justify-center gap-2.5 shadow-sm"
+          className="w-full bg-white hover:bg-[#FFF6DC] border border-[#DCD3C5] text-[#2B2B2B] font-bold py-2.5 rounded-xl transition-all text-xs flex items-center justify-center gap-2.5 shadow-xs cursor-pointer"
         >
           <svg className="w-4 h-4" viewBox="0 0 24 24">
             <path
@@ -162,45 +162,45 @@ const Register = () => {
         </button>
 
         <div className="flex items-center gap-3">
-          <div className="h-[1px] flex-1 bg-slate-800" />
-          <span className="text-[11px] uppercase tracking-wider text-slate-500 font-semibold">Or email registration</span>
-          <div className="h-[1px] flex-1 bg-slate-800" />
+          <div className="h-[1px] flex-1 bg-[#EAE2D5]" />
+          <span className="text-[11px] uppercase tracking-wider text-[#6B7280] font-bold">Or email registration</span>
+          <div className="h-[1px] flex-1 bg-[#EAE2D5]" />
         </div>
 
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
-            <label className="block text-xs font-semibold text-slate-300 mb-1.5">Full Name / Member Name</label>
+            <label className="block text-xs font-bold text-[#2B2B2B] mb-1.5">Full Name / Member Name</label>
             <div className="relative">
-              <User className="w-4 h-4 text-slate-500 absolute left-3.5 top-1/2 -translate-y-1/2" />
+              <User className="w-4 h-4 text-[#9CA3AF] absolute left-3.5 top-1/2 -translate-y-1/2" />
               <input
                 type="text"
                 required
                 value={username}
                 onChange={(e) => setUsername(e.target.value)}
                 placeholder="Tanishq Pardeshi"
-                className="w-full bg-[#0a0c10] border border-slate-700/80 focus:border-amber-400 rounded-xl pl-10 pr-4 py-2 text-xs sm:text-sm text-white focus:outline-none shadow-inner transition-colors"
+                className="w-full bg-[#FFF9F0] border border-[#DCD3C5] focus:border-[#E63946] focus:bg-white focus:ring-2 focus:ring-[#FFC93C]/30 rounded-xl pl-10 pr-4 py-2 text-xs sm:text-sm text-[#2B2B2B] focus:outline-none transition-all"
               />
             </div>
           </div>
 
           <div>
-            <label className="block text-xs font-semibold text-slate-300 mb-1.5">Email Address</label>
+            <label className="block text-xs font-bold text-[#2B2B2B] mb-1.5">Email Address</label>
             <div className="relative">
-              <Mail className="w-4 h-4 text-slate-500 absolute left-3.5 top-1/2 -translate-y-1/2" />
+              <Mail className="w-4 h-4 text-[#9CA3AF] absolute left-3.5 top-1/2 -translate-y-1/2" />
               <input
                 type="email"
                 required
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 placeholder="you@example.com"
-                className="w-full bg-[#0a0c10] border border-slate-700/80 focus:border-amber-400 rounded-xl pl-10 pr-4 py-2 text-xs sm:text-sm text-white focus:outline-none shadow-inner transition-colors"
+                className="w-full bg-[#FFF9F0] border border-[#DCD3C5] focus:border-[#E63946] focus:bg-white focus:ring-2 focus:ring-[#FFC93C]/30 rounded-xl pl-10 pr-4 py-2 text-xs sm:text-sm text-[#2B2B2B] focus:outline-none transition-all"
               />
             </div>
           </div>
 
           <div>
             <div className="flex items-center justify-between mb-1.5">
-              <label className="block text-xs font-semibold text-slate-300">Password</label>
+              <label className="block text-xs font-bold text-[#2B2B2B]">Password</label>
               {password && (
                 <span className={`text-[10px] font-bold ${strength.text}`}>
                   {strength.label}
@@ -208,7 +208,7 @@ const Register = () => {
               )}
             </div>
             <div className="relative">
-              <Lock className="w-4 h-4 text-slate-500 absolute left-3.5 top-1/2 -translate-y-1/2" />
+              <Lock className="w-4 h-4 text-[#9CA3AF] absolute left-3.5 top-1/2 -translate-y-1/2" />
               <input
                 type={showPassword ? 'text' : 'password'}
                 required
@@ -216,12 +216,12 @@ const Register = () => {
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 placeholder="At least 6 characters"
-                className="w-full bg-[#0a0c10] border border-slate-700/80 focus:border-amber-400 rounded-xl pl-10 pr-10 py-2 text-xs sm:text-sm text-white focus:outline-none shadow-inner transition-colors"
+                className="w-full bg-[#FFF9F0] border border-[#DCD3C5] focus:border-[#E63946] focus:bg-white focus:ring-2 focus:ring-[#FFC93C]/30 rounded-xl pl-10 pr-10 py-2 text-xs sm:text-sm text-[#2B2B2B] focus:outline-none transition-all"
               />
               <button
                 type="button"
                 onClick={() => setShowPassword((prev) => !prev)}
-                className="absolute right-3.5 top-1/2 -translate-y-1/2 text-slate-500 hover:text-amber-400 transition-colors cursor-pointer"
+                className="absolute right-3.5 top-1/2 -translate-y-1/2 text-[#9CA3AF] hover:text-[#2B2B2B] transition-colors cursor-pointer"
                 aria-label={showPassword ? 'Hide password' : 'Show password'}
               >
                 {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
@@ -230,20 +230,20 @@ const Register = () => {
             {/* Visual Strength Meter */}
             {password && (
               <div className="mt-1.5 space-y-1">
-                <div className="w-full h-1.5 bg-slate-800 rounded-full overflow-hidden">
+                <div className="w-full h-1.5 bg-[#EAE2D5] rounded-full overflow-hidden">
                   <div
                     className={`h-full transition-all duration-300 ${strength.color}`}
                     style={{ width: `${strength.score}%` }}
                   />
                 </div>
-                <div className="flex items-center gap-3 text-[10px] text-slate-400">
-                  <span className={`flex items-center gap-1 ${password.length >= 6 ? 'text-emerald-400' : ''}`}>
+                <div className="flex items-center gap-3 text-[10px] text-[#6B7280]">
+                  <span className={`flex items-center gap-1 ${password.length >= 6 ? 'text-[#047857] font-semibold' : ''}`}>
                     <Check className="w-2.5 h-2.5" /> 6+ chars
                   </span>
-                  <span className={`flex items-center gap-1 ${/[0-9]/.test(password) ? 'text-emerald-400' : ''}`}>
+                  <span className={`flex items-center gap-1 ${/[0-9]/.test(password) ? 'text-[#047857] font-semibold' : ''}`}>
                     <Check className="w-2.5 h-2.5" /> Numbers
                   </span>
-                  <span className={`flex items-center gap-1 ${/[^A-Za-z0-9]/.test(password) ? 'text-emerald-400' : ''}`}>
+                  <span className={`flex items-center gap-1 ${/[^A-Za-z0-9]/.test(password) ? 'text-[#047857] font-semibold' : ''}`}>
                     <Check className="w-2.5 h-2.5" /> Special
                   </span>
                 </div>
@@ -252,9 +252,9 @@ const Register = () => {
           </div>
 
           <div>
-            <label className="block text-xs font-semibold text-slate-300 mb-1.5">Confirm Password</label>
+            <label className="block text-xs font-bold text-[#2B2B2B] mb-1.5">Confirm Password</label>
             <div className="relative">
-              <ShieldCheck className="w-4 h-4 text-slate-500 absolute left-3.5 top-1/2 -translate-y-1/2" />
+              <ShieldCheck className="w-4 h-4 text-[#9CA3AF] absolute left-3.5 top-1/2 -translate-y-1/2" />
               <input
                 type={showConfirmPassword ? 'text' : 'password'}
                 required
@@ -262,44 +262,44 @@ const Register = () => {
                 value={confirmPassword}
                 onChange={(e) => setConfirmPassword(e.target.value)}
                 placeholder="Re-enter password"
-                className={`w-full bg-[#0a0c10] border rounded-xl pl-10 pr-10 py-2 text-xs sm:text-sm text-white focus:outline-none shadow-inner transition-colors ${
+                className={`w-full bg-[#FFF9F0] border rounded-xl pl-10 pr-10 py-2 text-xs sm:text-sm text-[#2B2B2B] focus:outline-none transition-all ${
                   confirmPassword && confirmPassword !== password
-                    ? 'border-rose-500'
+                    ? 'border-[#B81D2D]'
                     : confirmPassword && confirmPassword === password
-                    ? 'border-emerald-500'
-                    : 'border-slate-700/80 focus:border-amber-400'
+                    ? 'border-[#047857]'
+                    : 'border-[#DCD3C5] focus:border-[#E63946] focus:bg-white focus:ring-2 focus:ring-[#FFC93C]/30'
                 }`}
               />
               <button
                 type="button"
                 onClick={() => setShowConfirmPassword((prev) => !prev)}
-                className="absolute right-3.5 top-1/2 -translate-y-1/2 text-slate-500 hover:text-amber-400 transition-colors cursor-pointer"
+                className="absolute right-3.5 top-1/2 -translate-y-1/2 text-[#9CA3AF] hover:text-[#2B2B2B] transition-colors cursor-pointer"
                 aria-label={showConfirmPassword ? 'Hide confirm password' : 'Show confirm password'}
               >
                 {showConfirmPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
               </button>
             </div>
             {confirmPassword && confirmPassword !== password && (
-              <p className="text-[11px] text-rose-400 mt-1">Passwords do not match.</p>
+              <p className="text-[11px] text-[#B81D2D] mt-1 font-semibold">Passwords do not match.</p>
             )}
           </div>
 
           <button
             type="submit"
             disabled={loading}
-            className="w-full bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 disabled:opacity-40 text-slate-950 font-black py-2.5 rounded-xl shadow-lg shadow-amber-500/20 transition-all text-xs sm:text-sm flex items-center justify-center gap-2 cursor-pointer"
+            className="w-full bg-[#E63946] hover:bg-[#D62839] disabled:opacity-40 text-white font-bold py-2.5 rounded-xl shadow-xs transition-all text-xs sm:text-sm flex items-center justify-center gap-2 cursor-pointer"
           >
             <span>{loading ? 'Creating Account...' : 'Create Account'}</span>
             <ArrowRight className="w-4 h-4 stroke-[2.5]" />
           </button>
         </form>
 
-        <p className="text-center text-xs text-slate-400">
+        <p className="text-center text-xs text-[#6B7280]">
           Already registered?{' '}
           <Link
             to="/login"
             state={{ from: location.state?.from }}
-            className="text-amber-400 hover:text-amber-300 font-bold"
+            className="text-[#E63946] hover:underline font-bold"
           >
             Sign In here
           </Link>

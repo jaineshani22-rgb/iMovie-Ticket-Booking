@@ -18,7 +18,7 @@ const App = () => {
     <AuthProvider>
       <LocationProvider>
         <Router>
-          <div className="min-h-screen bg-[#0b0d11] text-slate-100 flex flex-col selection:bg-amber-500 selection:text-slate-950">
+          <div className="min-h-screen bg-[#FFF9F0] text-[#2B2B2B] flex flex-col selection:bg-[#FFC93C] selection:text-[#2B2B2B]">
             <Navbar />
             <main className="flex-1">
               <Routes>
@@ -53,12 +53,12 @@ const App = () => {
                 />
               </Routes>
             </main>
-            <footer className="border-t border-amber-500/10 py-8 bg-[#090b0e] text-xs text-slate-500 text-center">
+            <footer className="border-t border-[#EAE2D5] py-8 bg-white text-xs text-[#6B7280] text-center shadow-xs">
               <div className="max-w-7xl mx-auto px-4 flex flex-col sm:flex-row items-center justify-between gap-4">
-                <p className="font-['Cinzel',serif] tracking-wider text-slate-400">
-                  i<span className="text-amber-400">Movies</span> Worldwide Real-Time Movie Ticket Booking
+                <p className="font-['Space_Grotesk',sans-serif] tracking-wider text-[#2B2B2B] font-bold">
+                  i<span className="text-[#E63946]">Movies</span> Worldwide Real-Time Movie Ticket Booking
                 </p>
-                <p>© {new Date().getFullYear()} iMovies. 4K IMAX Laser · Dolby Atmos · Reserve Suites · Sandbox Verified.</p>
+                <p>© {new Date().getFullYear()} iMovies. 4K IMAX Laser · Dolby Atmos · Reserve Suites · Cinema Verified.</p>
               </div>
             </footer>
           </div>

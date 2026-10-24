@@ -125,24 +125,24 @@ const Login = () => {
 
   return (
     <div className="min-h-[85vh] flex items-center justify-center px-4 py-10">
-      <div className="max-w-md w-full bg-[#12151d] border border-amber-500/25 rounded-3xl p-6 sm:p-8 shadow-2xl shadow-black/80 space-y-6 cinema-vignette relative">
+      <div className="max-w-md w-full bg-white border border-[#EAE2D5] rounded-3xl p-6 sm:p-8 shadow-xl space-y-6 relative">
         <div className="text-center space-y-2">
-          <div className="w-12 h-12 rounded-2xl bg-amber-500/10 border border-amber-500/30 text-amber-400 flex items-center justify-center mx-auto shadow-md">
+          <div className="w-12 h-12 rounded-2xl bg-[#FDECEC] border border-[#FCD7D7] text-[#E63946] flex items-center justify-center mx-auto shadow-xs">
             <Film className="w-6 h-6 stroke-[2.2]" />
           </div>
-          <h2 className="text-2xl font-extrabold text-white font-['Cinzel',serif]">VIP Lounge Sign In</h2>
-          <p className="text-xs text-slate-400">Access your reserved seats and digital booking passes</p>
+          <h2 className="text-2xl font-extrabold text-[#2B2B2B] tracking-tight">VIP Lounge Sign In</h2>
+          <p className="text-xs text-[#6B7280]">Access your reserved seats and digital booking passes</p>
         </div>
 
         {error && (
-          <div className="flex items-center gap-2 bg-rose-500/10 border border-rose-500/30 text-rose-400 text-xs p-3.5 rounded-xl animate-in fade-in">
-            <AlertCircle className="w-4 h-4 shrink-0" />
+          <div className="flex items-center gap-2 bg-[#FDECEC] border border-[#FCD7D7] text-[#B81D2D] text-xs p-3.5 rounded-xl animate-in fade-in">
+            <AlertCircle className="w-4 h-4 shrink-0 text-[#E63946]" />
             <span>{error}</span>
           </div>
         )}
 
         {success && (
-          <div className="flex items-center gap-2 bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 text-xs p-3.5 rounded-xl animate-in fade-in">
+          <div className="flex items-center gap-2 bg-[#ECFDF5] border border-[#A7F3D0] text-[#047857] text-xs p-3.5 rounded-xl animate-in fade-in">
             <CheckCircle2 className="w-4 h-4 shrink-0" />
             <span>{success}</span>
           </div>
@@ -153,7 +153,7 @@ const Login = () => {
           type="button"
           onClick={handleGoogleSignIn}
           disabled={loading}
-          className="w-full bg-[#161a24] hover:bg-[#1e2330] border border-slate-700/80 text-white font-semibold py-2.5 rounded-xl transition-all text-xs flex items-center justify-center gap-2.5 shadow-sm"
+          className="w-full bg-white hover:bg-[#FFF6DC] border border-[#DCD3C5] text-[#2B2B2B] font-bold py-2.5 rounded-xl transition-all text-xs flex items-center justify-center gap-2.5 shadow-xs cursor-pointer"
         >
           <svg className="w-4 h-4" viewBox="0 0 24 24">
             <path
@@ -177,30 +177,30 @@ const Login = () => {
         </button>
 
         <div className="flex items-center gap-3">
-          <div className="h-[1px] flex-1 bg-slate-800" />
-          <span className="text-[11px] uppercase tracking-wider text-slate-500 font-semibold">Or email & password</span>
-          <div className="h-[1px] flex-1 bg-slate-800" />
+          <div className="h-[1px] flex-1 bg-[#EAE2D5]" />
+          <span className="text-[11px] uppercase tracking-wider text-[#6B7280] font-bold">Or email & password</span>
+          <div className="h-[1px] flex-1 bg-[#EAE2D5]" />
         </div>
 
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
-            <label className="block text-xs font-semibold text-slate-300 mb-1.5">Email Address</label>
+            <label className="block text-xs font-bold text-[#2B2B2B] mb-1.5">Email Address</label>
             <div className="relative">
-              <Mail className="w-4 h-4 text-slate-500 absolute left-3.5 top-1/2 -translate-y-1/2" />
+              <Mail className="w-4 h-4 text-[#9CA3AF] absolute left-3.5 top-1/2 -translate-y-1/2" />
               <input
                 type="email"
                 required
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 placeholder="you@example.com"
-                className="w-full bg-[#0a0c10] border border-slate-700/80 focus:border-amber-400 rounded-xl pl-10 pr-4 py-2 text-xs sm:text-sm text-white focus:outline-none shadow-inner transition-colors"
+                className="w-full bg-[#FFF9F0] border border-[#DCD3C5] focus:border-[#E63946] focus:bg-white focus:ring-2 focus:ring-[#FFC93C]/30 rounded-xl pl-10 pr-4 py-2 text-xs sm:text-sm text-[#2B2B2B] focus:outline-none transition-all"
               />
             </div>
           </div>
 
           <div>
             <div className="flex items-center justify-between mb-1.5">
-              <label className="block text-xs font-semibold text-slate-300">Password</label>
+              <label className="block text-xs font-bold text-[#2B2B2B]">Password</label>
               <button
                 type="button"
                 onClick={() => {
@@ -210,25 +210,25 @@ const Login = () => {
                   setForgotMessage('');
                   setShowForgotModal(true);
                 }}
-                className="text-[11px] text-amber-400 hover:text-amber-300 font-medium cursor-pointer"
+                className="text-[11px] text-[#E63946] hover:underline font-bold cursor-pointer"
               >
                 Forgot Password?
               </button>
             </div>
             <div className="relative">
-              <Lock className="w-4 h-4 text-slate-500 absolute left-3.5 top-1/2 -translate-y-1/2" />
+              <Lock className="w-4 h-4 text-[#9CA3AF] absolute left-3.5 top-1/2 -translate-y-1/2" />
               <input
                 type={showPassword ? 'text' : 'password'}
                 required
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 placeholder="••••••••"
-                className="w-full bg-[#0a0c10] border border-slate-700/80 focus:border-amber-400 rounded-xl pl-10 pr-10 py-2 text-xs sm:text-sm text-white focus:outline-none shadow-inner transition-colors"
+                className="w-full bg-[#FFF9F0] border border-[#DCD3C5] focus:border-[#E63946] focus:bg-white focus:ring-2 focus:ring-[#FFC93C]/30 rounded-xl pl-10 pr-10 py-2 text-xs sm:text-sm text-[#2B2B2B] focus:outline-none transition-all"
               />
               <button
                 type="button"
                 onClick={() => setShowPassword((prev) => !prev)}
-                className="absolute right-3.5 top-1/2 -translate-y-1/2 text-slate-500 hover:text-amber-400 transition-colors cursor-pointer"
+                className="absolute right-3.5 top-1/2 -translate-y-1/2 text-[#9CA3AF] hover:text-[#2B2B2B] transition-colors cursor-pointer"
                 aria-label={showPassword ? 'Hide password' : 'Show password'}
               >
                 {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
@@ -239,7 +239,7 @@ const Login = () => {
           <button
             type="submit"
             disabled={loading}
-            className="w-full bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 disabled:opacity-40 text-slate-950 font-black py-2.5 rounded-xl shadow-lg shadow-amber-500/20 transition-all text-xs sm:text-sm flex items-center justify-center gap-2 cursor-pointer"
+            className="w-full bg-[#E63946] hover:bg-[#D62839] disabled:opacity-40 text-white font-bold py-2.5 rounded-xl shadow-xs transition-all text-xs sm:text-sm flex items-center justify-center gap-2 cursor-pointer"
           >
             <span>{loading ? 'Authenticating...' : 'Sign In to Lounge'}</span>
             <ArrowRight className="w-4 h-4 stroke-[2.5]" />
@@ -247,34 +247,34 @@ const Login = () => {
         </form>
 
         {/* Quick Seeded Demo Accounts */}
-        <div className="pt-4 border-t border-slate-800/80 space-y-2">
-          <p className="text-[11px] text-slate-400 text-center font-semibold uppercase tracking-wider">
+        <div className="pt-4 border-t border-[#EAE2D5] space-y-2">
+          <p className="text-[11px] text-[#6B7280] text-center font-bold uppercase tracking-wider">
             One-Click Demo Credentials:
           </p>
           <div className="grid grid-cols-2 gap-2">
             <button
               type="button"
               onClick={() => fillDemoCredentials('user@imovies.com', 'user123')}
-              className="text-xs bg-[#161a24] hover:bg-[#1f2432] border border-amber-500/20 text-slate-200 py-2 rounded-lg transition-colors font-medium cursor-pointer"
+              className="text-xs bg-[#FFF9F0] hover:bg-[#FFF6DC] border border-[#EAE2D5] text-[#2B2B2B] py-2 rounded-xl transition-colors font-semibold cursor-pointer"
             >
               Customer Account
             </button>
             <button
               type="button"
               onClick={() => fillDemoCredentials('admin@imovies.com', 'admin123')}
-              className="text-xs bg-[#161a24] hover:bg-[#1f2432] border border-amber-500/30 text-amber-400 py-2 rounded-lg transition-colors font-medium cursor-pointer"
+              className="text-xs bg-[#FFF6DC] hover:bg-[#FFEDB0] border border-[#FFC93C] text-[#7A5B14] py-2 rounded-xl transition-colors font-bold cursor-pointer"
             >
               Admin Manager
             </button>
           </div>
         </div>
 
-        <p className="text-center text-xs text-slate-400">
+        <p className="text-center text-xs text-[#6B7280]">
           New to iMovies?{' '}
           <Link
             to="/register"
             state={{ from: location.state?.from }}
-            className="text-amber-400 hover:text-amber-300 font-bold"
+            className="text-[#E63946] hover:underline font-bold"
           >
             Create an account
           </Link>
@@ -282,37 +282,37 @@ const Login = () => {
 
         {/* Forgot / Reset Password Modal */}
         {showForgotModal && (
-          <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm animate-in fade-in">
-            <div className="w-full max-w-sm bg-[#12151d] border border-amber-500/30 rounded-2xl p-6 shadow-2xl space-y-4 relative">
+          <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-xs animate-in fade-in">
+            <div className="w-full max-w-sm bg-white border border-[#EAE2D5] rounded-3xl p-6 shadow-2xl space-y-4 relative">
               <button
                 type="button"
                 onClick={() => setShowForgotModal(false)}
-                className="absolute top-4 right-4 text-slate-400 hover:text-white"
+                className="absolute top-4 right-4 text-[#6B7280] hover:text-[#2B2B2B] cursor-pointer"
               >
                 <X className="w-4 h-4" />
               </button>
 
               <div className="flex items-center gap-2.5">
-                <div className="w-8 h-8 rounded-lg bg-amber-500/10 border border-amber-500/30 text-amber-400 flex items-center justify-center">
+                <div className="w-8 h-8 rounded-xl bg-[#FDECEC] border border-[#FCD7D7] text-[#E63946] flex items-center justify-center">
                   <KeyRound className="w-4 h-4" />
                 </div>
                 <div>
-                  <h3 className="text-sm font-bold text-white">Reset VIP Password</h3>
-                  <p className="text-[11px] text-slate-400">
+                  <h3 className="text-sm font-bold text-[#2B2B2B]">Reset VIP Password</h3>
+                  <p className="text-[11px] text-[#6B7280]">
                     {forgotStep === 1 ? 'Enter your email for reset instructions' : 'Set your new secure password'}
                   </p>
                 </div>
               </div>
 
               {forgotError && (
-                <div className="text-[11px] bg-rose-500/10 border border-rose-500/30 text-rose-400 p-2.5 rounded-lg flex items-center gap-1.5">
-                  <AlertCircle className="w-3.5 h-3.5 shrink-0" />
+                <div className="text-[11px] bg-[#FDECEC] border border-[#FCD7D7] text-[#B81D2D] p-2.5 rounded-xl flex items-center gap-1.5">
+                  <AlertCircle className="w-3.5 h-3.5 shrink-0 text-[#E63946]" />
                   <span>{forgotError}</span>
                 </div>
               )}
 
               {forgotMessage && (
-                <div className="text-[11px] bg-amber-500/10 border border-amber-500/30 text-amber-300 p-2.5 rounded-lg break-all">
+                <div className="text-[11px] bg-[#FFF6DC] border border-[#FFEDB0] text-[#7A5B14] p-2.5 rounded-xl break-all">
                   {forgotMessage}
                 </div>
               )}
@@ -320,20 +320,20 @@ const Login = () => {
               {forgotStep === 1 ? (
                 <form onSubmit={handleRequestResetToken} className="space-y-3">
                   <div>
-                    <label className="block text-[11px] font-semibold text-slate-300 mb-1">Registered Email</label>
+                    <label className="block text-[11px] font-bold text-[#2B2B2B] mb-1">Registered Email</label>
                     <input
                       type="email"
                       required
                       value={forgotEmail}
                       onChange={(e) => setForgotEmail(e.target.value)}
                       placeholder="user@imovies.com"
-                      className="w-full bg-[#0a0c10] border border-slate-700 rounded-xl px-3 py-2 text-xs text-white focus:outline-none focus:border-amber-400"
+                      className="w-full bg-[#FFF9F0] border border-[#DCD3C5] rounded-xl px-3 py-2 text-xs text-[#2B2B2B] focus:outline-none focus:border-[#E63946] focus:bg-white"
                     />
                   </div>
                   <button
                     type="submit"
                     disabled={forgotLoading}
-                    className="w-full bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold py-2 rounded-xl text-xs transition-colors cursor-pointer"
+                    className="w-full bg-[#E63946] hover:bg-[#D62839] text-white font-bold py-2 rounded-xl text-xs transition-colors cursor-pointer"
                   >
                     {forgotLoading ? 'Processing...' : 'Get Reset Token'}
                   </button>
@@ -341,18 +341,18 @@ const Login = () => {
               ) : (
                 <form onSubmit={handleConfirmResetPassword} className="space-y-3">
                   <div>
-                    <label className="block text-[11px] font-semibold text-slate-300 mb-1">Reset Token</label>
+                    <label className="block text-[11px] font-bold text-[#2B2B2B] mb-1">Reset Token</label>
                     <input
                       type="text"
                       required
                       value={resetToken}
                       onChange={(e) => setResetToken(e.target.value)}
                       placeholder="Token from step 1"
-                      className="w-full bg-[#0a0c10] border border-slate-700 rounded-xl px-3 py-2 text-xs text-white focus:outline-none focus:border-amber-400 font-mono text-[11px]"
+                      className="w-full bg-[#FFF9F0] border border-[#DCD3C5] rounded-xl px-3 py-2 text-xs text-[#2B2B2B] focus:outline-none focus:border-[#E63946] focus:bg-white font-mono text-[11px]"
                     />
                   </div>
                   <div>
-                    <label className="block text-[11px] font-semibold text-slate-300 mb-1">New Password (6+ chars)</label>
+                    <label className="block text-[11px] font-bold text-[#2B2B2B] mb-1">New Password (6+ chars)</label>
                     <input
                       type="password"
                       required
@@ -360,13 +360,13 @@ const Login = () => {
                       value={newPassword}
                       onChange={(e) => setNewPassword(e.target.value)}
                       placeholder="••••••••"
-                      className="w-full bg-[#0a0c10] border border-slate-700 rounded-xl px-3 py-2 text-xs text-white focus:outline-none focus:border-amber-400"
+                      className="w-full bg-[#FFF9F0] border border-[#DCD3C5] rounded-xl px-3 py-2 text-xs text-[#2B2B2B] focus:outline-none focus:border-[#E63946] focus:bg-white"
                     />
                   </div>
                   <button
                     type="submit"
                     disabled={forgotLoading}
-                    className="w-full bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold py-2 rounded-xl text-xs transition-colors cursor-pointer"
+                    className="w-full bg-[#E63946] hover:bg-[#D62839] text-white font-bold py-2 rounded-xl text-xs transition-colors cursor-pointer"
                   >
                     {forgotLoading ? 'Saving...' : 'Set New Password'}
                   </button>

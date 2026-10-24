@@ -24,45 +24,45 @@ const Navbar = () => {
 
   return (
     <>
-      <header className="sticky top-0 z-40 bg-[#0d1016]/95 backdrop-blur-md border-b border-amber-500/15">
+      <header className="sticky top-0 z-40 bg-white/95 backdrop-blur-md border-b border-[#EAE2D5] shadow-xs">
         <div className="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 h-16 flex items-center justify-between gap-3 sm:gap-6">
           {/* Brand Logo */}
-          <Link to="/" className="flex items-center gap-2 group whitespace-nowrap shrink-0">
-            <div className="w-8 h-8 sm:w-9 sm:h-9 rounded-xl bg-gradient-to-br from-amber-400 to-amber-600 text-slate-950 flex items-center justify-center shadow-lg shadow-amber-500/20 group-hover:scale-105 transition-transform duration-200">
-              <Film className="w-4 h-4 sm:w-5 sm:h-5 stroke-[2.2]" />
+          <Link to="/" className="flex items-center gap-2.5 group whitespace-nowrap shrink-0">
+            <div className="w-8 h-8 sm:w-9 sm:h-9 rounded-xl bg-gradient-to-br from-[#E63946] to-[#D62839] text-white flex items-center justify-center shadow-md shadow-[#E63946]/20 group-hover:scale-105 transition-transform duration-200">
+              <Film className="w-4 h-4 sm:w-5 sm:h-5 stroke-[2.2] text-[#FFC93C]" />
             </div>
-            <span className="text-lg sm:text-xl font-bold tracking-tight text-white font-['Cinzel',serif]">
-              i<span className="text-amber-400">Movies</span>
-              <span className="text-[10px] uppercase font-['Plus_Jakarta_Sans',sans-serif] tracking-[0.2em] text-amber-500/80 ml-1.5 font-semibold hidden md:inline">
+            <span className="text-lg sm:text-xl font-extrabold tracking-tight text-[#2B2B2B]">
+              i<span className="text-[#E63946]">Movies</span>
+              <span className="text-[10px] uppercase font-['Plus_Jakarta_Sans',sans-serif] tracking-[0.2em] bg-[#FFF6DC] text-[#7A5B14] border border-[#FFEDB0] px-1.5 py-0.5 rounded-md ml-1.5 font-bold hidden md:inline">
                 Worldwide
               </span>
             </span>
           </Link>
 
           {/* Nav Links */}
-          <nav className="hidden sm:flex items-center gap-6 text-xs sm:text-sm font-medium">
+          <nav className="hidden sm:flex items-center gap-6 text-xs sm:text-sm font-semibold">
             <Link
               to="/"
               className={`whitespace-nowrap transition-colors relative py-1 ${
-                isActive('/') ? 'text-amber-400 font-semibold' : 'text-slate-300 hover:text-white'
+                isActive('/') ? 'text-[#E63946] font-bold' : 'text-[#6B7280] hover:text-[#E63946]'
               }`}
             >
               Movies
               {isActive('/') && (
-                <span className="absolute bottom-0 left-0 right-0 h-[2px] bg-gradient-to-r from-amber-400 to-amber-500 rounded-full" />
+                <span className="absolute bottom-0 left-0 right-0 h-[2.5px] bg-[#E63946] rounded-full" />
               )}
             </Link>
 
             <Link
               to="/cinemas"
               className={`whitespace-nowrap flex items-center gap-1.5 transition-colors relative py-1 ${
-                isActive('/cinemas') ? 'text-amber-400 font-semibold' : 'text-slate-300 hover:text-white'
+                isActive('/cinemas') ? 'text-[#E63946] font-bold' : 'text-[#6B7280] hover:text-[#E63946]'
               }`}
             >
-              <Building className="w-3.5 h-3.5 text-amber-400/90" />
+              <Building className="w-3.5 h-3.5 text-[#E63946]" />
               <span>Cinemas</span>
               {isActive('/cinemas') && (
-                <span className="absolute bottom-0 left-0 right-0 h-[2px] bg-gradient-to-r from-amber-400 to-amber-500 rounded-full" />
+                <span className="absolute bottom-0 left-0 right-0 h-[2.5px] bg-[#E63946] rounded-full" />
               )}
             </Link>
 
@@ -70,13 +70,13 @@ const Navbar = () => {
               <Link
                 to="/bookings"
                 className={`whitespace-nowrap flex items-center gap-1.5 transition-colors relative py-1 ${
-                  isActive('/bookings') ? 'text-amber-400 font-semibold' : 'text-slate-300 hover:text-white'
+                  isActive('/bookings') ? 'text-[#E63946] font-bold' : 'text-[#6B7280] hover:text-[#E63946]'
                 }`}
               >
-                <Ticket className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-amber-400/90" />
+                <Ticket className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-[#E63946]" />
                 <span>Passes</span>
                 {isActive('/bookings') && (
-                  <span className="absolute bottom-0 left-0 right-0 h-[2px] bg-gradient-to-r from-amber-400 to-amber-500 rounded-full" />
+                  <span className="absolute bottom-0 left-0 right-0 h-[2.5px] bg-[#E63946] rounded-full" />
                 )}
               </Link>
             )}
@@ -96,8 +96,8 @@ const Navbar = () => {
               aria-label="Toggle movie search bar"
               className={`sm:hidden w-8 h-8 rounded-xl flex items-center justify-center transition-colors border ${
                 showMobileSearch
-                  ? 'bg-amber-500 text-slate-950 border-amber-400'
-                  : 'bg-[#141822] text-amber-400 border-amber-500/25 hover:bg-[#1d2332]'
+                  ? 'bg-[#E63946] text-white border-[#E63946]'
+                  : 'bg-white text-[#E63946] border-[#EAE2D5] hover:bg-[#FFF6DC]'
               }`}
             >
               <Search className="w-4 h-4" />
@@ -115,7 +115,7 @@ const Navbar = () => {
               }}
               disabled={detectingLocation}
               title="Fetch live location automatically"
-              className="w-8 h-8 rounded-xl bg-[#141822] hover:bg-[#1c2230] border border-[#00F2FE]/30 text-[#00F2FE] hover:text-white flex items-center justify-center transition-all shadow-sm cursor-pointer disabled:opacity-50"
+              className="w-8 h-8 rounded-xl bg-white hover:bg-[#FFF6DC] border border-[#EAE2D5] text-[#E63946] flex items-center justify-center transition-all shadow-xs cursor-pointer disabled:opacity-50"
             >
               <Compass className={`w-3.5 h-3.5 ${detectingLocation ? 'animate-spin' : ''}`} />
             </button>
@@ -124,14 +124,14 @@ const Navbar = () => {
             <button
               type="button"
               onClick={() => setShowLocationModal(true)}
-              className="flex items-center gap-1.5 text-xs text-slate-200 bg-[#141822] hover:bg-[#1c2230] border border-amber-500/25 px-2.5 sm:px-3 py-1.5 rounded-xl transition-all shadow-sm cursor-pointer"
+              className="flex items-center gap-1.5 text-xs text-[#2B2B2B] bg-[#FFF9F0] hover:bg-[#FFF6DC] border border-[#EAE2D5] px-2.5 sm:px-3 py-1.5 rounded-xl transition-all shadow-xs cursor-pointer"
               title={`Change Country, State & City (${city}, ${state || ''}, ${activeCountry?.name || ''})`}
             >
-              <Globe className="w-3.5 h-3.5 text-[#00F2FE]" aria-hidden="true" />
-              <span className="font-semibold text-white max-w-[80px] sm:max-w-[100px] truncate">
+              <Globe className="w-3.5 h-3.5 text-[#E63946]" aria-hidden="true" />
+              <span className="font-bold text-[#2B2B2B] max-w-[80px] sm:max-w-[100px] truncate">
                 {city}
               </span>
-              <span className="text-[10px] font-mono text-amber-400 font-bold hidden xs:inline">
+              <span className="text-[10px] font-mono text-[#D62839] font-bold hidden xs:inline">
                 ({activeCountry?.currency})
               </span>
             </button>
@@ -140,15 +140,15 @@ const Navbar = () => {
               <div className="flex items-center gap-1.5 sm:gap-2">
                 <Link
                   to="/profile"
-                  className="flex items-center gap-1.5 sm:gap-2 text-xs text-slate-200 bg-[#161a23] hover:bg-[#1f2431] border border-amber-500/20 px-2.5 sm:px-3 py-1.5 rounded-xl shadow-sm transition-colors"
+                  className="flex items-center gap-1.5 sm:gap-2 text-xs text-[#2B2B2B] bg-white hover:bg-[#FFF6DC] border border-[#EAE2D5] px-2.5 sm:px-3 py-1.5 rounded-xl shadow-xs transition-colors"
                   title="View Profile"
                 >
                   {user.role === 'admin' ? (
-                    <Crown className="w-3.5 h-3.5 text-amber-400 shrink-0" />
+                    <Crown className="w-3.5 h-3.5 text-[#E5B129] shrink-0" />
                   ) : (
-                    <User className="w-3.5 h-3.5 text-amber-400 shrink-0" />
+                    <User className="w-3.5 h-3.5 text-[#E63946] shrink-0" />
                   )}
-                  <span className="font-semibold text-white truncate max-w-[70px] sm:max-w-[110px]">
+                  <span className="font-bold text-[#2B2B2B] truncate max-w-[70px] sm:max-w-[110px]">
                     {user.username}
                   </span>
                 </Link>
@@ -157,30 +157,22 @@ const Navbar = () => {
                   to="/settings"
                   title="Account Settings"
                   aria-label="Account Settings"
-                  className="w-8 h-8 sm:w-9 sm:h-9 flex items-center justify-center rounded-xl text-slate-300 hover:text-amber-400 bg-[#161a23] hover:bg-[#1f2431] border border-amber-500/20 transition-colors"
+                  className="w-8 h-8 sm:w-9 sm:h-9 flex items-center justify-center rounded-xl text-[#6B7280] hover:text-[#E63946] bg-white hover:bg-[#FFF6DC] border border-[#EAE2D5] transition-colors"
                 >
                   <Settings className="w-4 h-4" />
                 </Link>
-
-                <button
-                  onClick={handleLogout}
-                  title="Sign out of account"
-                  className="w-8 h-8 sm:w-9 sm:h-9 flex items-center justify-center rounded-xl text-slate-400 hover:text-amber-400 hover:bg-[#161a23] transition-colors cursor-pointer"
-                >
-                  <LogOut className="w-4 h-4" />
-                </button>
               </div>
             ) : (
               <div className="flex items-center gap-2">
                 <Link
                   to="/login"
-                  className="text-xs sm:text-sm font-semibold text-slate-200 hover:text-white bg-[#141822] hover:bg-[#1c2232] border border-amber-500/30 px-3 sm:px-3.5 py-1.5 rounded-xl transition-colors whitespace-nowrap"
+                  className="text-xs sm:text-sm font-bold text-[#2B2B2B] hover:text-[#E63946] bg-white hover:bg-[#FFF6DC] border border-[#EAE2D5] px-3 sm:px-3.5 py-1.5 rounded-xl transition-colors whitespace-nowrap shadow-xs"
                 >
                   Log In
                 </Link>
                 <Link
                   to="/register"
-                  className="text-xs sm:text-sm font-bold bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 text-slate-950 px-3 sm:px-4 py-1.5 rounded-xl shadow-md shadow-amber-500/15 transition-all whitespace-nowrap"
+                  className="text-xs sm:text-sm font-bold bg-[#E63946] hover:bg-[#D62839] text-white px-3 sm:px-4 py-1.5 rounded-xl shadow-sm shadow-[#E63946]/20 transition-all whitespace-nowrap"
                 >
                   Create Account
                 </Link>
@@ -191,7 +183,7 @@ const Navbar = () => {
 
         {/* Mobile Search Bar Expansion */}
         {showMobileSearch && (
-          <div className="sm:hidden px-3 py-2.5 bg-[#0a0d13] border-t border-amber-500/20 shadow-xl">
+          <div className="sm:hidden px-3 py-2.5 bg-[#FFF9F0] border-t border-[#EAE2D5] shadow-md">
             <MovieSearchBar onSearchSubmit={() => setShowMobileSearch(false)} />
           </div>
         )}
