@@ -17,7 +17,7 @@ const INITIAL_USERS = [
   },
   {
     _id: '65f1a0000000000000000002',
-    username: 'Tanishq Pardeshi',
+    username: 'Eshani Jain',
     email: 'user@imovies.com',
     password: defaultUserPassHash,
     role: 'user',
@@ -140,11 +140,114 @@ const INITIAL_CINEMAS = [
     rating: 4.8
   },
   {
+    _id: 'cin_in_mum_03',
+    name: 'iMovies PVR INOX Maison Jio World Drive BKC',
+    chain: 'iMovies VIP',
+    country: 'IN',
+    countryName: 'India',
+    state: 'Maharashtra',
+    city: 'Mumbai',
+    address: 'Bandra Kurla Complex, Bandra East, Mumbai 400051',
+    screens: 6,
+    formats: ['IMAX Laser 4K', 'Luxe Living Room', 'Dolby Atmos'],
+    currency: 'INR',
+    currencySymbol: '₹',
+    basePrice: 500,
+    amenities: ['Celebrity VIP Suites', 'Masterchef Concessions', 'Butler Service', 'Valet Parking'],
+    rating: 5.0
+  },
+  {
+    _id: 'cin_in_mum_04',
+    name: 'iMovies Cinepolis VIP Viviana Mall',
+    chain: 'iMovies VIP',
+    country: 'IN',
+    countryName: 'India',
+    state: 'Maharashtra',
+    city: 'Mumbai',
+    address: 'Viviana Mall, Eastern Express Highway, Thane West, Mumbai 400606',
+    screens: 14,
+    formats: ['VIP Luxury Recliner', '4DX Motion', 'Dolby Atmos'],
+    currency: 'INR',
+    currencySymbol: '₹',
+    basePrice: 390,
+    amenities: ['Gourmet Live Counter', 'Leather Recliners', 'VIP Coffee Lounge'],
+    rating: 4.8
+  },
+  {
+    _id: 'cin_in_mum_05',
+    name: 'iMovies PVR Dynamix Mall Juhu',
+    chain: 'iMovies VIP',
+    country: 'IN',
+    countryName: 'India',
+    state: 'Maharashtra',
+    city: 'Mumbai',
+    address: 'Dynamix Mall, Santacruz West, Juhu, Mumbai 400049',
+    screens: 5,
+    formats: ['PVR Gold Class', 'Dolby 7.1', 'Laser 4K'],
+    currency: 'INR',
+    currencySymbol: '₹',
+    basePrice: 420,
+    amenities: ['Plush Pushback Recliners', 'Artisan Coffee Bar', 'Valet Parking'],
+    rating: 4.9
+  },
+  {
+    _id: 'cin_in_mum_06',
+    name: 'iMovies MovieMax Cineplex Sion',
+    chain: 'iMovies VIP',
+    country: 'IN',
+    countryName: 'India',
+    state: 'Maharashtra',
+    city: 'Mumbai',
+    address: 'Sion Circle, Opp Sion Railway Station, Sion, Mumbai 400022',
+    screens: 4,
+    formats: ['Dolby Atmos', 'Laser 4K', 'Prime Club Seating'],
+    currency: 'INR',
+    currencySymbol: '₹',
+    basePrice: 280,
+    amenities: ['Spacious Recliners', 'Classic Concessions', 'Quick Check-in'],
+    rating: 4.7
+  },
+  {
+    _id: 'cin_in_mum_07',
+    name: 'iMovies Carnival Cinemas IMAX Wadala',
+    chain: 'iMovies VIP',
+    country: 'IN',
+    countryName: 'India',
+    state: 'Maharashtra',
+    city: 'Mumbai',
+    address: 'Anik Wadala Link Road, Bhakti Park, Wadala, Mumbai 400037',
+    screens: 5,
+    formats: ['Giant Screen IMAX Laser', 'Dolby Atmos', 'VIP Balcony'],
+    currency: 'INR',
+    currencySymbol: '₹',
+    basePrice: 360,
+    amenities: ['Massive Curved Screen', 'Reserved Recliner Pods', 'Gourmet Snacks'],
+    rating: 4.8
+  },
+  {
+    _id: 'cin_in_mum_08',
+    name: 'iMovies INOX Laserplex Nariman Point',
+    chain: 'iMovies VIP',
+    country: 'IN',
+    countryName: 'India',
+    state: 'Maharashtra',
+    city: 'Mumbai',
+    address: 'CR2 Mall, Barrister Rajni Patel Marg, Nariman Point, Mumbai 400021',
+    screens: 5,
+    formats: ['INSIGNIA VIP', 'Dolby Atmos', 'Laser 4K'],
+    currency: 'INR',
+    currencySymbol: '₹',
+    basePrice: 480,
+    amenities: ['South Mumbai Sea View Lounge', 'Chef Curated Menu', 'Butler In-Seat'],
+    rating: 4.9
+  },
+  {
     _id: 'cin_in_del_01',
     name: 'iMovies Directors Cut Vasant Kunj',
     chain: 'iMovies VIP',
     country: 'IN',
     countryName: 'India',
+    state: 'Delhi NCR',
     city: 'Delhi',
     address: 'Ambience Mall, Nelson Mandela Marg, Vasant Kunj, New Delhi 110070',
     screens: 6,
@@ -154,6 +257,91 @@ const INITIAL_CINEMAS = [
     basePrice: 650,
     amenities: ['180° Fully Reclining Beds', 'Curated Wine & Dine', 'Concierge Service'],
     rating: 5.0
+  },
+  {
+    _id: 'cin_in_del_02',
+    name: 'iMovies PVR Plaza Heritage Connaught Place',
+    chain: 'iMovies VIP',
+    country: 'IN',
+    countryName: 'India',
+    state: 'Delhi NCR',
+    city: 'Delhi',
+    address: 'Block H, Radial Road 6, Connaught Place, New Delhi 110001',
+    screens: 3,
+    formats: ['Dolby Atmos Laser', 'Heritage Luxe', 'VIP Recliners'],
+    currency: 'INR',
+    currencySymbol: '₹',
+    basePrice: 420,
+    amenities: ['Iconic Heritage Ambiance', 'In-Seat Food Ordering', 'Dolby Atmos'],
+    rating: 4.9
+  },
+  {
+    _id: 'cin_in_del_03',
+    name: 'iMovies INOX Insignia Epicuria Nehru Place',
+    chain: 'iMovies VIP',
+    country: 'IN',
+    countryName: 'India',
+    state: 'Delhi NCR',
+    city: 'Delhi',
+    address: 'Epicuria Food Mall, Nehru Place Metro Station, New Delhi 110019',
+    screens: 4,
+    formats: ['INSIGNIA VIP', 'Dolby Atmos', 'Laser 4K'],
+    currency: 'INR',
+    currencySymbol: '₹',
+    basePrice: 550,
+    amenities: ['Private Lounge Access', 'Gourmet Platter Menu', 'Electric Recliners'],
+    rating: 4.9
+  },
+  {
+    _id: 'cin_in_del_04',
+    name: 'iMovies Cinepolis VIP DLF Avenue Saket',
+    chain: 'iMovies VIP',
+    country: 'IN',
+    countryName: 'India',
+    state: 'Delhi NCR',
+    city: 'Delhi',
+    address: 'DLF Avenue Mall, Press Enclave Marg, Saket District Centre, New Delhi 110017',
+    screens: 6,
+    formats: ['VIP Club Recliners', '4DX Motion', 'Dolby Atmos'],
+    currency: 'INR',
+    currencySymbol: '₹',
+    basePrice: 480,
+    amenities: ['Coffee Barista', 'Chef-Prepared Tapas', 'Motorized Loungers'],
+    rating: 4.8
+  },
+  {
+    _id: 'cin_in_del_05',
+    name: 'iMovies PVR Superplex Logix Noida',
+    chain: 'iMovies VIP',
+    country: 'IN',
+    countryName: 'India',
+    state: 'Delhi NCR',
+    city: 'Delhi',
+    address: 'Logix City Centre Mall, Sector 32, Noida 201301',
+    screens: 15,
+    formats: ['IMAX Laser', '4DX Motion', 'PlayHouse', 'Gold Class'],
+    currency: 'INR',
+    currencySymbol: '₹',
+    basePrice: 380,
+    amenities: ['15-Screen Mega Complex', 'VIP Lounge', 'Live Kitchen'],
+    rating: 4.8
+  },
+  {
+    _id: 'cin_in_del_06',
+    name: 'iMovies PVR IMAX CyberHub Gurugram',
+    chain: 'iMovies VIP',
+    country: 'IN',
+    countryName: 'India',
+    state: 'Delhi NCR',
+    city: 'Delhi',
+    address: 'DLF CyberHub, DLF Phase 2, Gurugram 122002',
+    screens: 7,
+    formats: ['IMAX 4K Laser', 'Dolby Atmos', 'VIP Recliners'],
+    currency: 'INR',
+    currencySymbol: '₹',
+    basePrice: 460,
+    amenities: ['Cyber City Corporate Concierge', 'Craft Dining Bar', 'Ultra-Plush Seats'],
+    rating: 4.9
   },
   {
     _id: 'cin_ca_tor_01',
@@ -250,6 +438,499 @@ const INITIAL_CINEMAS = [
     basePrice: 17,
     amenities: ['Historic Grand Hall', 'Cocktail Service at Seat', 'Berlinale Red Carpet Venue'],
     rating: 4.9
+  },
+  {
+    _id: 'cin_in_pun_01',
+    name: 'iMovies PVR ICON The Pavilion',
+    chain: 'iMovies VIP',
+    country: 'IN',
+    countryName: 'India',
+    state: 'Maharashtra',
+    city: 'Pune',
+    address: 'The Pavilion Mall, Senapati Bapat Road, Shivajinagar, Pune 411016',
+    screens: 9,
+    formats: ['IMAX Laser 4K', '4DX Motion', 'PVR Gold Class'],
+    currency: 'INR',
+    currencySymbol: '₹',
+    basePrice: 380,
+    amenities: ['180° Motorized Recliners', 'Gourmet In-Seat Dining', 'Dolby Atmos 12-Channel', 'Valet Parking'],
+    rating: 4.9
+  },
+  {
+    _id: 'cin_in_pun_02',
+    name: 'iMovies Cinepolis Seasons Megaplex',
+    chain: 'iMovies VIP',
+    country: 'IN',
+    countryName: 'India',
+    state: 'Maharashtra',
+    city: 'Pune',
+    address: 'Seasons Mall, Magarpatta City, Hadapsar, Pune 411028',
+    screens: 15,
+    formats: ['VIP Luxury Club', 'Dolby Atmos', 'RealD 3D', 'Macro XE'],
+    currency: 'INR',
+    currencySymbol: '₹',
+    basePrice: 350,
+    amenities: ['Plush Leather Recliners', 'Live Sushi & Dim Sum Counter', 'Dolby Atmos Sound'],
+    rating: 4.8
+  },
+  {
+    _id: 'cin_in_pun_03',
+    name: 'iMovies INOX Phoenix Marketcity',
+    chain: 'iMovies VIP',
+    country: 'IN',
+    countryName: 'India',
+    state: 'Maharashtra',
+    city: 'Pune',
+    address: 'Phoenix Marketcity, Viman Nagar, Pune 411014',
+    screens: 8,
+    formats: ['INSIGNIA VIP', 'IMAX Laser', 'ScreenX 270°'],
+    currency: 'INR',
+    currencySymbol: '₹',
+    basePrice: 420,
+    amenities: ['Butler On Call', 'Masterchef Curated Food', 'Laser Projection'],
+    rating: 4.9
+  },
+  {
+    _id: 'cin_in_blr_01',
+    name: 'iMovies PVR Superplex Forum South',
+    chain: 'iMovies VIP',
+    country: 'IN',
+    countryName: 'India',
+    state: 'Karnataka',
+    city: 'Bengaluru',
+    address: 'Forum Mall, Konanakunte, Kanakapura Road, Bengaluru 560062',
+    screens: 11,
+    formats: ['IMAX Laser', '4DX Motion', 'LUXE Gold Class'],
+    currency: 'INR',
+    currencySymbol: '₹',
+    basePrice: 420,
+    amenities: ['Motorized Recliners', 'Gourmet Lounge', 'Dolby Atmos Surround'],
+    rating: 4.9
+  },
+  {
+    _id: 'cin_in_blr_02',
+    name: 'iMovies INOX Megaplex Nexus Shantiniketan',
+    chain: 'iMovies VIP',
+    country: 'IN',
+    countryName: 'India',
+    state: 'Karnataka',
+    city: 'Bengaluru',
+    address: 'Nexus Shantiniketan Mall, Whitefield Main Rd, Bengaluru 560067',
+    screens: 12,
+    formats: ['IMAX Laser', 'ScreenX 270°', 'MX4D', 'INSIGNIA VIP'],
+    currency: 'INR',
+    currencySymbol: '₹',
+    basePrice: 450,
+    amenities: ['Live Teppanyaki & Pizza', 'Butler Service', 'Dolby Atmos Sound'],
+    rating: 4.9
+  },
+  {
+    _id: 'cin_in_blr_03',
+    name: 'iMovies PVR Directors Cut Forum Rex Walk',
+    chain: 'iMovies VIP',
+    country: 'IN',
+    countryName: 'India',
+    state: 'Karnataka',
+    city: 'Bengaluru',
+    address: 'Brigade Rd, Shanthala Nagar, Ashok Nagar, Bengaluru 560001',
+    screens: 5,
+    formats: ['Platinum Suites', 'Dolby Cinema', 'VIP Recliners'],
+    currency: 'INR',
+    currencySymbol: '₹',
+    basePrice: 650,
+    amenities: ['Private Sommelier', 'Fine Dining In-Seat', 'Blankets & Pillows'],
+    rating: 5.0
+  },
+  {
+    _id: 'cin_in_hyd_01',
+    name: 'iMovies Prasads Large Screen & IMAX',
+    chain: 'iMovies VIP',
+    country: 'IN',
+    countryName: 'India',
+    state: 'Telangana',
+    city: 'Hyderabad',
+    address: 'NTR Gardens, Necklace Road, Khairatabad, Hyderabad 500004',
+    screens: 6,
+    formats: ['Giant Screen IMAX Laser', 'Dolby Atmos', 'VIP Recliner'],
+    currency: 'INR',
+    currencySymbol: '₹',
+    basePrice: 350,
+    amenities: ['Giant Precision Screen', 'Laser 4K Projection', 'Premium Club Lounges'],
+    rating: 4.9
+  },
+  {
+    _id: 'cin_in_hyd_02',
+    name: 'iMovies AMB Cinemas Gachibowli',
+    chain: 'iMovies VIP',
+    country: 'IN',
+    countryName: 'India',
+    state: 'Telangana',
+    city: 'Hyderabad',
+    address: 'Sarath City Capital Mall, Gachibowli - Miyapur Rd, Hyderabad 500084',
+    screens: 7,
+    formats: ['VIP M-Lounge', 'Dolby Atmos', 'Laser 4K', '4DX Motion'],
+    currency: 'INR',
+    currencySymbol: '₹',
+    basePrice: 380,
+    amenities: ['Celebrity VIP Lounge', 'Plush Pushback Leather', 'Gourmet Bar'],
+    rating: 4.9
+  },
+  {
+    _id: 'cin_in_che_01',
+    name: 'iMovies PVR SPI Sathyam Royapettah',
+    chain: 'iMovies VIP',
+    country: 'IN',
+    countryName: 'India',
+    state: 'Tamil Nadu',
+    city: 'Chennai',
+    address: '8 Thiruvika Road, Peters Colony, Royapettah, Chennai 600014',
+    screens: 6,
+    formats: ['Dolby Atmos RDX', 'Elite Club Recliners', '4K Laser'],
+    currency: 'INR',
+    currencySymbol: '₹',
+    basePrice: 250,
+    amenities: ['Legendary Butter Popcorn', 'Dolby Atmos 128-Track', 'Classic Heritage Architecture'],
+    rating: 5.0
+  },
+  {
+    _id: 'cin_in_che_02',
+    name: 'iMovies Palazzo Multiplex Forum Vijaya',
+    chain: 'iMovies VIP',
+    country: 'IN',
+    countryName: 'India',
+    state: 'Tamil Nadu',
+    city: 'Chennai',
+    address: 'Forum Vijaya Mall, 183 Arcot Rd, Vadapalani, Chennai 600026',
+    screens: 9,
+    formats: ['IMAX Laser', 'Palazzo Royal Suites', 'Dolby Atmos'],
+    currency: 'INR',
+    currencySymbol: '₹',
+    basePrice: 280,
+    amenities: ['Italian Renaissance Foyer', 'Plush Motorized Recliners', 'Valet Parking'],
+    rating: 4.8
+  },
+  {
+    _id: 'cin_in_ahm_01',
+    name: 'iMovies PVR Acropolis Thaltej',
+    chain: 'iMovies VIP',
+    country: 'IN',
+    countryName: 'India',
+    state: 'Gujarat',
+    city: 'Ahmedabad',
+    address: 'Acropolis Mall, Thaltej Crossroads, SG Highway, Ahmedabad 380054',
+    screens: 6,
+    formats: ['IMAX Laser', '4DX Motion', 'PVR Gold Class'],
+    currency: 'INR',
+    currencySymbol: '₹',
+    basePrice: 320,
+    amenities: ['Plush Recliners', 'Live Food Counters', 'Dolby Atmos'],
+    rating: 4.8
+  },
+  {
+    _id: 'cin_in_ahm_02',
+    name: 'iMovies Cinepolis One Mall Vastrapur',
+    chain: 'iMovies VIP',
+    country: 'IN',
+    countryName: 'India',
+    state: 'Gujarat',
+    city: 'Ahmedabad',
+    address: 'Ahmedabad One Mall, Vastrapur, Ahmedabad 380015',
+    screens: 7,
+    formats: ['VIP Club Recliners', 'RealD 3D', 'Dolby 7.1'],
+    currency: 'INR',
+    currencySymbol: '₹',
+    basePrice: 300,
+    amenities: ['VIP Concierge', 'Chef-Prepared Snacks', 'Spacious Seating'],
+    rating: 4.7
+  },
+  {
+    _id: 'cin_in_kol_01',
+    name: 'iMovies INOX South City Mall',
+    chain: 'iMovies VIP',
+    country: 'IN',
+    countryName: 'India',
+    state: 'West Bengal',
+    city: 'Kolkata',
+    address: 'South City Mall, 375 Prince Anwar Shah Rd, Kolkata 700068',
+    screens: 6,
+    formats: ['IMAX Laser', 'INSIGNIA VIP', 'Dolby Atmos'],
+    currency: 'INR',
+    currencySymbol: '₹',
+    basePrice: 380,
+    amenities: ['Insignia Lounge', 'Gourmet In-Seat Dining', 'Laser Projection'],
+    rating: 4.9
+  },
+  {
+    _id: 'cin_in_kol_02',
+    name: 'iMovies PVR Mani Square Mall',
+    chain: 'iMovies VIP',
+    country: 'IN',
+    countryName: 'India',
+    state: 'West Bengal',
+    city: 'Kolkata',
+    address: 'Mani Square Mall, 164/1 Maniktala Main Rd, EM Bypass, Kolkata 700054',
+    screens: 8,
+    formats: ['Gold Class', 'Dolby Atmos', '4K Laser'],
+    currency: 'INR',
+    currencySymbol: '₹',
+    basePrice: 340,
+    amenities: ['Leather Recliners', 'Artisanal Cafe', 'Valet Parking'],
+    rating: 4.8
+  },
+  {
+    _id: 'cin_in_jai_01',
+    name: 'iMovies INOX Crystal Palm',
+    chain: 'iMovies VIP',
+    country: 'IN',
+    countryName: 'India',
+    state: 'Rajasthan',
+    city: 'Jaipur',
+    address: 'Crystal Palm Mall, Sahkar Marg, Bais Godam, Jaipur 302001',
+    screens: 5,
+    formats: ['INSIGNIA VIP', 'Dolby Atmos', '4K Laser'],
+    currency: 'INR',
+    currencySymbol: '₹',
+    basePrice: 290,
+    amenities: ['Royal Maharaja Seating', 'Live Kitchen Delights', 'Personal Attendant'],
+    rating: 4.8
+  },
+  {
+    _id: 'cin_in_jai_02',
+    name: 'iMovies Cinepolis World Trade Park',
+    chain: 'iMovies VIP',
+    country: 'IN',
+    countryName: 'India',
+    state: 'Rajasthan',
+    city: 'Jaipur',
+    address: 'World Trade Park Mall, JLN Marg, Malviya Nagar, Jaipur 302017',
+    screens: 8,
+    formats: ['VIP Club Recliners', 'RealD 3D', 'Macro XE'],
+    currency: 'INR',
+    currencySymbol: '₹',
+    basePrice: 310,
+    amenities: ['Electronic Recliners', 'Gourmet Coffee Bar', 'Atmos Surround'],
+    rating: 4.9
+  },
+  {
+    _id: 'cin_in_lko_01',
+    name: 'iMovies Cinepolis Lulu Mall',
+    chain: 'iMovies VIP',
+    country: 'IN',
+    countryName: 'India',
+    state: 'Uttar Pradesh',
+    city: 'Lucknow',
+    address: 'Lulu Mall, Amar Shaheed Path, Golf City, Sector B Ansal API, Lucknow 226030',
+    screens: 11,
+    formats: ['VIP Megaplex', 'Dolby Atmos', 'IMAX Laser', '4DX Motion'],
+    currency: 'INR',
+    currencySymbol: '₹',
+    basePrice: 320,
+    amenities: ['Awadhi Royal Hospitality', 'Ultra-Plush Recliners', '12-Track Surround'],
+    rating: 4.9
+  },
+  {
+    _id: 'cin_in_chd_01',
+    name: 'iMovies PVR Elante Mall',
+    chain: 'iMovies VIP',
+    country: 'IN',
+    countryName: 'India',
+    state: 'Punjab & Chandigarh',
+    city: 'Chandigarh',
+    address: 'Elante Mall, 178-178A Industrial Area Phase 1, Chandigarh 160002',
+    screens: 8,
+    formats: ['IMAX Laser', '4DX Motion', 'Gold Class Recliners'],
+    currency: 'INR',
+    currencySymbol: '₹',
+    basePrice: 360,
+    amenities: ['Gold Class VIP Lounge', 'Barista Coffee Bar', 'Dolby Atmos Sound'],
+    rating: 4.9
+  },
+  {
+    _id: 'cin_in_cok_01',
+    name: 'iMovies PVR Superplex Lulu Mall',
+    chain: 'iMovies VIP',
+    country: 'IN',
+    countryName: 'India',
+    state: 'Kerala',
+    city: 'Kochi',
+    address: 'Lulu International Shopping Mall, 34/1000, Old NH 47, Edappally, Kochi 682024',
+    screens: 9,
+    formats: ['IMAX Laser', '4K Dolby Atmos', 'Gold Class'],
+    currency: 'INR',
+    currencySymbol: '₹',
+    basePrice: 290,
+    amenities: ['Luxury Recliners', 'Gourmet Kerala Specials', 'Dolby Atmos Sound'],
+    rating: 4.9
+  },
+  {
+    _id: 'cin_in_idr_01',
+    name: 'iMovies INOX C21 Mall',
+    chain: 'iMovies VIP',
+    country: 'IN',
+    countryName: 'India',
+    state: 'Madhya Pradesh',
+    city: 'Indore',
+    address: 'C21 Mall, Scheme 54, PU 4 Commercial, AB Road, Indore 452010',
+    screens: 6,
+    formats: ['INSIGNIA VIP', 'Dolby Atmos', '4K Laser'],
+    currency: 'INR',
+    currencySymbol: '₹',
+    basePrice: 280,
+    amenities: ['Insignia Lounge', 'Chef In-Seat Dining', 'Dolby Atmos'],
+    rating: 4.8
+  },
+  {
+    _id: 'cin_in_sur_01',
+    name: 'iMovies Cinepolis Imperial Square',
+    chain: 'iMovies VIP',
+    country: 'IN',
+    countryName: 'India',
+    state: 'Gujarat',
+    city: 'Surat',
+    address: 'Imperial Square Mall, Pal Hazira Road, Adajan, Surat 395009',
+    screens: 8,
+    formats: ['VIP Club Recliner', 'RealD 3D', 'Dolby Atmos'],
+    currency: 'INR',
+    currencySymbol: '₹',
+    basePrice: 290,
+    amenities: ['Electronic Recliners', 'Artisanal Cafe', 'Dolby Atmos'],
+    rating: 4.8
+  },
+  {
+    _id: 'cin_in_noi_01',
+    name: 'iMovies PVR Superplex Mall of India',
+    chain: 'iMovies VIP',
+    country: 'IN',
+    countryName: 'India',
+    state: 'Delhi NCR',
+    city: 'Noida',
+    address: 'DLF Mall of India, Sector 18, Noida, Uttar Pradesh 201301',
+    screens: 7,
+    formats: ['IMAX Laser', '4DX Motion', 'Gold Class Recliners'],
+    currency: 'INR',
+    currencySymbol: '₹',
+    basePrice: 450,
+    amenities: ['Gold Class Lounge', 'Chef-Crafted Menus', 'Dolby Atmos Sound'],
+    rating: 4.9
+  },
+  {
+    _id: 'cin_in_gur_01',
+    name: 'iMovies PVR Directors Cut Ambience Mall',
+    chain: 'iMovies VIP',
+    country: 'IN',
+    countryName: 'India',
+    state: 'Delhi NCR',
+    city: 'Gurugram',
+    address: 'Ambience Mall, NH-8, DLF Phase 3, Gurugram, Haryana 122002',
+    screens: 11,
+    formats: ['Platinum Suites', 'IMAX Laser', 'Dolby Cinema'],
+    currency: 'INR',
+    currencySymbol: '₹',
+    basePrice: 550,
+    amenities: ['Personal Butler Service', 'Luxury Reclining Couches', 'Gourmet Dining Bar'],
+    rating: 5.0
+  },
+  {
+    _id: 'cin_in_del_02',
+    name: 'iMovies PVR Plaza Connaught Place',
+    chain: 'iMovies VIP',
+    country: 'IN',
+    countryName: 'India',
+    state: 'Delhi NCR',
+    city: 'New Delhi',
+    address: 'H-Block, Connaught Circus, Connaught Place, New Delhi 110001',
+    screens: 4,
+    formats: ['Heritage Dolby Atmos', 'Gold Class Recliner', '4K Laser'],
+    currency: 'INR',
+    currencySymbol: '₹',
+    basePrice: 420,
+    amenities: ['Heritage Architecture', 'Luxury Recliners', 'Full Cafe Lounge'],
+    rating: 4.8
+  },
+  {
+    _id: 'cin_us_sf_01',
+    name: 'iMovies AMC Metreon 16 IMAX',
+    chain: 'iMovies VIP',
+    country: 'US',
+    countryName: 'United States',
+    state: 'California',
+    city: 'San Francisco',
+    address: '135 4th St #3000, San Francisco, CA 94103',
+    screens: 16,
+    formats: ['IMAX 70mm Laser', 'Dolby Cinema', 'Prime'],
+    currency: 'USD',
+    currencySymbol: '$',
+    basePrice: 24,
+    amenities: ['Heated Recliners', 'MacGuffins Bar', 'Dolby Cinema at AMC'],
+    rating: 4.9
+  },
+  {
+    _id: 'cin_us_chi_01',
+    name: 'iMovies AMC River East 21',
+    chain: 'iMovies VIP',
+    country: 'US',
+    countryName: 'United States',
+    state: 'Illinois',
+    city: 'Chicago',
+    address: '322 E Illinois St, Chicago, IL 60611',
+    screens: 21,
+    formats: ['Dolby Cinema', 'IMAX Laser', 'VIP Loungers'],
+    currency: 'USD',
+    currencySymbol: '$',
+    basePrice: 21,
+    amenities: ['Signature Recliners', 'Full Cocktail Bar', 'Laser Projection'],
+    rating: 4.8
+  },
+  {
+    _id: 'cin_us_dal_01',
+    name: 'iMovies Cinemark Northpark Center',
+    chain: 'iMovies VIP',
+    country: 'US',
+    countryName: 'United States',
+    state: 'Texas',
+    city: 'Dallas',
+    address: '8687 N Central Expy, Dallas, TX 75225',
+    screens: 15,
+    formats: ['XD Laser', 'VIP Luxury Loungers', 'D-BOX Motion'],
+    currency: 'USD',
+    currencySymbol: '$',
+    basePrice: 19,
+    amenities: ['Luxury Loungers', 'Expanded Food & Beer Menu', 'XD Screen'],
+    rating: 4.8
+  },
+  {
+    _id: 'cin_gb_man_01',
+    name: 'iMovies Vue Printworks IMAX',
+    chain: 'iMovies VIP',
+    country: 'GB',
+    countryName: 'United Kingdom',
+    state: 'Greater Manchester',
+    city: 'Manchester',
+    address: '27 Withy Grove, Manchester M4 2BS',
+    screens: 23,
+    formats: ['Giant Screen IMAX Laser', 'VIP Recliners', 'Dolby Atmos'],
+    currency: 'GBP',
+    currencySymbol: '£',
+    basePrice: 17,
+    amenities: ['Second Largest Screen in Europe', 'Reclining Luxury Seats', 'Licensed Bar'],
+    rating: 4.9
+  },
+  {
+    _id: 'cin_au_mel_01',
+    name: 'iMovies IMAX Melbourne Museum',
+    chain: 'iMovies VIP',
+    country: 'AU',
+    countryName: 'Australia',
+    state: 'Victoria',
+    city: 'Melbourne',
+    address: 'Rathdowne St, Carlton VIC 3053',
+    screens: 1,
+    formats: ['World-Class Laser IMAX 1.43:1', '12-Channel Audio'],
+    currency: 'AUD',
+    currencySymbol: 'A$',
+    basePrice: 30,
+    amenities: ['World Largest Screen', 'Laser Dual 4K', 'Pristine Geometry'],
+    rating: 5.0
   }
 ];
 
@@ -355,6 +1036,147 @@ const INITIAL_MOVIES = [
     ]
   },
   {
+    "votes": 142000,
+    "_id": "65f1b0000000000000000125",
+    "title": "Clayface",
+    "aliases": [
+      "Clayface 2026",
+      "DC Clayface",
+      "Basil Karlo Clayface"
+    ],
+    "industry": "Hollywood",
+    "description": "A terrifying psychological body-horror thriller from acclaimed director Mike Flanagan. When B-list actor Basil Karlo is brutally disfigured in a mob hit, an experimental cosmetic compound mutates his cellular structure into a horrifying, shapeshifting clay-like creature, unleashing an unstoppable quest for vengeance across Gotham City.",
+    "genre": [
+      "Action",
+      "Horror",
+      "Thriller",
+      "Sci-Fi"
+    ],
+    "duration": 142,
+    "posterUrl": "/posters/clayface.jpg",
+    "backdropUrl": "https://upload.wikimedia.org/wikipedia/en/4/4f/Clayface_%28film%29_poster.jpg",
+    "releaseDate": "2026-10-15T00:00:00.000Z",
+    "ticketPrice": 420,
+    "theater": "iMovies IMAX Laser 4K",
+    "rating": 9.2,
+    "language": "English",
+    "trailerKey": "ClayfaceOfficialTrailer",
+    "director": "Mike Flanagan",
+    "category": "now_playing",
+    "cast": [
+      {
+        "name": "Tom Rhys Harries",
+        "character": "Matt Hagen / Clayface",
+        "profileUrl": "https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?w=185&auto=format&fit=crop&q=80"
+      },
+      {
+        "name": "Carla Gugino",
+        "character": "Dr. Julie Madison",
+        "profileUrl": "https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=185&auto=format&fit=crop&q=80"
+      },
+      {
+        "name": "Rahul Kohli",
+        "character": "Detective Ethan Bennett",
+        "profileUrl": "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=185&auto=format&fit=crop&q=80"
+      },
+      {
+        "name": "Bruce Greenwood",
+        "character": "DA Harvey Dent",
+        "profileUrl": "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=185&auto=format&fit=crop&q=80"
+      }
+    ],
+    "showtimes": [
+      "11:15 AM",
+      "02:45 PM",
+      "06:15 PM",
+      "09:45 PM"
+    ],
+    "availableCountries": [
+      "IN",
+      "US",
+      "GB",
+      "CA",
+      "AU",
+      "DE",
+      "JP",
+      "SG",
+      "AE"
+    ]
+  },
+  {
+    "votes": 188000,
+    "_id": "65f1b0000000000000000126",
+    "title": "Hope",
+    "aliases": [
+      "Hope 2026",
+      "Hopeu",
+      "Na Hong-jin Hope"
+    ],
+    "industry": "Hollywood",
+    "description": "Directed by visionary auteur Na Hong-jin (The Wailing), Hope follows the desperate survival battle of residents in an isolated seaside harbor town after an alien lifeform lands on the outskirts of the village, thrusting the community into terrifying encounters with an extraterrestrial presence.",
+    "genre": [
+      "Sci-Fi",
+      "Thriller",
+      "Mystery",
+      "Adventure"
+    ],
+    "duration": 152,
+    "posterUrl": "/posters/hope.jpg",
+    "backdropUrl": "https://upload.wikimedia.org/wikipedia/commons/0/03/Hope_%282026_film%29_poster.png",
+    "releaseDate": "2026-09-28T00:00:00.000Z",
+    "ticketPrice": 450,
+    "theater": "iMovies IMAX 70mm Laser",
+    "rating": 9.4,
+    "language": "English",
+    "trailerKey": "HopeOfficialTeaser",
+    "director": "Na Hong-jin",
+    "category": "now_playing",
+    "cast": [
+      {
+        "name": "Jung Ho-yeon",
+        "character": "Officer Sung-ae",
+        "profileUrl": "https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=185&auto=format&fit=crop&q=80"
+      },
+      {
+        "name": "Hwang Jung-min",
+        "character": "Bum-seok",
+        "profileUrl": "https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?w=185&auto=format&fit=crop&q=80"
+      },
+      {
+        "name": "Zo In-sung",
+        "character": "Sung-ki",
+        "profileUrl": "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=185&auto=format&fit=crop&q=80"
+      },
+      {
+        "name": "Alicia Vikander",
+        "character": "Dr. Evelyn",
+        "profileUrl": "https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=185&auto=format&fit=crop&q=80"
+      },
+      {
+        "name": "Michael Fassbender",
+        "character": "Lucas",
+        "profileUrl": "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=185&auto=format&fit=crop&q=80"
+      }
+    ],
+    "showtimes": [
+      "10:45 AM",
+      "02:15 PM",
+      "05:45 PM",
+      "09:15 PM"
+    ],
+    "availableCountries": [
+      "IN",
+      "US",
+      "GB",
+      "CA",
+      "AU",
+      "DE",
+      "JP",
+      "SG",
+      "AE"
+    ]
+  },
+  {
     "votes": 280000,
     "_id": "65f1b0000000000000000121",
     "title": "Namit Malhotra's Ramayana",
@@ -375,7 +1197,7 @@ const INITIAL_MOVIES = [
       "Devotional"
     ],
     "duration": 175,
-    "posterUrl": "https://upload.wikimedia.org/wikipedia/en/4/48/Ramayana_Part_1_%28poster%29.jpg",
+    "posterUrl": "/posters/ramayana.jpg",
     "backdropUrl": "https://img.youtube.com/vi/xzIE3mVmgKs/maxresdefault.jpg",
     "releaseDate": "2026-11-05T00:00:00.000Z",
     "ticketPrice": 450,
@@ -537,7 +1359,7 @@ const INITIAL_MOVIES = [
       "Musical"
     ],
     "duration": 136,
-    "posterUrl": "https://assets.voxcinemas.com/posters/P_HO00013700_1792137866469.jpg",
+    "posterUrl": "/posters/pehla-pyaar-dusri-baar.jpg",
     "backdropUrl": "https://img.youtube.com/vi/zzrb40x96Sg/maxresdefault.jpg",
     "releaseDate": "2026-10-23T00:00:00.000Z",
     "ticketPrice": 320,
@@ -775,7 +1597,7 @@ const INITIAL_MOVIES = [
       "Thriller"
     ],
     "duration": 138,
-    "posterUrl": "https://upload.wikimedia.org/wikipedia/en/c/c8/Udta_Teer_film_poster.jpg",
+    "posterUrl": "/posters/udta-teer.jpg",
     "backdropUrl": "https://img.youtube.com/vi/hN_ZUElLH44/maxresdefault.jpg",
     "releaseDate": "2026-10-23T00:00:00.000Z",
     "ticketPrice": 350,
@@ -1156,7 +1978,7 @@ const INITIAL_MOVIES = [
       "Drama"
     ],
     "duration": 134,
-    "posterUrl": "https://upload.wikimedia.org/wikipedia/en/e/e3/Nayyi_Navelli_Poster.jpg",
+    "posterUrl": "/posters/nayyi-navelli.jpg",
     "backdropUrl": "https://img.youtube.com/vi/NPkMecGOxDc/maxresdefault.jpg",
     "releaseDate": "2026-05-15T00:00:00.000Z",
     "ticketPrice": 320,
@@ -1988,7 +2810,7 @@ const INITIAL_MOVIES = [
       "Thriller"
     ],
     "duration": 119,
-    "posterUrl": "https://upload.wikimedia.org/wikipedia/en/c/cb/Alien_Romulus_2024_%28poster%29.jpg",
+    "posterUrl": "/posters/alien-romulus.jpg",
     "backdropUrl": "https://image.tmdb.org/t/p/w1280/9SSEUrSqhljBMzRe4aBTh17rUaC.jpg",
     "releaseDate": "2024-08-16T00:00:00.000Z",
     "ticketPrice": 290,
@@ -2102,7 +2924,7 @@ const INITIAL_MOVIES = [
       "Fantasy"
     ],
     "duration": 181,
-    "posterUrl": "https://upload.wikimedia.org/wikipedia/en/4/4c/Kalki_2898_AD.jpg",
+    "posterUrl": "/posters/kalki-2898-ad.jpg",
     "backdropUrl": "https://image.tmdb.org/t/p/w1280/kalkibackdrop.jpg",
     "releaseDate": "2024-06-27T00:00:00.000Z",
     "ticketPrice": 380,
@@ -2338,7 +3160,7 @@ const INITIAL_MOVIES = [
       "Mystery"
     ],
     "duration": 158,
-    "posterUrl": "https://upload.wikimedia.org/wikipedia/en/e/e4/Bhool_Bhulaiyaa_3_poster.jpg",
+    "posterUrl": "/posters/bhool-bhulaiyaa-3.jpg",
     "backdropUrl": "https://img.youtube.com/vi/kN-ScVqz0wU/maxresdefault.jpg",
     "releaseDate": "2024-11-01T00:00:00.000Z",
     "ticketPrice": 330,
@@ -3332,7 +4154,7 @@ const INITIAL_MOVIES = [
       "Thriller"
     ],
     "duration": 200,
-    "posterUrl": "https://upload.wikimedia.org/wikipedia/en/1/11/Pushpa_2-_The_Rule.jpg",
+    "posterUrl": "/posters/pushpa-2.jpg",
     "backdropUrl": "https://img.youtube.com/vi/1kVK0MZlbI4/maxresdefault.jpg",
     "releaseDate": "2024-12-05T00:00:00.000Z",
     "ticketPrice": 380,
@@ -3400,7 +4222,7 @@ const INITIAL_MOVIES = [
       "Biography"
     ],
     "duration": 165,
-    "posterUrl": "https://upload.wikimedia.org/wikipedia/en/7/75/Chhaava_film_poster.jpg",
+    "posterUrl": "/posters/chhaava.jpg",
     "backdropUrl": "https://img.youtube.com/vi/F6dGg2JX8Lc/maxresdefault.jpg",
     "releaseDate": "2025-02-14T00:00:00.000Z",
     "ticketPrice": 350,
@@ -3739,7 +4561,7 @@ const INITIAL_MOVIES = [
       "Mystery"
     ],
     "duration": 123,
-    "posterUrl": "https://upload.wikimedia.org/wikipedia/en/3/39/Munjya_2024.jpg",
+    "posterUrl": "/posters/munjya.jpg",
     "backdropUrl": "https://img.youtube.com/vi/OAhD_mgWQ_U/maxresdefault.jpg",
     "releaseDate": "2024-06-07T00:00:00.000Z",
     "ticketPrice": 280,
@@ -3852,7 +4674,7 @@ const INITIAL_MOVIES = [
       "Adventure"
     ],
     "duration": 148,
-    "posterUrl": "https://upload.wikimedia.org/wikipedia/en/3/34/Furiosa_A_Mad_Max_Saga.jpg",
+    "posterUrl": "/posters/furiosa.jpg",
     "backdropUrl": "https://image.tmdb.org/t/p/w1280/mSDmvloA24Q0c2Yc7a8r0t2y.jpg",
     "releaseDate": "2024-05-24T00:00:00.000Z",
     "ticketPrice": 300,
@@ -4078,7 +4900,7 @@ const INITIAL_MOVIES = [
       "Crime"
     ],
     "duration": 154,
-    "posterUrl": "https://upload.wikimedia.org/wikipedia/en/0/04/Singham_Again_poster.jpg",
+    "posterUrl": "/posters/singham-again.jpg",
     "backdropUrl": "https://img.youtube.com/vi/MD7v0-igVIM/maxresdefault.jpg",
     "releaseDate": "2024-11-01T00:00:00.000Z",
     "ticketPrice": 300,
@@ -5265,7 +6087,7 @@ const INITIAL_BOOKINGS = [
     showDate: today,
     showTime: '06:30 PM',
     customer: {
-      name: 'Tanishq Pardeshi',
+      name: 'Eshani Jain',
       email: 'user@imovies.com',
       phone: '+91 98765 43210'
     },
@@ -5290,7 +6112,7 @@ const INITIAL_BOOKINGS = [
     showDate: today,
     showTime: '07:30 PM',
     customer: {
-      name: 'Tanishq Pardeshi',
+      name: 'Eshani Jain',
       email: 'user@imovies.com',
       phone: '+91 98765 43210'
     },
@@ -5332,7 +6154,7 @@ const INITIAL_REVIEWS = [
     _id: '65f1d0000000000000000001',
     movie: '65f1b0000000000000000001',
     user: '65f1a0000000000000000002',
-    username: 'Tanishq Pardeshi',
+    username: 'Eshani Jain',
     rating: 5,
     comment: 'A monumental cinematic triumph! The scale, Hans Zimmer score, and IMAX visuals were utterly mesmerizing from start to finish.',
     isVerifiedBooking: true,
@@ -5368,7 +6190,7 @@ const INITIAL_REVIEWS = [
     _id: '65f1d0000000000000000004',
     movie: '65f1b0000000000000000021',
     user: '65f1a0000000000000000002',
-    username: 'Tanishq Pardeshi',
+    username: 'Eshani Jain',
     rating: 5,
     comment: 'Heartwarming, hilariously witty, and deeply moving. Kiran Rao has created a modern gem of Indian cinema that everyone must watch!',
     isVerifiedBooking: true,
@@ -5473,16 +6295,140 @@ class InMemoryStore {
     return user.favorites;
   }
 
-  // Cinemas
-  getCinemas(country, city) {
+  // Cinemas: Enhanced with smart city matching, aliases, and auto-provisioning
+  getCinemas(country, city, state) {
     let list = [...this.cinemas];
-    if (country) {
-      list = list.filter((c) => c.country.toLowerCase() === country.toLowerCase());
+
+    const cleanCountry = country ? country.toUpperCase().trim() : '';
+    const cleanCity = city && city !== 'All' ? city.trim() : '';
+
+    if (cleanCountry) {
+      list = list.filter((c) => c.country.toUpperCase() === cleanCountry);
     }
-    if (city && city !== 'All') {
-      list = list.filter((c) => c.city.toLowerCase() === city.toLowerCase());
+
+    if (cleanCity) {
+      const norm = (str) => (str ? String(str).toLowerCase().replace(/[^a-z0-9]/g, '') : '');
+      const targetNorm = norm(cleanCity);
+
+      let matched = list.filter((c) => {
+        const cCityNorm = norm(c.city);
+        if (cCityNorm === targetNorm) return true;
+        if (cCityNorm.includes(targetNorm) || targetNorm.includes(cCityNorm)) return true;
+        // Known city aliases
+        if ((targetNorm === 'delhi' && cCityNorm === 'newdelhi') || (targetNorm === 'newdelhi' && cCityNorm === 'delhi')) return true;
+        if ((targetNorm === 'bengaluru' && cCityNorm === 'bangalore') || (targetNorm === 'bangalore' && cCityNorm === 'bengaluru')) return true;
+        if ((targetNorm === 'gurugram' && cCityNorm === 'gurgaon') || (targetNorm === 'gurgaon' && cCityNorm === 'gurugram')) return true;
+        if ((targetNorm === 'mumbai' && cCityNorm === 'bombay') || (targetNorm === 'bombay' && cCityNorm === 'mumbai')) return true;
+        if ((targetNorm === 'kolkata' && cCityNorm === 'calcutta') || (targetNorm === 'calcutta' && cCityNorm === 'kolkata')) return true;
+        if ((targetNorm === 'chennai' && cCityNorm === 'madras') || (targetNorm === 'madras' && cCityNorm === 'chennai')) return true;
+        return false;
+      });
+
+      // If no cinema exists for this specific city, dynamically generate and register premiere auditoriums
+      if (matched.length === 0) {
+        matched = this.generateCinemasForCity(cleanCountry || 'IN', cleanCity, state);
+      }
+
+      list = matched;
     }
+
     return list;
+  }
+
+  generateCinemasForCity(countryCode, cityName, stateName) {
+    const code = (countryCode || 'IN').toUpperCase();
+    const citySlug = cityName.toLowerCase().replace(/[^a-z0-9]/g, '_').slice(0, 10);
+
+    const countryMeta = {
+      IN: { name: 'India', cur: 'INR', sym: '₹', p1: 380, p2: 320, p3: 450 },
+      US: { name: 'United States', cur: 'USD', sym: '$', p1: 22, p2: 19, p3: 25 },
+      GB: { name: 'United Kingdom', cur: 'GBP', sym: '£', p1: 18, p2: 15, p3: 22 },
+      CA: { name: 'Canada', cur: 'CAD', sym: 'CA$', p1: 20, p2: 17, p3: 24 },
+      AU: { name: 'Australia', cur: 'AUD', sym: 'A$', p1: 26, p2: 22, p3: 30 },
+      DE: { name: 'Germany', cur: 'EUR', sym: '€', p1: 17, p2: 14, p3: 20 },
+      JP: { name: 'Japan', cur: 'JPY', sym: '¥', p1: 2200, p2: 1900, p3: 2600 },
+      SG: { name: 'Singapore', cur: 'SGD', sym: 'S$', p1: 19, p2: 16, p3: 22 },
+      AE: { name: 'United Arab Emirates', cur: 'AED', sym: 'AED ', p1: 75, p2: 60, p3: 90 }
+    };
+
+    const meta = countryMeta[code] || { name: countryCode, cur: 'USD', sym: '$', p1: 19, p2: 16, p3: 22 };
+
+    const c1 = {
+      _id: `cin_${code.toLowerCase()}_${citySlug}_01`,
+      name: `iMovies PVR ICON ${cityName} Central`,
+      chain: 'iMovies VIP',
+      country: code,
+      countryName: meta.name,
+      state: stateName || '',
+      city: cityName,
+      address: `${cityName} Grand Mall, Commercial Boulevard, ${cityName}`,
+      screens: 9,
+      formats: ['IMAX Laser 4K', 'Dolby Atmos', '4DX Motion', 'VIP Recliners'],
+      currency: meta.cur,
+      currencySymbol: meta.sym,
+      basePrice: meta.p1,
+      amenities: ['180° Motorized Recliners', 'Gourmet In-Seat Dining', 'Dolby Atmos 12-Channel', 'Valet Parking'],
+      rating: 4.9
+    };
+
+    const c2 = {
+      _id: `cin_${code.toLowerCase()}_${citySlug}_02`,
+      name: `iMovies INOX Megaplex ${cityName} Galleria`,
+      chain: 'iMovies VIP',
+      country: code,
+      countryName: meta.name,
+      state: stateName || '',
+      city: cityName,
+      address: `${cityName} Lifestyle Galleria, High Street, ${cityName}`,
+      screens: 11,
+      formats: ['INSIGNIA VIP', 'ScreenX 270°', 'Dolby Cinema', 'VIP Recliners'],
+      currency: meta.cur,
+      currencySymbol: meta.sym,
+      basePrice: meta.p2,
+      amenities: ['Plush Leather Loungers', 'Chef-Crafted Artisan Menu', 'Butler on Call', 'Laser 4K Projection'],
+      rating: 4.8
+    };
+
+    const c3 = {
+      _id: `cin_${code.toLowerCase()}_${citySlug}_03`,
+      name: `iMovies Cinepolis VIP ${cityName} Grand City`,
+      chain: 'iMovies VIP',
+      country: code,
+      countryName: meta.name,
+      state: stateName || '',
+      city: cityName,
+      address: `${cityName} City Centre Mall, Ring Road, ${cityName}`,
+      screens: 8,
+      formats: ['VIP Luxury Club', 'Dolby Atmos', 'RealD 3D', 'Macro XE'],
+      currency: meta.cur,
+      currencySymbol: meta.sym,
+      basePrice: meta.p3 || meta.p1,
+      amenities: ['Electric Recliners', 'VIP Coffee Bar', 'Personal Headsets', 'Dolby Surround'],
+      rating: 4.9
+    };
+
+    const c4 = {
+      _id: `cin_${code.toLowerCase()}_${citySlug}_04`,
+      name: `iMovies MovieMax Cineplex ${cityName} Square`,
+      chain: 'iMovies VIP',
+      country: code,
+      countryName: meta.name,
+      state: stateName || '',
+      city: cityName,
+      address: `${cityName} Mega Mall, Station Road, ${cityName}`,
+      screens: 6,
+      formats: ['Laser 4K', 'Dolby 7.1', 'Executive Recliner Suites'],
+      currency: meta.cur,
+      currencySymbol: meta.sym,
+      basePrice: Math.round(meta.p2 * 0.9),
+      amenities: ['Curved Silver Screen', 'Gourmet Popcorn Bar', 'Quick Pass Entry'],
+      rating: 4.7
+    };
+
+    // Register into memory store so showtimes & booking queries locate them
+    this.cinemas.push(c1, c2, c3, c4);
+
+    return [c1, c2, c3, c4];
   }
 
   getCinemaById(id) {

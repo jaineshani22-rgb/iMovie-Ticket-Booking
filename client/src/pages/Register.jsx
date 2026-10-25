@@ -177,7 +177,7 @@ const Register = () => {
                 required
                 value={username}
                 onChange={(e) => setUsername(e.target.value)}
-                placeholder="Tanishq Pardeshi"
+                placeholder="Eshani Jain"
                 className="w-full bg-[#FFF9F0] border border-[#DCD3C5] focus:border-[#E63946] focus:bg-white focus:ring-2 focus:ring-[#FFC93C]/30 rounded-xl pl-10 pr-4 py-2 text-xs sm:text-sm text-[#2B2B2B] focus:outline-none transition-all"
               />
             </div>

@@ -3,28 +3,17 @@ import { Link } from 'react-router-dom';
 import { Clock, Star, Ticket, MapPin, Film, Play, Calendar } from 'lucide-react';
 import { useLocationContext } from '../context/LocationContext';
 
+import { resolveMoviePoster, getFallbackMoviePoster, DEFAULT_FALLBACK_POSTER } from '../utils/moviePosters';
+
 const MovieCard = ({ movie, onWatchTrailer }) => {
-  const defaultPoster =
-    'https://images.unsplash.com/photo-1489599849927-2ee91cede3ba?w=1000&auto=format&fit=crop&q=85';
-
-  const getOptimizedUrl = (url) => {
-    if (!url) return defaultPoster;
-    if (url.includes('wikimedia.org') || url.includes('wikipedia.org')) {
-      return `/api/images/proxy?url=${encodeURIComponent(url)}`;
-    }
-    return url;
-  };
-
-  const [posterSrc, setPosterSrc] = useState(() => getOptimizedUrl(movie.posterUrl));
+  const [posterSrc, setPosterSrc] = useState(() => resolveMoviePoster(movie?.title, movie?.posterUrl));
   const [imgError, setImgError] = useState(false);
   const { formatPrice, selectedCinema } = useLocationContext();
 
   useEffect(() => {
-    if (movie.posterUrl) {
-      setPosterSrc(getOptimizedUrl(movie.posterUrl));
-      setImgError(false);
-    }
-  }, [movie.posterUrl, movie._id]);
+    setPosterSrc(resolveMoviePoster(movie?.title, movie?.posterUrl));
+    setImgError(false);
+  }, [movie?.posterUrl, movie?.title, movie?._id]);
 
   const genres = Array.isArray(movie.genre) ? movie.genre : [movie.genre];
 
@@ -43,12 +32,13 @@ const MovieCard = ({ movie, onWatchTrailer }) => {
             loading="lazy"
             decoding="async"
             onError={() => {
-              if (movie.posterUrl && !posterSrc.startsWith('/api/images/proxy')) {
-                setPosterSrc(`/api/images/proxy?url=${encodeURIComponent(movie.posterUrl)}`);
+              const fallback = getFallbackMoviePoster(movie?.title, posterSrc);
+              if (fallback && fallback !== posterSrc) {
+                setPosterSrc(fallback);
                 return;
               }
-              if (posterSrc !== defaultPoster) {
-                setPosterSrc(defaultPoster);
+              if (posterSrc !== DEFAULT_FALLBACK_POSTER) {
+                setPosterSrc(DEFAULT_FALLBACK_POSTER);
                 return;
               }
               setImgError(true);

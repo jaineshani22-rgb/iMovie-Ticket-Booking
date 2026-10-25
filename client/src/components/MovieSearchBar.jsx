@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { Search, X, Star, Film, Sparkles, ArrowRight, Loader2 } from 'lucide-react';
 import API from '../services/api';
+import { resolveMoviePoster, DEFAULT_FALLBACK_POSTER } from '../utils/moviePosters';
 
 const TRENDING_SUGGESTIONS = [
   { title: 'Pushpa 2: The Rule', genre: 'Action / Crime', industry: 'Bollywood' },
@@ -233,22 +234,17 @@ const MovieSearchBar = ({ className = '', onSearchSubmit }) => {
                   >
                     {/* Poster Thumbnail */}
                     <div className="w-10 h-14 rounded-xl bg-[#FAF6EE] overflow-hidden shrink-0 border border-[#EAE2D5] relative">
-                      {movie.posterUrl ? (
-                        <img
-                          src={movie.posterUrl}
-                          alt={movie.title}
-                          className="w-full h-full object-cover"
-                          referrerPolicy="no-referrer"
-                          onError={(e) => {
-                            e.currentTarget.src =
-                              'https://images.unsplash.com/photo-1489599849927-2ee91cede3ba?w=200&auto=format&fit=crop&q=80';
-                          }}
-                        />
-                      ) : (
-                        <div className="w-full h-full flex items-center justify-center text-[#9CA3AF]">
-                          <Film className="w-4 h-4" />
-                        </div>
-                      )}
+                      <img
+                        src={resolveMoviePoster(movie?.title, movie?.posterUrl)}
+                        alt={movie.title}
+                        className="w-full h-full object-cover"
+                        referrerPolicy="no-referrer"
+                        onError={(e) => {
+                          if (e.currentTarget.src !== DEFAULT_FALLBACK_POSTER) {
+                            e.currentTarget.src = DEFAULT_FALLBACK_POSTER;
+                          }
+                        }}
+                      />
                     </div>
 
                     {/* Movie Info */}

@@ -130,7 +130,7 @@ const Login = () => {
           <div className="w-12 h-12 rounded-2xl bg-[#FDECEC] border border-[#FCD7D7] text-[#E63946] flex items-center justify-center mx-auto shadow-xs">
             <Film className="w-6 h-6 stroke-[2.2]" />
           </div>
-          <h2 className="text-2xl font-extrabold text-[#2B2B2B] tracking-tight">VIP Lounge Sign In</h2>
+          <h2 className="text-2xl font-extrabold text-[#2B2B2B] tracking-tight">Sign In</h2>
           <p className="text-xs text-[#6B7280]">Access your reserved seats and digital booking passes</p>
         </div>
 
@@ -257,7 +257,7 @@ const Login = () => {
               onClick={() => fillDemoCredentials('user@imovies.com', 'user123')}
               className="text-xs bg-[#FFF9F0] hover:bg-[#FFF6DC] border border-[#EAE2D5] text-[#2B2B2B] py-2 rounded-xl transition-colors font-semibold cursor-pointer"
             >
-              Customer Account
+              VIP Member (Eshani Jain)
             </button>
             <button
               type="button"

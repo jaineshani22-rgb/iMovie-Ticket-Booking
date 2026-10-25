@@ -37,6 +37,10 @@ async function start() {
   app.use('/api/movies', require('./server/routes/movieRoutes'));
   app.use('/api/cinemas', require('./server/routes/cinemaRoutes'));
   app.use('/api/bookings', require('./server/routes/bookingRoutes'));
+  app.use('/posters', express.static(path.resolve(__dirname, 'client/public/posters'), {
+    maxAge: '7d',
+    immutable: true
+  }));
   app.use('/api/images', require('./server/routes/imageRoutes'));
 
   app.get('/api/health', (req, res) => {
