@@ -75,7 +75,14 @@ const Settings = () => {
           if (data.preferredCinema) setPreferredCinema(data.preferredCinema);
         }
       } catch (err) {
-        console.error('Error fetching profile for settings:', err);
+        if (user) {
+          if (user.username) setUsername(user.username);
+          if (user.email) setEmail(user.email);
+          if (user.phone) setPhone(user.phone || '');
+          if (user.preferredCountry) setPreferredCountry(user.preferredCountry);
+          if (user.preferredCity) setPreferredCity(user.preferredCity);
+          if (user.preferredCinema) setPreferredCinema(user.preferredCinema || '');
+        }
       }
     };
     if (user) {

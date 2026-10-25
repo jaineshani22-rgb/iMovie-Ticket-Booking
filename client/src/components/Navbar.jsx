@@ -27,19 +27,52 @@ const Navbar = () => {
       <header className="sticky top-0 z-40 bg-white/95 backdrop-blur-md border-b border-[#EAE2D5] shadow-xs">
         <div className="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 h-16 flex items-center justify-between gap-3 sm:gap-6">
           {/* Brand Logo */}
-          <Link to="/" className="flex items-center gap-2.5 group whitespace-nowrap shrink-0">
-            <div className="w-8 h-8 sm:w-9 sm:h-9 rounded-xl bg-gradient-to-br from-[#E63946] to-[#D62839] text-white flex items-center justify-center shadow-md shadow-[#E63946]/20 group-hover:scale-105 transition-transform duration-200">
-              <Film className="w-4 h-4 sm:w-5 sm:h-5 stroke-[2.2] text-[#FFC93C]" />
+          <Link to="/" className="flex items-center gap-2.5 sm:gap-3 group whitespace-nowrap shrink-0">
+            {/* Attractive Custom Cinema Emblem */}
+            <div className="relative w-9 h-9 sm:w-10 sm:h-10 rounded-xl bg-gradient-to-br from-[#FF4D5A] via-[#E63946] to-[#9E0B19] p-0.5 shadow-md shadow-[#E63946]/25 group-hover:shadow-lg group-hover:shadow-[#E63946]/40 group-hover:scale-105 transition-all duration-300 flex items-center justify-center">
+              <div className="w-full h-full rounded-[10px] bg-gradient-to-b from-black/20 via-transparent to-black/40 flex items-center justify-center relative overflow-hidden">
+                {/* Specular highlight */}
+                <div className="absolute -top-3 -right-3 w-7 h-7 bg-white/30 rounded-full blur-xs pointer-events-none" />
+                
+                {/* Cinema Projector / Film Star Emblem SVG */}
+                <svg className="w-5 h-5 sm:w-5.5 sm:h-5.5 text-white drop-shadow-xs" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <rect x="2.5" y="4" width="19" height="16" rx="3.5" stroke="currentColor" strokeWidth="1.8" />
+                  <circle cx="5.5" cy="7.5" r="1.1" fill="#FFC93C" />
+                  <circle cx="5.5" cy="12" r="1.1" fill="#FFC93C" />
+                  <circle cx="5.5" cy="16.5" r="1.1" fill="#FFC93C" />
+                  <circle cx="18.5" cy="7.5" r="1.1" fill="#FFC93C" />
+                  <circle cx="18.5" cy="12" r="1.1" fill="#FFC93C" />
+                  <circle cx="18.5" cy="16.5" r="1.1" fill="#FFC93C" />
+                  <path d="M10 8.5L16 12L10 15.5V8.5Z" fill="url(#logoGoldGrad)" />
+                  <defs>
+                    <linearGradient id="logoGoldGrad" x1="10" y1="8.5" x2="16" y2="15.5" gradientUnits="userSpaceOnUse">
+                      <stop stopColor="#FFF4B8" />
+                      <stop offset="1" stopColor="#FFC93C" />
+                    </linearGradient>
+                  </defs>
+                </svg>
+              </div>
             </div>
-            <span className="text-lg sm:text-xl font-extrabold tracking-tight text-[#2B2B2B]">
-              i<span className="text-[#E63946]">Movies</span>
-              <span className="text-[10px] uppercase font-['Plus_Jakarta_Sans',sans-serif] tracking-[0.2em] bg-[#FFF6DC] text-[#7A5B14] border border-[#FFEDB0] px-1.5 py-0.5 rounded-md ml-1.5 font-bold hidden md:inline">
-                Worldwide
+
+            {/* Logo Typography with sparkling flair */}
+            <div className="flex flex-col">
+              <div className="flex items-center gap-1.5 leading-none">
+                <span className="text-xl sm:text-2xl font-black tracking-tight text-[#1F2937]">
+                  <span className="text-[#E63946] inline-block -mr-0.5">i</span>
+                  <span>Movies</span>
+                </span>
+                <span className="text-[9px] uppercase font-bold tracking-[0.2em] bg-gradient-to-r from-[#FFF6DC] to-[#FFEDB0] text-[#7A5B14] border border-[#FFC93C]/50 px-1.5 py-0.5 rounded-md shadow-2xs hidden xs:inline-flex items-center gap-1">
+                  <span className="w-1.5 h-1.5 rounded-full bg-[#E63946] inline-block animate-pulse" />
+                  <span>Cinemas</span>
+                </span>
+              </div>
+              <span className="text-[9px] font-bold tracking-wider text-[#9CA3AF] uppercase hidden sm:block mt-0.5">
+                IMAX Laser & Recliner Suites
               </span>
-            </span>
+            </div>
           </Link>
 
-          {/* Nav Links */}
+          {/* Nav Links - Purely Movies & Cinemas (Passes removed near Movies/Cinemas as requested) */}
           <nav className="hidden sm:flex items-center gap-6 text-xs sm:text-sm font-semibold">
             <Link
               to="/"
@@ -65,21 +98,6 @@ const Navbar = () => {
                 <span className="absolute bottom-0 left-0 right-0 h-[2.5px] bg-[#E63946] rounded-full" />
               )}
             </Link>
-
-            {user && (
-              <Link
-                to="/bookings"
-                className={`whitespace-nowrap flex items-center gap-1.5 transition-colors relative py-1 ${
-                  isActive('/bookings') ? 'text-[#E63946] font-bold' : 'text-[#6B7280] hover:text-[#E63946]'
-                }`}
-              >
-                <Ticket className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-[#E63946]" />
-                <span>Passes</span>
-                {isActive('/bookings') && (
-                  <span className="absolute bottom-0 left-0 right-0 h-[2.5px] bg-[#E63946] rounded-full" />
-                )}
-              </Link>
-            )}
           </nav>
 
           {/* Universal Movie Search Bar (Desktop / Tablet) */}

@@ -24,6 +24,7 @@ app.use('/api/auth', require('./routes/authRoutes'));
 app.use('/api/movies', require('./routes/movieRoutes'));
 app.use('/api/cinemas', require('./routes/cinemaRoutes'));
 app.use('/api/bookings', require('./routes/bookingRoutes'));
+app.use('/api/images', require('./routes/imageRoutes'));
 
 app.use((err, req, res, next) => {
   if (
