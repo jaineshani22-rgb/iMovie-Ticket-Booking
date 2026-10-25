@@ -27,6 +27,7 @@ import LocationPickerModal from '../components/LocationPickerModal';
 import NearbyCinemaFinder from '../components/NearbyCinemaFinder';
 import { useAuth } from '../context/AuthContext';
 import { useLocationContext, COUNTRIES } from '../context/LocationContext';
+import { resolveMoviePoster, getFallbackMoviePoster, DEFAULT_FALLBACK_POSTER } from '../utils/moviePosters';
 
 const INDUSTRIES = [
   { id: 'All', label: 'All Industries (Hollywood & Bollywood)', badge: 'Global' },
@@ -185,6 +186,53 @@ const Home = () => {
 
   const spotlightConfig = [
     {
+      _id: '65f1b0000000000000000125',
+      title: 'Clayface',
+      aliases: ['Clayface 2026', 'DC Clayface', 'Basil Karlo Clayface'],
+      director: 'Mike Flanagan',
+      industry: 'Hollywood',
+      rating: 9.2,
+      duration: 142,
+      genre: ['Action', 'Horror', 'Thriller', 'Sci-Fi'],
+      ticketPrice: 420,
+      theater: 'iMovies IMAX Laser 4K',
+      posterUrl: '/posters/clayface.jpg',
+      backdropUrl: 'https://upload.wikimedia.org/wikipedia/en/4/4f/Clayface_%28film%29_poster.jpg',
+      trailerKey: 'ClayfaceOfficialTrailer',
+      description:
+        'A terrifying psychological body-horror thriller from director Mike Flanagan. When actor Basil Karlo is brutally disfigured, an experimental cosmetic compound mutates his body into a horrifying shapeshifter, unleashing vengeance across Gotham City.',
+      cast: [
+        { name: 'Tom Rhys Harries', character: 'Matt Hagen / Clayface' },
+        { name: 'Carla Gugino', character: 'Dr. Julie Madison' },
+        { name: 'Rahul Kohli', character: 'Detective Ethan Bennett' },
+        { name: 'Bruce Greenwood', character: 'DA Harvey Dent' }
+      ]
+    },
+    {
+      _id: '65f1b0000000000000000126',
+      title: 'Hope',
+      aliases: ['Hope 2026', 'Hopeu', 'Na Hong-jin Hope'],
+      director: 'Na Hong-jin',
+      industry: 'Hollywood',
+      rating: 9.4,
+      duration: 152,
+      genre: ['Sci-Fi', 'Thriller', 'Mystery', 'Adventure'],
+      ticketPrice: 450,
+      theater: 'iMovies IMAX 70mm Laser',
+      posterUrl: '/posters/hope.jpg',
+      backdropUrl: 'https://upload.wikimedia.org/wikipedia/commons/0/03/Hope_%282026_film%29_poster.png',
+      trailerKey: 'HopeOfficialTeaser',
+      description:
+        'Directed by visionary auteur Na Hong-jin (The Wailing), Hope chronicles residents of an isolated seaside harbor town thrust into a desperate survival fight when an enigmatic alien phenomenon lands on the outskirts of their village.',
+      cast: [
+        { name: 'Jung Ho-yeon', character: 'Officer Sung-ae' },
+        { name: 'Hwang Jung-min', character: 'Bum-seok' },
+        { name: 'Zo In-sung', character: 'Sung-ki' },
+        { name: 'Alicia Vikander', character: 'Dr. Evelyn' },
+        { name: 'Michael Fassbender', character: 'Lucas' }
+      ]
+    },
+    {
       _id: '65f1b0000000000000000121',
       title: "Namit Malhotra's Ramayana",
       aliases: ['Ramayana', 'Ramayana Part 1', 'Nitesh Tiwari Ramayana', 'Ranbir Kapoor Ramayana', 'Ramayana Namit Malhotra'],
@@ -195,7 +243,7 @@ const Home = () => {
       genre: ['Action', 'Adventure', 'Fantasy', 'History', 'Devotional'],
       ticketPrice: 450,
       theater: 'iMovies IMAX 70mm Laser',
-      posterUrl: 'https://upload.wikimedia.org/wikipedia/en/4/48/Ramayana_Part_1_%28poster%29.jpg',
+      posterUrl: '/posters/ramayana.jpg',
       backdropUrl: 'https://img.youtube.com/vi/xzIE3mVmgKs/maxresdefault.jpg',
       trailerKey: 'xzIE3mVmgKs',
       description:
@@ -241,7 +289,7 @@ const Home = () => {
       genre: ['Romance', 'Comedy', 'Drama', 'Musical'],
       ticketPrice: 320,
       theater: 'iMovies Directors Cut Vasant Kunj',
-      posterUrl: 'https://assets.voxcinemas.com/posters/P_HO00013700_1792137866469.jpg',
+      posterUrl: '/posters/pehla-pyaar-dusri-baar.jpg',
       backdropUrl: 'https://img.youtube.com/vi/zzrb40x96Sg/maxresdefault.jpg',
       trailerKey: 'zzrb40x96Sg',
       description:
@@ -264,7 +312,7 @@ const Home = () => {
       genre: ['Action', 'Comedy', 'Spy'],
       ticketPrice: 350,
       theater: 'iMovies PVR ICON Lower Parel',
-      posterUrl: 'https://upload.wikimedia.org/wikipedia/en/c/c8/Udta_Teer_film_poster.jpg',
+      posterUrl: '/posters/udta-teer.jpg',
       backdropUrl: 'https://img.youtube.com/vi/hN_ZUElLH44/maxresdefault.jpg',
       trailerKey: 'hN_ZUElLH44',
       description:
@@ -308,7 +356,7 @@ const Home = () => {
       genre: ['Comedy', 'Horror', 'Drama'],
       ticketPrice: 320,
       theater: 'iMovies INOX Megaplex Malad',
-      posterUrl: 'https://upload.wikimedia.org/wikipedia/en/e/e3/Nayyi_Navelli_Poster.jpg',
+      posterUrl: '/posters/nayyi-navelli.jpg',
       backdropUrl: 'https://img.youtube.com/vi/NPkMecGOxDc/maxresdefault.jpg',
       trailerKey: 'NPkMecGOxDc',
       description:
@@ -521,16 +569,24 @@ const Home = () => {
                 {/* 16:9 Trailer Video & Poster Header - Full Canvas Edge-to-Edge */}
                 <div className="relative aspect-video w-full overflow-hidden bg-[#FAF6EE]">
                   <img
-                    src={
-                      (spot.backdropUrl || spot.posterUrl)?.includes('wikimedia.org') || (spot.backdropUrl || spot.posterUrl)?.includes('wikipedia.org')
-                        ? `/api/images/proxy?url=${encodeURIComponent(spot.backdropUrl || spot.posterUrl)}`
-                        : (spot.backdropUrl || spot.posterUrl)
-                    }
+                    src={resolveMoviePoster(spot.title, spot.posterUrl || spot.backdropUrl)}
                     alt={spot.title}
                     referrerPolicy="no-referrer"
                     loading="lazy"
                     decoding="async"
                     className="w-full h-full object-cover object-center group-hover:scale-105 transition-transform duration-500 will-change-transform"
+                    onError={(e) => {
+                      const fallback = getFallbackMoviePoster(spot.title, e.currentTarget.src);
+                      if (fallback && fallback !== e.currentTarget.src) {
+                        e.currentTarget.src = fallback;
+                        return;
+                      }
+                      if (e.currentTarget.src.includes('maxresdefault.jpg')) {
+                        e.currentTarget.src = e.currentTarget.src.replace('maxresdefault.jpg', 'hqdefault.jpg');
+                        return;
+                      }
+                      e.currentTarget.src = DEFAULT_FALLBACK_POSTER;
+                    }}
                     style={{
                       imageRendering: '-webkit-optimize-contrast',
                       transform: 'translateZ(0)',
@@ -694,103 +750,44 @@ const Home = () => {
       ) : (
         <>
           <div className="space-y-5">
-            {/* Toolbar: Search input, Language dropdown, and Sorter (with Sort by Genre, Upcoming, Past) */}
-            <div className="flex flex-col lg:flex-row gap-3 items-stretch lg:items-center justify-between">
-          {/* Search Bar with Clear Button */}
-          <div className="relative flex-1 max-w-md">
-            <Search className="w-4 h-4 text-[#E63946] absolute left-3.5 top-1/2 -translate-y-1/2" />
-            <input
-              type="text"
-              placeholder="Search by movie name, cast, director (e.g. Lapata Ladies, Titanic, Drishyam)..."
-              value={search}
-              onChange={(e) => handleSearchChange(e.target.value)}
-              className="w-full bg-white border border-[#EAE2D5] focus:border-[#E63946] focus:ring-1 focus:ring-[#E63946] rounded-xl pl-10 pr-9 py-2.5 text-xs sm:text-sm text-[#2B2B2B] placeholder-[#9CA3AF] focus:outline-none transition-colors shadow-xs"
-            />
-            {search && (
-              <button
-                type="button"
-                onClick={() => handleSearchChange('')}
-                className="absolute right-3 top-1/2 -translate-y-1/2 text-[#9CA3AF] hover:text-[#2B2B2B] p-0.5 rounded-full hover:bg-[#F3EFE6] transition-colors cursor-pointer"
-                title="Clear search"
-              >
-                <X className="w-3.5 h-3.5" />
-              </button>
-            )}
+            {/* Toolbar: Language dropdown and Sorter (with Sort by Genre, Upcoming, Past) */}
+            <div className="flex flex-wrap items-center justify-between gap-3">
+              <div className="text-xs font-bold text-[#6B7280]">
+                <span>Catalogue Exhibition &amp; Filters</span>
+              </div>
+
+              <div className="flex flex-wrap items-center gap-2">
+                {/* Language filter */}
+                <select
+                  value={selectedLanguage}
+                  onChange={(e) => setSelectedLanguage(e.target.value)}
+                  className="bg-white border border-[#EAE2D5] text-xs text-[#2B2B2B] font-semibold rounded-xl px-3 py-2 focus:outline-none focus:border-[#E63946] shadow-xs cursor-pointer"
+                >
+                  <option value="All">All Languages</option>
+                  {LANGUAGES.slice(1).map((lang) => (
+                    <option key={lang} value={lang}>
+                      {lang}
+                    </option>
+                  ))}
+                </select>
+
+                {/* Sort by dropdown */}
+                <select
+                  value={sortBy}
+                  onChange={(e) => setSortBy(e.target.value)}
+                  className="bg-white border border-[#FFEDB0] text-xs text-[#7A5B14] font-bold rounded-xl px-3 py-2 focus:outline-none focus:border-[#E63946] shadow-xs cursor-pointer"
+                >
+                  <option value="genre">Sort by Genre (Grouped A-Z)</option>
+                  <option value="upcoming_first">⏳ Upcoming Releases First</option>
+                  <option value="past_first">🏛️ Past Classics First (Oldest to Newest)</option>
+                  <option value="releaseDate">Newest Releases (Latest Date)</option>
+                  <option value="rating">Highest Rated (Rating ↓)</option>
+                  <option value="title">Alphabetical (A-Z)</option>
+                  <option value="duration">Longest Duration</option>
+                </select>
+              </div>
+            </div>
           </div>
-
-          <div className="flex flex-wrap items-center gap-2">
-            {/* Language filter */}
-            <select
-              value={selectedLanguage}
-              onChange={(e) => setSelectedLanguage(e.target.value)}
-              className="bg-white border border-[#EAE2D5] text-xs text-[#2B2B2B] font-semibold rounded-xl px-3 py-2.5 focus:outline-none focus:border-[#E63946] shadow-xs cursor-pointer"
-            >
-              <option value="All">All Languages</option>
-              {LANGUAGES.slice(1).map((lang) => (
-                <option key={lang} value={lang}>
-                  {lang}
-                </option>
-              ))}
-            </select>
-
-            {/* Sort by dropdown */}
-            <select
-              value={sortBy}
-              onChange={(e) => setSortBy(e.target.value)}
-              className="bg-white border border-[#FFEDB0] text-xs text-[#7A5B14] font-bold rounded-xl px-3 py-2.5 focus:outline-none focus:border-[#E63946] shadow-xs cursor-pointer"
-            >
-              <option value="genre">Sort by Genre (Grouped A-Z)</option>
-              <option value="upcoming_first">⏳ Upcoming Releases First</option>
-              <option value="past_first">🏛️ Past Classics First (Oldest to Newest)</option>
-              <option value="releaseDate">Newest Releases (Latest Date)</option>
-              <option value="rating">Highest Rated (Rating ↓)</option>
-              <option value="title">Alphabetical (A-Z)</option>
-              <option value="duration">Longest Duration</option>
-            </select>
-          </div>
-        </div>
-
-        {/* Quick Search Suggestions */}
-        <div className="flex items-center gap-1.5 flex-wrap text-[11px] -mt-2">
-          <span className="text-[#9CA3AF] font-bold uppercase tracking-wider text-[10px]">
-            Quick Search:
-          </span>
-          {[
-            'Laapataa Ladies',
-            'Ratatouille',
-            'Drishyam',
-            'Shutter Island',
-            'Kahaani',
-            'Titanic',
-            'Inside Out 2',
-            'Spider-Verse',
-            'Laila Majnu'
-          ].map((title) => (
-            <button
-              key={title}
-              type="button"
-              onClick={() => {
-                handleSearchChange(title);
-              }}
-              className={`px-2.5 py-1 rounded-lg border transition-all cursor-pointer ${
-                search.toLowerCase() === title.toLowerCase()
-                  ? 'bg-[#E63946] text-white font-bold border-[#E63946] shadow-xs'
-                  : 'bg-white text-[#6B7280] hover:text-[#E63946] hover:border-[#E63946]/30 border-[#EAE2D5] shadow-xs'
-              }`}
-            >
-              {title}
-            </button>
-          ))}
-          {search && (
-            <button
-              type="button"
-              onClick={() => handleSearchChange('')}
-              className="text-[#E63946] hover:text-[#D62839] hover:underline font-bold ml-1 cursor-pointer"
-            >
-              Clear
-            </button>
-          )}
-        </div>
 
         {/* Dedicated Minimum Rating Slider & Dropdown Control */}
         <div className="bg-white border border-[#EAE2D5] rounded-2xl p-3.5 sm:p-4 space-y-3 shadow-xs">

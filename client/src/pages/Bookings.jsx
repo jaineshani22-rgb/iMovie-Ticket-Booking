@@ -17,6 +17,7 @@ import {
 } from 'lucide-react';
 import API from '../services/api';
 import { useLocationContext } from '../context/LocationContext';
+import { resolveMoviePoster, DEFAULT_FALLBACK_POSTER } from '../utils/moviePosters';
 
 const Bookings = () => {
   const location = useLocation();
@@ -171,12 +172,14 @@ const Bookings = () => {
                 {/* Main Pass Section */}
                 <div className="flex flex-col sm:flex-row gap-5 p-5 sm:p-6 flex-1 items-start sm:items-center">
                   <img
-                    src={
-                      movie.posterUrl ||
-                      'https://images.unsplash.com/photo-1489599849927-2ee91cede3ba?w=400&auto=format&fit=crop&q=80'
-                    }
+                    src={resolveMoviePoster(movie?.title, movie?.posterUrl)}
                     alt={movie.title || 'Movie'}
                     referrerPolicy="no-referrer"
+                    onError={(e) => {
+                      if (e.currentTarget.src !== DEFAULT_FALLBACK_POSTER) {
+                        e.currentTarget.src = DEFAULT_FALLBACK_POSTER;
+                      }
+                    }}
                     className="w-20 sm:w-28 aspect-[3/4] rounded-xl object-cover border border-[#EAE2D5] shadow-xs shrink-0"
                   />
 
@@ -223,6 +226,11 @@ const Bookings = () => {
                           {booking.showTime || '06:30 PM'}
                         </span>
                       </span>
+                      {booking.paymentMethod && (
+                        <span className="text-[11px] font-semibold text-[#065F46] bg-[#ECFDF5] border border-[#A7F3D0] px-2 py-0.5 rounded-lg truncate max-w-xs">
+                          {booking.paymentMethod}
+                        </span>
+                      )}
                     </div>
 
                     {/* Actions: Print and Cancel */}

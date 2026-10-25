@@ -1,10 +1,10 @@
 const Cinema = require('../models/Cinema');
 const inMemoryStore = require('../config/inMemoryStore');
 
-// @desc    Get all cinemas with optional country & city filtering
+// @desc    Get all cinemas with optional country, city & state filtering
 // @route   GET /api/cinemas
 exports.getCinemas = async (req, res) => {
-  const { country, city } = req.query;
+  const { country, city, state } = req.query;
   try {
     const query = {};
     if (country) query.country = country.toUpperCase();
@@ -15,10 +15,10 @@ exports.getCinemas = async (req, res) => {
       return res.status(200).json(cinemas);
     }
     // Fall back to in-memory store
-    const fallback = inMemoryStore.getCinemas(country, city);
+    const fallback = inMemoryStore.getCinemas(country, city, state);
     return res.status(200).json(fallback);
   } catch (error) {
-    const fallback = inMemoryStore.getCinemas(country, city);
+    const fallback = inMemoryStore.getCinemas(country, city, state);
     return res.status(200).json(fallback);
   }
 };
@@ -58,7 +58,14 @@ exports.getCinemaShowtimes = async (req, res) => {
       return res.status(404).json({ message: 'Cinema not found' });
     }
 
-    const movies = inMemoryStore.getMovies(null, null, 'now_playing', cinema.country);
+    let movies = inMemoryStore.getMovies(null, null, 'now_playing', cinema.country);
+    if (!movies || movies.length === 0) {
+      movies = inMemoryStore.getMovies(null, null, 'now_playing');
+    }
+    if (!movies || movies.length === 0) {
+      movies = inMemoryStore.movies;
+    }
+
     const schedule = movies.slice(0, 6).map((m) => ({
       movie: m,
       formats: cinema.formats,

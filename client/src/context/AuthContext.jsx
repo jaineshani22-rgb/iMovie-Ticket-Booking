@@ -12,7 +12,13 @@ export const AuthProvider = ({ children }) => {
     const token = localStorage.getItem('token');
     if (storedUser && token) {
       try {
-        setUser(JSON.parse(storedUser));
+        const parsed = JSON.parse(storedUser);
+        if (parsed && (parsed.username === 'Tanishq Pardeshi' || parsed.name === 'Tanishq Pardeshi')) {
+          parsed.username = 'Eshani Jain';
+          if (parsed.name) parsed.name = 'Eshani Jain';
+          localStorage.setItem('user', JSON.stringify(parsed));
+        }
+        setUser(parsed);
       } catch (e) {
         localStorage.removeItem('user');
         localStorage.removeItem('token');

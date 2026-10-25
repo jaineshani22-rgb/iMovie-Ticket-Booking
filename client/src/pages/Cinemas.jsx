@@ -160,10 +160,23 @@ const Cinemas = () => {
       ) : filteredCinemas.length === 0 ? (
         <div className="bg-white border border-[#EAE2D5] rounded-3xl p-12 text-center space-y-3 shadow-xs">
           <Building className="w-10 h-10 text-[#9CA3AF] mx-auto" />
-          <h3 className="text-base font-bold text-[#2B2B2B]">No Theatres in Selected Filter</h3>
+          <h3 className="text-base font-bold text-[#2B2B2B]">
+            {activeFormatFilter !== 'All' ? `No ${activeFormatFilter} Theatres in ${city}` : `No Theatres in ${city}`}
+          </h3>
           <p className="text-xs text-[#6B7280] max-w-sm mx-auto">
-            Try choosing a different format filter or switch to another city in {activeCountry.name}.
+            {activeFormatFilter !== 'All'
+              ? `No auditoriums in ${city} match "${activeFormatFilter}". Reset your format filter to explore all local screens.`
+              : `Try choosing a different city in ${activeCountry.name}.`}
           </p>
+          {activeFormatFilter !== 'All' && (
+            <button
+              type="button"
+              onClick={() => setActiveFormatFilter('All')}
+              className="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl text-xs font-bold bg-[#E63946] text-white hover:bg-[#D62839] transition-all cursor-pointer shadow-xs"
+            >
+              Show All Theatres in {city}
+            </button>
+          )}
         </div>
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">

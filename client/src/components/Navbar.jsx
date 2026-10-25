@@ -189,10 +189,12 @@ const Navbar = () => {
                   Log In
                 </Link>
                 <Link
-                  to="/register"
-                  className="text-xs sm:text-sm font-bold bg-[#E63946] hover:bg-[#D62839] text-white px-3 sm:px-4 py-1.5 rounded-xl shadow-sm shadow-[#E63946]/20 transition-all whitespace-nowrap"
+                  to="/settings"
+                  className="text-xs sm:text-sm font-bold bg-[#E63946] hover:bg-[#D62839] text-white px-3 sm:px-4 py-1.5 rounded-xl shadow-sm shadow-[#E63946]/20 transition-all whitespace-nowrap inline-flex items-center gap-1.5"
+                  title="Settings"
                 >
-                  Create Account
+                  <Settings className="w-3.5 h-3.5 text-white" />
+                  <span>Settings</span>
                 </Link>
               </div>
             )}

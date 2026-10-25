@@ -19,6 +19,7 @@ import {
   Filter
 } from 'lucide-react';
 import { useLocationContext } from '../context/LocationContext';
+import { resolveMoviePoster, DEFAULT_FALLBACK_POSTER } from '../utils/moviePosters';
 import {
   LOCATION_HIERARCHY,
   CITY_COORDINATES,
@@ -308,12 +309,32 @@ const NearbyCinemaFinder = ({ className = '', defaultExpandedCinema = true }) =>
           ))}
         </div>
       ) : filteredCinemas.length === 0 ? (
-        <div className="bg-[#FFF9F0] border border-[#EAE2D5] rounded-2xl p-8 text-center space-y-2">
+        <div className="bg-[#FFF9F0] border border-[#EAE2D5] rounded-2xl p-8 text-center space-y-3">
           <Building className="w-8 h-8 text-[#9CA3AF] mx-auto" />
-          <p className="text-sm font-bold text-[#2B2B2B]">No Cinema Theatres Found in {city}</p>
-          <p className="text-xs text-[#6B7280]">
-            Try switching cities or click "Use Current Location" to discover auditoriums near your coordinates.
+          <p className="text-sm font-bold text-[#2B2B2B]">
+            {selectedFormat !== 'All'
+              ? `No ${selectedFormat} Theatres Found in ${city}`
+              : cinemaSearch
+              ? `No Theatres matching "${cinemaSearch}" in ${city}`
+              : `No Cinema Theatres Found in ${city}`}
           </p>
+          <p className="text-xs text-[#6B7280] max-w-md mx-auto">
+            {selectedFormat !== 'All' || cinemaSearch
+              ? `Try resetting your filters to explore all available auditoriums in ${city}.`
+              : 'Try switching cities or click "Use Current Location" to discover auditoriums near your coordinates.'}
+          </p>
+          {(selectedFormat !== 'All' || cinemaSearch) && (
+            <button
+              type="button"
+              onClick={() => {
+                setSelectedFormat('All');
+                setCinemaSearch('');
+              }}
+              className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl text-xs font-bold bg-[#E63946] text-white hover:bg-[#D62839] transition-all cursor-pointer shadow-xs"
+            >
+              Show All Cinemas in {city}
+            </button>
+          )}
         </div>
       ) : (
         <div className="space-y-4">
@@ -427,9 +448,14 @@ const NearbyCinemaFinder = ({ className = '', defaultExpandedCinema = true }) =>
                             {/* Movie Info */}
                             <div className="flex items-center gap-3">
                               <img
-                                src={movie.posterUrl || 'https://images.unsplash.com/photo-1489599849927-2ee91cede3ba?w=200'}
+                                src={resolveMoviePoster(movie?.title, movie?.posterUrl)}
                                 alt={movie.title}
                                 referrerPolicy="no-referrer"
+                                onError={(e) => {
+                                  if (e.currentTarget.src !== DEFAULT_FALLBACK_POSTER) {
+                                    e.currentTarget.src = DEFAULT_FALLBACK_POSTER;
+                                  }
+                                }}
                                 className="w-12 h-16 object-cover rounded-xl shrink-0 border border-[#EAE2D5] shadow-xs"
                               />
                               <div className="space-y-1">

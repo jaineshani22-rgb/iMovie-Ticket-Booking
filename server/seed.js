@@ -44,7 +44,7 @@ const seedData = async () => {
         role: 'admin'
       },
       {
-        username: 'Tanishq Pardeshi',
+        username: 'Eshani Jain',
         email: 'user@imovies.com',
         password: userPassword,
         role: 'user'

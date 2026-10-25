@@ -22,6 +22,7 @@ import { useLocationContext } from '../context/LocationContext';
 import TrailerModal from '../components/TrailerModal';
 import CheckoutModal from '../components/CheckoutModal';
 import MovieReviews from '../components/MovieReviews';
+import { resolveMoviePoster, getFallbackMoviePoster, DEFAULT_FALLBACK_POSTER } from '../utils/moviePosters';
 
 const ROWS = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H'];
 const COLS = [1, 2, 3, 4, 5, 6, 7, 8];
@@ -218,18 +219,22 @@ const MovieDetails = () => {
         {/* Poster with Trailer Trigger - Full Canvas Theatrical Visibility */}
         <div className="relative w-44 sm:w-60 aspect-[2/3] rounded-2xl overflow-hidden shadow-sm mx-auto md:mx-0 border border-[#EAE2D5] shrink-0 group bg-[#FAF6EE] flex items-center justify-center">
           <img
-            src={
-              movie.posterUrl
-                ? (movie.posterUrl.includes('wikimedia.org') || movie.posterUrl.includes('wikipedia.org')
-                    ? `/api/images/proxy?url=${encodeURIComponent(movie.posterUrl)}`
-                    : movie.posterUrl)
-                : 'https://images.unsplash.com/photo-1489599849927-2ee91cede3ba?w=1000&auto=format&fit=crop&q=85'
-            }
+            src={resolveMoviePoster(movie?.title, movie?.posterUrl)}
             alt={movie.title}
             referrerPolicy="no-referrer"
             loading="eager"
             decoding="async"
             className="w-full h-full object-cover object-center group-hover:scale-105 transition-transform duration-500 will-change-transform"
+            onError={(e) => {
+              const fallback = getFallbackMoviePoster(movie?.title, e.currentTarget.src);
+              if (fallback && fallback !== e.currentTarget.src) {
+                e.currentTarget.src = fallback;
+                return;
+              }
+              if (e.currentTarget.src !== DEFAULT_FALLBACK_POSTER) {
+                e.currentTarget.src = DEFAULT_FALLBACK_POSTER;
+              }
+            }}
             style={{
               imageRendering: '-webkit-optimize-contrast',
               transform: 'translateZ(0)',
@@ -350,10 +355,12 @@ const MovieDetails = () => {
               {/* Preferred Cinema Selector in city */}
               {cinemas && cinemas.length > 0 && (
                 <div>
-                  <label className="block text-xs font-bold text-[#2B2B2B] mb-1.5 flex items-center gap-1.5">
-                    <Building className="w-3.5 h-3.5 text-[#E63946]" />
-                    Select Cinema Location in {city}
-                  </label>
+                  <div className="flex items-center justify-between mb-1.5">
+                    <label className="text-xs font-bold text-[#2B2B2B] flex items-center gap-1.5">
+                      <Building className="w-3.5 h-3.5 text-[#E63946]" />
+                      Select Cinema House in {city} ({cinemas.length} available)
+                    </label>
+                  </div>
                   <div className="flex flex-wrap gap-2">
                     {cinemas.map((cin) => {
                       const isSelected = activeCinema?._id === cin._id;
@@ -362,13 +369,14 @@ const MovieDetails = () => {
                           key={cin._id}
                           type="button"
                           onClick={() => setSelectedCinema(cin)}
-                          className={`px-3 py-1.5 rounded-xl text-xs font-bold transition-all cursor-pointer ${
+                          className={`px-3 py-1.5 rounded-xl text-xs font-bold transition-all cursor-pointer flex items-center gap-1.5 ${
                             isSelected
-                              ? 'bg-[#E63946] text-white shadow-xs'
+                              ? 'bg-[#E63946] text-white shadow-xs ring-2 ring-[#E63946]/30'
                               : 'bg-[#FFF9F0] border border-[#EAE2D5] text-[#2B2B2B] hover:bg-[#FFF6DC]'
                           }`}
                         >
-                          {cin.name}
+                          {isSelected && <CheckCircle2 className="w-3 h-3" />}
+                          <span>{cin.name}</span>
                         </button>
                       );
                     })}
@@ -468,6 +476,94 @@ const MovieDetails = () => {
           </div>
         </div>
       ) : (
+      <>
+        {/* All Cinema Houses Available in Current Location for Ticket Booking */}
+        {cinemas && cinemas.length > 0 && (
+          <section aria-label="Cinema Houses in Location" className="bg-white border border-[#EAE2D5] rounded-3xl p-6 sm:p-8 space-y-4 shadow-xs">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-[#EAE2D5] pb-4">
+              <div className="space-y-1">
+                <div className="inline-flex items-center gap-1.5 text-xs font-bold text-[#E63946] bg-[#FDECEC] border border-[#FCD7D7] px-3 py-1 rounded-lg">
+                  <Building className="w-3.5 h-3.5 text-[#E63946]" />
+                  <span>Available Cinema Houses in {city}</span>
+                </div>
+                <h2 className="text-lg sm:text-xl font-extrabold text-[#2B2B2B]">
+                  Select Cinema House for Ticket Booking
+                </h2>
+                <p className="text-xs text-[#6B7280]">
+                  Choose from {cinemas.length} luxury cinema houses available in your current location featuring verified laser auditoriums and reserved recliners.
+                </p>
+              </div>
+              <span className="text-xs font-bold text-[#7A5B14] bg-[#FFF6DC] border border-[#FFEDB0] px-3.5 py-1.5 rounded-xl self-start sm:self-auto font-mono">
+                {cinemas.length} {cinemas.length === 1 ? 'Cinema House' : 'Cinema Houses'} in {city}
+              </span>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+              {cinemas.map((cin) => {
+                const isSelected = activeCinema?._id === cin._id;
+                return (
+                  <div
+                    key={cin._id}
+                    onClick={() => setSelectedCinema(cin)}
+                    className={`p-4 rounded-2xl border transition-all duration-200 cursor-pointer flex flex-col justify-between gap-3 text-left ${
+                      isSelected
+                        ? 'bg-gradient-to-br from-[#FFF9F0] to-[#FFF6DC] border-[#E63946] shadow-sm ring-2 ring-[#E63946]/30'
+                        : 'bg-[#FFFDF9] border-[#EAE2D5] hover:border-[#FFC93C] hover:bg-[#FFF6DC]/40'
+                    }`}
+                  >
+                    <div className="space-y-1.5">
+                      <div className="flex items-start justify-between gap-2">
+                        <h3 className="text-sm font-bold text-[#2B2B2B] leading-snug">
+                          {cin.name}
+                        </h3>
+                        {isSelected ? (
+                          <span className="text-[10px] uppercase font-extrabold tracking-wider bg-[#E63946] text-white px-2 py-0.5 rounded-md shrink-0 shadow-xs flex items-center gap-1">
+                            <CheckCircle2 className="w-2.5 h-2.5" />
+                            Active
+                          </span>
+                        ) : (
+                          <span className="text-[10px] font-bold text-[#6B7280] bg-white border border-[#EAE2D5] px-2 py-0.5 rounded-md shrink-0">
+                            Select
+                          </span>
+                        )}
+                      </div>
+
+                      <p className="text-xs text-[#6B7280] flex items-center gap-1.5">
+                        <MapPin className="w-3.5 h-3.5 text-[#E63946] shrink-0" />
+                        <span className="truncate">{cin.address || `${cin.city}, ${cin.country}`}</span>
+                      </p>
+
+                      {cin.formats && cin.formats.length > 0 && (
+                        <div className="flex flex-wrap gap-1 pt-1">
+                          {cin.formats.slice(0, 3).map((fmt, i) => (
+                            <span
+                              key={i}
+                              className="text-[10px] font-bold bg-white border border-[#EAE2D5] text-[#2B2B2B] px-1.5 py-0.5 rounded"
+                            >
+                              {fmt}
+                            </span>
+                          ))}
+                        </div>
+                      )}
+                    </div>
+
+                    <div className="flex items-center justify-between text-[11px] pt-2 border-t border-[#EAE2D5]/70 text-[#6B7280]">
+                      <span className="flex items-center gap-1 text-[#7A5B14] font-bold">
+                        <Star className="w-3 h-3 fill-[#FFC93C] stroke-none" />
+                        <span>{cin.rating || 4.8}</span>
+                        <span className="font-normal text-[#9CA3AF]">({cin.screens || 8} screens)</span>
+                      </span>
+                      <span className="font-mono font-bold text-[#B81D2D]">
+                        From {formatPrice(cin.basePrice || movie.ticketPrice || 350)}
+                      </span>
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          </section>
+        )}
+
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 items-start">
         {/* Auditorium Seat Map */}
         <div id="auditorium-seat-map" className="lg:col-span-2 bg-white border border-[#EAE2D5] rounded-3xl p-4 sm:p-8 space-y-6 sm:space-y-8 shadow-xs">
@@ -628,6 +724,7 @@ const MovieDetails = () => {
           </button>
         </div>
       </div>
+      </>
       )}
 
       {/* Verified Audience Reviews & Ratings Section */}
@@ -658,6 +755,8 @@ const MovieDetails = () => {
         onClose={() => setShowCheckout(false)}
         movie={movie}
         cinema={activeCinema}
+        availableCinemas={cinemas}
+        onSelectCinema={setSelectedCinema}
         showDate={showDate}
         showTime={showTime}
         selectedSeats={selectedSeats}

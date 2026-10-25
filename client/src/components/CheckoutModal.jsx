@@ -12,9 +12,14 @@ import {
   Lock,
   Sparkles,
   Zap,
-  ArrowRight
+  ArrowRight,
+  QrCode,
+  Smartphone,
+  Check,
+  Loader2
 } from 'lucide-react';
 import API from '../services/api';
+import { resolveMoviePoster, DEFAULT_FALLBACK_POSTER } from '../utils/moviePosters';
 
 const CheckoutModal = ({
   isOpen,
@@ -29,7 +34,9 @@ const CheckoutModal = ({
   currencySymbol,
   currencyCode,
   user,
-  onBookingSuccess
+  onBookingSuccess,
+  availableCinemas = [],
+  onSelectCinema
 }) => {
   const [step, setStep] = useState(1); // 1: Details & Summary, 2: Payment, 3: Processing
   const [customerName, setCustomerName] = useState(user?.username || 'VIP Patron');
@@ -37,12 +44,20 @@ const CheckoutModal = ({
   const [customerPhone, setCustomerPhone] = useState('+1 (555) 234-5678');
 
   // Payment states
+  const [paymentMethod, setPaymentMethod] = useState('upi');
   const [cardNumber, setCardNumber] = useState('4242 •••• •••• 4242');
   const [cardExpiry, setCardExpiry] = useState('12/28');
   const [cardCvc, setCardCvc] = useState('888');
-  const [paymentMethod, setPaymentMethod] = useState('card');
   const [discountCode, setDiscountCode] = useState('');
   const [discountApplied, setDiscountApplied] = useState(false);
+
+  // UPI Payment states
+  const [upiId, setUpiId] = useState('eshani@okhdfcbank');
+  const [upiVerified, setUpiVerified] = useState(false);
+  const [upiVerifying, setUpiVerifying] = useState(false);
+  const [upiError, setUpiError] = useState('');
+  const [upiVerifiedDetails, setUpiVerifiedDetails] = useState(null);
+  const [upiMode, setUpiMode] = useState('id'); // 'id' | 'qr'
 
   // Hold Timer (8 minutes = 480 seconds)
   const [timeLeft, setTimeLeft] = useState(480);
@@ -92,10 +107,83 @@ const CheckoutModal = ({
     }
   };
 
+  const getBankNameFromHandle = (handle) => {
+    const lower = (handle || '').toLowerCase();
+    if (lower.includes('okhdfc') || lower.includes('hdfc')) return 'HDFC Bank';
+    if (lower.includes('oksbi') || lower.includes('sbi')) return 'State Bank of India';
+    if (lower.includes('okicici') || lower.includes('icici')) return 'ICICI Bank';
+    if (lower.includes('okaxis') || lower.includes('axis')) return 'Axis Bank';
+    if (lower.includes('paytm')) return 'Paytm Payments Bank';
+    if (lower.includes('ybl') || lower.includes('ibl')) return 'YES Bank / PhonePe';
+    if (lower.includes('apl')) return 'Amazon Pay (Axis Bank)';
+    if (lower.includes('barodampay')) return 'Bank of Baroda';
+    if (lower.includes('pnb')) return 'Punjab National Bank';
+    return 'Unified Payments Interface (NPCI)';
+  };
+
+  const validateUpiFormat = (id) => {
+    return /^[a-zA-Z0-9.\-_]{2,256}@[a-zA-Z0-9.\-_]{2,64}$/.test((id || '').trim());
+  };
+
+  const handleVerifyUpi = () => {
+    setUpiError('');
+    const cleanId = upiId.trim();
+    if (!cleanId) {
+      setUpiError('Please enter a UPI ID to verify.');
+      return;
+    }
+    if (!validateUpiFormat(cleanId)) {
+      setUpiError('Invalid format. Please enter format like username@okhdfcbank or 9876543210@paytm');
+      return;
+    }
+
+    setUpiVerifying(true);
+    setTimeout(() => {
+      setUpiVerifying(false);
+      const parts = cleanId.split('@');
+      const bankName = getBankNameFromHandle(parts[1]);
+      const name = customerName?.trim() || user?.username || 'VIP Patron';
+      setUpiVerified(true);
+      setUpiVerifiedDetails({
+        name,
+        bank: bankName,
+        vpa: cleanId
+      });
+      setError('');
+    }, 500);
+  };
+
+  const quickHandles = ['@okhdfcbank', '@oksbi', '@paytm', '@ybl', '@okicici', '@apl'];
+
+  const handleApplyQuickHandle = (handle) => {
+    let base = upiId.trim();
+    if (base.includes('@')) {
+      base = base.split('@')[0];
+    }
+    const newId = `${base || 'patron'}${handle}`;
+    setUpiId(newId);
+    setUpiVerified(false);
+    setUpiVerifiedDetails(null);
+    setUpiError('');
+  };
+
   const fillTestCredentials = () => {
-    setCardNumber('4242 4242 4242 4242');
-    setCardExpiry('08/29');
-    setCardCvc('314');
+    if (paymentMethod === 'card') {
+      setCardNumber('4242 4242 4242 4242');
+      setCardExpiry('08/29');
+      setCardCvc('314');
+    } else if (paymentMethod === 'upi') {
+      const testId = 'eshani@okhdfcbank';
+      setUpiId(testId);
+      setUpiVerifying(false);
+      setUpiVerified(true);
+      setUpiVerifiedDetails({
+        name: customerName || user?.username || 'Eshani Jain',
+        bank: 'HDFC Bank',
+        vpa: testId
+      });
+      setUpiError('');
+    }
   };
 
   const handleProcessPayment = async () => {
@@ -104,9 +192,43 @@ const CheckoutModal = ({
       return;
     }
 
+    if (paymentMethod === 'upi' && upiMode === 'id') {
+      const cleanId = upiId.trim();
+      if (!cleanId) {
+        setError('Please enter your UPI ID (e.g. username@okhdfcbank).');
+        return;
+      }
+      if (!validateUpiFormat(cleanId)) {
+        setError('Please enter a valid UPI ID (e.g. username@okhdfcbank or 9876543210@paytm).');
+        return;
+      }
+      if (!upiVerified) {
+        const parts = cleanId.split('@');
+        const bankName = getBankNameFromHandle(parts[1]);
+        setUpiVerified(true);
+        setUpiVerifiedDetails({
+          name: customerName || user?.username || 'VIP Patron',
+          bank: bankName,
+          vpa: cleanId
+        });
+      }
+    }
+
     try {
       setSubmitting(true);
       setError('');
+
+      let formattedPaymentMethod = 'Sandbox Visa (•••• 4242)';
+      if (paymentMethod === 'upi') {
+        const cleanId = upiId.trim() || 'patron@upi';
+        const bank = upiVerifiedDetails?.bank || getBankNameFromHandle(cleanId.split('@')[1]);
+        formattedPaymentMethod =
+          upiMode === 'qr'
+            ? 'UPI Dynamic QR (Verified NPCI Collect)'
+            : `UPI: ${cleanId} (${bank})`;
+      } else if (paymentMethod === 'digital') {
+        formattedPaymentMethod = 'Apple Pay / Google Pay';
+      }
 
       // Send payment & booking payload
       const { data } = await API.post('/bookings', {
@@ -124,7 +246,7 @@ const CheckoutModal = ({
           email: customerEmail,
           phone: customerPhone
         },
-        paymentMethod: paymentMethod === 'card' ? 'Sandbox Visa (•••• 4242)' : 'Apple Pay / Google Pay'
+        paymentMethod: formattedPaymentMethod
       });
 
       onBookingSuccess(data);
@@ -181,17 +303,40 @@ const CheckoutModal = ({
           <div className="bg-[#FFF9F0] border border-[#EAE2D5] rounded-2xl p-4 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
             <div className="flex items-center gap-3 min-w-0">
               <img
-                src={movie.posterUrl || 'https://images.unsplash.com/photo-1489599849927-2ee91cede3ba?w=400&auto=format&fit=crop&q=85'}
+                src={resolveMoviePoster(movie?.title, movie?.posterUrl)}
                 alt={movie.title}
                 referrerPolicy="no-referrer"
+                onError={(e) => {
+                  if (e.currentTarget.src !== DEFAULT_FALLBACK_POSTER) {
+                    e.currentTarget.src = DEFAULT_FALLBACK_POSTER;
+                  }
+                }}
                 className="w-12 h-16 rounded-xl object-cover object-center border border-[#EAE2D5] shrink-0 shadow-xs"
               />
               <div className="min-w-0">
                 <h4 className="text-sm font-bold text-[#2B2B2B] truncate">{movie.title}</h4>
-                <p className="text-xs text-[#6B7280] flex items-center gap-1.5 truncate mt-0.5">
-                  <MapPin className="w-3 h-3 text-[#E63946] shrink-0" />
-                  <span>{cinema?.name || movie.theater || 'iMovies VIP Cinema'}</span>
-                </p>
+                <div className="text-xs text-[#6B7280] flex items-center gap-1.5 mt-0.5">
+                  <MapPin className="w-3.5 h-3.5 text-[#E63946] shrink-0" />
+                  {availableCinemas && availableCinemas.length > 1 && onSelectCinema ? (
+                    <select
+                      value={cinema?._id || ''}
+                      onChange={(e) => {
+                        const found = availableCinemas.find((c) => c._id === e.target.value);
+                        if (found) onSelectCinema(found);
+                      }}
+                      className="bg-white border border-[#EAE2D5] text-[#2B2B2B] text-[11px] font-bold rounded-lg px-2 py-0.5 focus:outline-none focus:border-[#E63946] cursor-pointer max-w-[220px] truncate"
+                      title="Switch cinema house"
+                    >
+                      {availableCinemas.map((c) => (
+                        <option key={c._id} value={c._id}>
+                          {c.name}
+                        </option>
+                      ))}
+                    </select>
+                  ) : (
+                    <span className="truncate max-w-[200px] font-bold text-[#2B2B2B]">{cinema?.name || movie.theater || 'iMovies VIP Cinema'}</span>
+                  )}
+                </div>
                 <div className="flex items-center gap-2 text-[11px] text-[#6B7280] mt-1">
                   <span>{showDate}</span>
                   <span>·</span>
@@ -317,58 +462,302 @@ const CheckoutModal = ({
           ) : (
             /* STEP 2: Simulated Payment Gateway (Test Mode) */
             <div className="space-y-5">
-              <div className="flex items-center justify-between bg-[#FFF6DC] border border-[#FFEDB0] rounded-2xl p-3 text-xs text-[#7A5B14]">
+              <div className="flex flex-wrap items-center justify-between gap-2 bg-[#FFF6DC] border border-[#FFEDB0] rounded-2xl p-3 text-xs text-[#7A5B14]">
                 <div className="flex items-center gap-2">
                   <Zap className="w-4 h-4 text-[#E5B129] shrink-0" />
                   <span>
                     <strong>Sandbox Mode:</strong> Testing simulation mode. Zero actual charges.
                   </span>
                 </div>
-                <button
-                  type="button"
-                  onClick={fillTestCredentials}
-                  className="text-[11px] underline font-bold text-[#B81D2D] hover:text-[#E63946] shrink-0 ml-2 cursor-pointer"
-                >
-                  Auto-Fill Test Card
-                </button>
+                <div className="flex items-center gap-2">
+                  {paymentMethod === 'upi' ? (
+                    <button
+                      type="button"
+                      onClick={fillTestCredentials}
+                      className="text-[11px] underline font-bold text-[#B81D2D] hover:text-[#E63946] shrink-0 cursor-pointer"
+                    >
+                      Auto-Fill Test UPI
+                    </button>
+                  ) : paymentMethod === 'card' ? (
+                    <button
+                      type="button"
+                      onClick={fillTestCredentials}
+                      className="text-[11px] underline font-bold text-[#B81D2D] hover:text-[#E63946] shrink-0 cursor-pointer"
+                    >
+                      Auto-Fill Test Card
+                    </button>
+                  ) : null}
+                </div>
               </div>
 
               {/* Payment Method Selector */}
-              <div className="grid grid-cols-2 gap-3">
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-2.5">
                 <button
                   type="button"
-                  onClick={() => setPaymentMethod('card')}
+                  onClick={() => {
+                    setPaymentMethod('upi');
+                    setError('');
+                  }}
                   className={`p-3 rounded-2xl border text-left flex items-center gap-3 transition-all cursor-pointer ${
-                    paymentMethod === 'card'
-                      ? 'bg-[#FFF6DC] border-[#FFC93C] text-[#2B2B2B] ring-2 ring-[#FFC93C]/40'
+                    paymentMethod === 'upi'
+                      ? 'bg-[#FFF6DC] border-[#FFC93C] text-[#2B2B2B] ring-2 ring-[#FFC93C]/40 shadow-xs'
                       : 'bg-[#FFF9F0] border-[#EAE2D5] text-[#6B7280] hover:text-[#2B2B2B]'
                   }`}
                 >
-                  <CreditCard className="w-4 h-4 text-[#E63946]" />
-                  <div>
-                    <p className="text-xs font-bold">Credit / Debit Card</p>
-                    <p className="text-[10px] text-[#6B7280]">Visa, Mastercard, Amex</p>
+                  <div className="w-8 h-8 rounded-xl bg-gradient-to-br from-[#097939] to-[#0D532A] text-white flex items-center justify-center font-black text-xs shrink-0 shadow-2xs">
+                    UPI
+                  </div>
+                  <div className="min-w-0">
+                    <p className="text-xs font-bold truncate text-[#2B2B2B]">UPI Payment</p>
+                    <p className="text-[10px] text-[#6B7280] truncate">GPay, PhonePe, Paytm</p>
                   </div>
                 </button>
 
                 <button
                   type="button"
-                  onClick={() => setPaymentMethod('digital')}
+                  onClick={() => {
+                    setPaymentMethod('card');
+                    setError('');
+                  }}
                   className={`p-3 rounded-2xl border text-left flex items-center gap-3 transition-all cursor-pointer ${
-                    paymentMethod === 'digital'
-                      ? 'bg-[#FFF6DC] border-[#FFC93C] text-[#2B2B2B] ring-2 ring-[#FFC93C]/40'
+                    paymentMethod === 'card'
+                      ? 'bg-[#FFF6DC] border-[#FFC93C] text-[#2B2B2B] ring-2 ring-[#FFC93C]/40 shadow-xs'
                       : 'bg-[#FFF9F0] border-[#EAE2D5] text-[#6B7280] hover:text-[#2B2B2B]'
                   }`}
                 >
-                  <Sparkles className="w-4 h-4 text-[#E5B129]" />
-                  <div>
-                    <p className="text-xs font-bold">Express Digital Pass</p>
-                    <p className="text-[10px] text-[#6B7280]">Apple Pay / Google Pay</p>
+                  <CreditCard className="w-4 h-4 text-[#E63946] shrink-0" />
+                  <div className="min-w-0">
+                    <p className="text-xs font-bold truncate text-[#2B2B2B]">Credit / Debit Card</p>
+                    <p className="text-[10px] text-[#6B7280] truncate">Visa, Mastercard</p>
+                  </div>
+                </button>
+
+                <button
+                  type="button"
+                  onClick={() => {
+                    setPaymentMethod('digital');
+                    setError('');
+                  }}
+                  className={`p-3 rounded-2xl border text-left flex items-center gap-3 transition-all cursor-pointer ${
+                    paymentMethod === 'digital'
+                      ? 'bg-[#FFF6DC] border-[#FFC93C] text-[#2B2B2B] ring-2 ring-[#FFC93C]/40 shadow-xs'
+                      : 'bg-[#FFF9F0] border-[#EAE2D5] text-[#6B7280] hover:text-[#2B2B2B]'
+                  }`}
+                >
+                  <Sparkles className="w-4 h-4 text-[#E5B129] shrink-0" />
+                  <div className="min-w-0">
+                    <p className="text-xs font-bold truncate text-[#2B2B2B]">Express Digital</p>
+                    <p className="text-[10px] text-[#6B7280] truncate">Apple / Google Pay</p>
                   </div>
                 </button>
               </div>
 
-              {paymentMethod === 'card' ? (
+              {/* UPI Gateway Section */}
+              {paymentMethod === 'upi' ? (
+                <div className="space-y-4 bg-[#FFF9F0] border border-[#EAE2D5] p-4 sm:p-5 rounded-2xl">
+                  {/* Mode switcher: VPA ID or Dynamic QR */}
+                  <div className="flex items-center gap-2 p-1 bg-white border border-[#EAE2D5] rounded-xl">
+                    <button
+                      type="button"
+                      onClick={() => setUpiMode('id')}
+                      className={`flex-1 py-1.5 px-3 rounded-lg text-xs font-bold transition-all flex items-center justify-center gap-1.5 cursor-pointer ${
+                        upiMode === 'id'
+                          ? 'bg-[#E63946] text-white shadow-xs'
+                          : 'text-[#6B7280] hover:text-[#2B2B2B]'
+                      }`}
+                    >
+                      <Smartphone className="w-3.5 h-3.5" />
+                      <span>Enter UPI ID / VPA</span>
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => setUpiMode('qr')}
+                      className={`flex-1 py-1.5 px-3 rounded-lg text-xs font-bold transition-all flex items-center justify-center gap-1.5 cursor-pointer ${
+                        upiMode === 'qr'
+                          ? 'bg-[#E63946] text-white shadow-xs'
+                          : 'text-[#6B7280] hover:text-[#2B2B2B]'
+                      }`}
+                    >
+                      <QrCode className="w-3.5 h-3.5" />
+                      <span>Scan UPI QR Code</span>
+                    </button>
+                  </div>
+
+                  {upiMode === 'id' ? (
+                    <div className="space-y-3">
+                      <div>
+                        <div className="flex items-center justify-between mb-1">
+                          <label className="block text-xs font-bold text-[#2B2B2B]">
+                            Virtual Payment Address (UPI ID) *
+                          </label>
+                          {upiVerified && (
+                            <span className="text-[11px] font-bold text-emerald-600 flex items-center gap-1">
+                              <CheckCircle2 className="w-3 h-3" />
+                              Verified VPA
+                            </span>
+                          )}
+                        </div>
+                        <div className="flex gap-2">
+                          <div className="relative flex-1">
+                            <input
+                              type="text"
+                              value={upiId}
+                              onChange={(e) => {
+                                setUpiId(e.target.value);
+                                setUpiVerified(false);
+                                setUpiVerifiedDetails(null);
+                                setUpiError('');
+                              }}
+                              placeholder="e.g. yourname@okhdfcbank or mobile@paytm"
+                              className={`w-full bg-white border rounded-xl px-3.5 py-2.5 text-xs text-[#2B2B2B] focus:outline-none transition-all ${
+                                upiVerified
+                                  ? 'border-emerald-500 ring-2 ring-emerald-500/20'
+                                  : 'border-[#DCD3C5] focus:border-[#E63946] focus:ring-1 focus:ring-[#E63946]'
+                              }`}
+                            />
+                          </div>
+                          <button
+                            type="button"
+                            onClick={handleVerifyUpi}
+                            disabled={upiVerifying || !upiId.trim()}
+                            className="px-4 py-2.5 bg-[#FFC93C] hover:bg-[#E5B129] disabled:opacity-50 text-[#1A1D20] text-xs font-extrabold rounded-xl transition-all cursor-pointer flex items-center gap-1.5 shrink-0 shadow-xs"
+                          >
+                            {upiVerifying ? (
+                              <>
+                                <Loader2 className="w-3.5 h-3.5 animate-spin" />
+                                <span>Verifying...</span>
+                              </>
+                            ) : upiVerified ? (
+                              <>
+                                <Check className="w-3.5 h-3.5 stroke-[3] text-emerald-800" />
+                                <span>Verified</span>
+                              </>
+                            ) : (
+                              <span>Verify UPI ID</span>
+                            )}
+                          </button>
+                        </div>
+                      </div>
+
+                      {/* Quick Bank Handle Suggestions */}
+                      <div className="flex items-center gap-1.5 flex-wrap pt-0.5">
+                        <span className="text-[11px] text-[#6B7280] font-medium mr-1">Popular handles:</span>
+                        {quickHandles.map((handle) => (
+                          <button
+                            key={handle}
+                            type="button"
+                            onClick={() => handleApplyQuickHandle(handle)}
+                            className="text-[10px] font-mono font-bold px-2 py-0.5 rounded-lg bg-white hover:bg-[#FFF6DC] border border-[#EAE2D5] text-[#2B2B2B] transition-colors cursor-pointer"
+                          >
+                            {handle}
+                          </button>
+                        ))}
+                      </div>
+
+                      {/* Verified VPA details notification badge */}
+                      {upiVerified && upiVerifiedDetails && (
+                        <div className="bg-[#ECFDF5] border border-[#A7F3D0] rounded-xl p-3 flex items-center justify-between gap-3 text-xs animate-in fade-in">
+                          <div className="flex items-center gap-2.5 min-w-0">
+                            <div className="w-6 h-6 rounded-full bg-[#10B981] text-white flex items-center justify-center shrink-0">
+                              <Check className="w-3.5 h-3.5 stroke-[3]" />
+                            </div>
+                            <div className="min-w-0">
+                              <p className="font-extrabold text-[#065F46] truncate">
+                                Verified: {upiVerifiedDetails.name}
+                              </p>
+                              <p className="text-[11px] text-[#047857] truncate">
+                                Bank: <span className="font-bold">{upiVerifiedDetails.bank}</span> · VPA: {upiVerifiedDetails.vpa}
+                              </p>
+                            </div>
+                          </div>
+                          <span className="text-[10px] font-bold text-[#065F46] bg-white border border-[#A7F3D0] px-2 py-0.5 rounded-md shrink-0">
+                            NPCI Ready
+                          </span>
+                        </div>
+                      )}
+
+                      {/* UPI Error message */}
+                      {upiError && (
+                        <div className="flex items-center gap-2 bg-[#FDECEC] border border-[#FCD7D7] text-[#B81D2D] text-xs p-2.5 rounded-xl">
+                          <AlertCircle className="w-3.5 h-3.5 shrink-0 text-[#E63946]" />
+                          <span>{upiError}</span>
+                        </div>
+                      )}
+
+                      {/* Supported UPI Apps strip */}
+                      <div className="pt-2 border-t border-[#EAE2D5] flex flex-wrap items-center justify-between gap-2 text-[11px] text-[#6B7280]">
+                        <span>Supported UPI Apps:</span>
+                        <div className="flex items-center gap-1.5 font-bold text-[10px] flex-wrap">
+                          <span className="px-2 py-0.5 rounded bg-white border border-[#EAE2D5] text-[#1E3A8A]">Google Pay</span>
+                          <span className="px-2 py-0.5 rounded bg-white border border-[#EAE2D5] text-[#5F259F]">PhonePe</span>
+                          <span className="px-2 py-0.5 rounded bg-white border border-[#EAE2D5] text-[#00BAF2]">Paytm</span>
+                          <span className="px-2 py-0.5 rounded bg-white border border-[#EAE2D5] text-[#0066B2]">BHIM</span>
+                          <span className="px-2 py-0.5 rounded bg-white border border-[#EAE2D5] text-[#111827]">CRED</span>
+                        </div>
+                      </div>
+                    </div>
+                  ) : (
+                    /* Dynamic UPI QR Code View */
+                    <div className="text-center py-2 space-y-3">
+                      <div className="relative inline-block bg-white p-4 rounded-2xl border-2 border-[#EAE2D5] shadow-xs">
+                        <svg className="w-36 h-36 mx-auto text-[#2B2B2B]" viewBox="0 0 100 100" fill="currentColor">
+                          {/* Corner positioning marks */}
+                          <rect x="5" y="5" width="28" height="28" fill="#1F2937" rx="3" />
+                          <rect x="9" y="9" width="20" height="20" fill="white" rx="1" />
+                          <rect x="13" y="13" width="12" height="12" fill="#1F2937" rx="1" />
+
+                          <rect x="67" y="5" width="28" height="28" fill="#1F2937" rx="3" />
+                          <rect x="71" y="9" width="20" height="20" fill="white" rx="1" />
+                          <rect x="75" y="13" width="12" height="12" fill="#1F2937" rx="1" />
+
+                          <rect x="5" y="67" width="28" height="28" fill="#1F2937" rx="3" />
+                          <rect x="9" y="71" width="20" height="20" fill="white" rx="1" />
+                          <rect x="13" y="75" width="12" height="12" fill="#1F2937" rx="1" />
+
+                          {/* Data elements */}
+                          <rect x="38" y="10" width="6" height="6" fill="#1F2937" />
+                          <rect x="48" y="14" width="6" height="6" fill="#1F2937" />
+                          <rect x="58" y="8" width="5" height="5" fill="#1F2937" />
+                          <rect x="38" y="22" width="6" height="6" fill="#1F2937" />
+                          <rect x="48" y="24" width="5" height="5" fill="#1F2937" />
+
+                          <rect x="10" y="38" width="6" height="6" fill="#1F2937" />
+                          <rect x="20" y="44" width="5" height="5" fill="#1F2937" />
+                          
+                          {/* Center UPI Badge */}
+                          <rect x="37" y="37" width="26" height="26" fill="#097939" rx="5" />
+                          <text x="50" y="54" fill="white" fontSize="9" fontWeight="900" textAnchor="middle">UPI</text>
+
+                          <rect x="68" y="38" width="6" height="6" fill="#1F2937" />
+                          <rect x="80" y="42" width="7" height="6" fill="#1F2937" />
+                          <rect x="74" y="52" width="5" height="6" fill="#1F2937" />
+
+                          <rect x="38" y="68" width="6" height="6" fill="#1F2937" />
+                          <rect x="48" y="74" width="6" height="6" fill="#1F2937" />
+                          <rect x="58" y="68" width="5" height="5" fill="#1F2937" />
+                          <rect x="44" y="84" width="8" height="6" fill="#1F2937" />
+                          <rect x="58" y="80" width="6" height="6" fill="#1F2937" />
+                          <rect x="70" y="70" width="6" height="6" fill="#1F2937" />
+                          <rect x="82" y="78" width="6" height="6" fill="#1F2937" />
+                          <rect x="74" y="86" width="6" height="6" fill="#1F2937" />
+                        </svg>
+                        <div className="absolute -bottom-2.5 left-1/2 -translate-x-1/2 bg-[#097939] text-white px-2.5 py-0.5 rounded-full text-[9px] font-bold tracking-wider uppercase shadow-xs">
+                          Scan & Pay
+                        </div>
+                      </div>
+
+                      <div className="space-y-1">
+                        <p className="text-xs font-bold text-[#2B2B2B]">
+                          Scan QR using GPay, PhonePe, Paytm, BHIM, or any UPI App
+                        </p>
+                        <p className="text-[11px] text-[#6B7280]">
+                          Collect Request: <span className="text-[#E63946] font-bold font-mono">{currencySymbol}{finalTotal}</span> · Payee: <span className="font-bold text-[#2B2B2B]">iMovies Cinemas</span>
+                        </p>
+                      </div>
+                    </div>
+                  )}
+                </div>
+              ) : paymentMethod === 'card' ? (
                 <div className="space-y-3.5 bg-[#FFF9F0] border border-[#EAE2D5] p-4 rounded-2xl">
                   <div>
                     <label className="block text-xs font-bold text-[#2B2B2B] mb-1">Card Number (Sandbox)</label>
@@ -461,6 +850,8 @@ const CheckoutModal = ({
                 <span>
                   {submitting
                     ? 'Authorizing Booking...'
+                    : paymentMethod === 'upi'
+                    ? `Pay ${currencySymbol}${finalTotal} via UPI`
                     : `Authorize ${currencySymbol}${finalTotal} (${currencyCode})`}
                 </span>
               </button>
