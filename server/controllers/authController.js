@@ -407,6 +407,22 @@ exports.getProfile = async (req, res) => {
     if (!user) {
       user = inMemoryStore.findUserById(req.user.id);
     }
+    if (!user && req.user.email) {
+      user = inMemoryStore.findUserByEmail(req.user.email);
+    }
+    if (!user && req.user.id) {
+      user = {
+        _id: req.user.id,
+        username: req.user.username || (req.user.email ? req.user.email.split('@')[0] : 'Member'),
+        email: req.user.email || 'user@imovies.com',
+        role: req.user.role || 'user',
+        preferredCountry: 'US',
+        preferredCity: 'New York',
+        preferredCinema: '',
+        favorites: []
+      };
+      inMemoryStore.users.push(user);
+    }
     if (!user) {
       return res.status(404).json({ message: 'User not found' });
     }
@@ -445,6 +461,22 @@ exports.updateProfile = async (req, res) => {
     }
     if (!user) {
       user = inMemoryStore.findUserById(req.user.id);
+    }
+    if (!user && req.user.email) {
+      user = inMemoryStore.findUserByEmail(req.user.email);
+    }
+    if (!user && req.user.id) {
+      user = {
+        _id: req.user.id,
+        username: req.user.username || (req.user.email ? req.user.email.split('@')[0] : 'Member'),
+        email: req.user.email || 'user@imovies.com',
+        role: req.user.role || 'user',
+        preferredCountry: 'US',
+        preferredCity: 'New York',
+        preferredCinema: '',
+        favorites: []
+      };
+      inMemoryStore.users.push(user);
     }
     if (!user) {
       return res.status(404).json({ message: 'User account not found' });

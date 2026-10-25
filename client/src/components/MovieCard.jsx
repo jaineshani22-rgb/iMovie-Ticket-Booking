@@ -6,13 +6,22 @@ import { useLocationContext } from '../context/LocationContext';
 const MovieCard = ({ movie, onWatchTrailer }) => {
   const defaultPoster =
     'https://images.unsplash.com/photo-1489599849927-2ee91cede3ba?w=1000&auto=format&fit=crop&q=85';
-  const [posterSrc, setPosterSrc] = useState(movie.posterUrl || defaultPoster);
+
+  const getOptimizedUrl = (url) => {
+    if (!url) return defaultPoster;
+    if (url.includes('wikimedia.org') || url.includes('wikipedia.org')) {
+      return `/api/images/proxy?url=${encodeURIComponent(url)}`;
+    }
+    return url;
+  };
+
+  const [posterSrc, setPosterSrc] = useState(() => getOptimizedUrl(movie.posterUrl));
   const [imgError, setImgError] = useState(false);
   const { formatPrice, selectedCinema } = useLocationContext();
 
   useEffect(() => {
     if (movie.posterUrl) {
-      setPosterSrc(movie.posterUrl);
+      setPosterSrc(getOptimizedUrl(movie.posterUrl));
       setImgError(false);
     }
   }, [movie.posterUrl, movie._id]);
@@ -34,14 +43,22 @@ const MovieCard = ({ movie, onWatchTrailer }) => {
             loading="lazy"
             decoding="async"
             onError={() => {
+              if (movie.posterUrl && !posterSrc.startsWith('/api/images/proxy')) {
+                setPosterSrc(`/api/images/proxy?url=${encodeURIComponent(movie.posterUrl)}`);
+                return;
+              }
               if (posterSrc !== defaultPoster) {
                 setPosterSrc(defaultPoster);
                 return;
               }
               setImgError(true);
             }}
-            className="w-full h-full object-cover object-center group-hover:scale-[1.05] transition-transform duration-500 ease-out"
-            style={{ imageRendering: 'auto' }}
+            className="w-full h-full object-cover object-center group-hover:scale-[1.05] transition-transform duration-500 ease-out will-change-transform"
+            style={{
+              imageRendering: '-webkit-optimize-contrast',
+              transform: 'translateZ(0)',
+              backfaceVisibility: 'hidden'
+            }}
           />
         ) : (
           <div className="relative z-10 w-full h-full flex flex-col items-center justify-center bg-[#FAF6EE] p-6 text-center space-y-3">

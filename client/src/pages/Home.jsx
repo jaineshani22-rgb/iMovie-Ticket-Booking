@@ -185,6 +185,75 @@ const Home = () => {
 
   const spotlightConfig = [
     {
+      _id: '65f1b0000000000000000121',
+      title: "Namit Malhotra's Ramayana",
+      aliases: ['Ramayana', 'Ramayana Part 1', 'Nitesh Tiwari Ramayana', 'Ranbir Kapoor Ramayana', 'Ramayana Namit Malhotra'],
+      director: 'Nitesh Tiwari',
+      industry: 'Bollywood',
+      rating: 9.8,
+      duration: 175,
+      genre: ['Action', 'Adventure', 'Fantasy', 'History', 'Devotional'],
+      ticketPrice: 450,
+      theater: 'iMovies IMAX 70mm Laser',
+      posterUrl: 'https://upload.wikimedia.org/wikipedia/en/4/48/Ramayana_Part_1_%28poster%29.jpg',
+      backdropUrl: 'https://img.youtube.com/vi/xzIE3mVmgKs/maxresdefault.jpg',
+      trailerKey: 'xzIE3mVmgKs',
+      description:
+        'A monumental cinematic retelling of the timeless Indian epic produced by Namit Malhotra with Prime Focus Studios, DNEG, and director Nitesh Tiwari, set to a breathtaking score by Oscar winners Hans Zimmer and A.R. Rahman. Follow Lord Rama’s journey of virtue, honour, sacrifice, and the cosmic triumph of Dharma over evil.',
+      cast: [
+        { name: 'Ranbir Kapoor', character: 'Lord Rama' },
+        { name: 'Sai Pallavi', character: 'Goddess Sita' },
+        { name: 'Yash', character: 'Lankesh Ravana' },
+        { name: 'Sunny Deol', character: 'Lord Hanuman' }
+      ]
+    },
+    {
+      _id: '65f1b0000000000000000120',
+      title: 'Drishyam: The Conclusion',
+      aliases: ['Drishyam 3', 'Drishyam The Conclusion', 'Drishyam Conclusion', 'Ajay Devgn Drishyam'],
+      director: 'Abhishek Pathak',
+      industry: 'Bollywood',
+      rating: 9.6,
+      duration: 156,
+      genre: ['Thriller', 'Crime', 'Drama', 'Mystery'],
+      ticketPrice: 380,
+      theater: 'iMovies PVR ICON Lower Parel',
+      posterUrl: 'https://img.youtube.com/vi/cxA2y9Tgl7o/maxresdefault.jpg',
+      backdropUrl: 'https://img.youtube.com/vi/cxA2y9Tgl7o/maxresdefault.jpg',
+      trailerKey: 'cxA2y9Tgl7o',
+      description:
+        'The monumental final chapter to Vijay Salgaonkar and his family’s relentless psychological confrontation with law enforcement. As Jaideep Ahlawat’s elite Crime Branch unit uncovers new forensic evidence alongside Meera Deshmukh and lawyer Prakash Raj, Vijay must execute his ultimate masterstroke to shield his loved ones from retribution.',
+      cast: [
+        { name: 'Ajay Devgn', character: 'Vijay Salgaonkar' },
+        { name: 'Tabu', character: 'Meera Deshmukh' },
+        { name: 'Shriya Saran', character: 'Nandini Salgaonkar' },
+        { name: 'Jaideep Ahlawat', character: 'IG Rathore' }
+      ]
+    },
+    {
+      _id: '65f1b0000000000000000107',
+      title: 'Pehla Pyaar Dusri Baar',
+      aliases: ['Pehla Pyaar Doosri Baar', 'Pehla Pyar Dusri Baar'],
+      director: 'Anuj Saini',
+      industry: 'Bollywood',
+      rating: 8.7,
+      duration: 136,
+      genre: ['Romance', 'Comedy', 'Drama', 'Musical'],
+      ticketPrice: 320,
+      theater: 'iMovies Directors Cut Vasant Kunj',
+      posterUrl: 'https://assets.voxcinemas.com/posters/P_HO00013700_1792137866469.jpg',
+      backdropUrl: 'https://img.youtube.com/vi/zzrb40x96Sg/maxresdefault.jpg',
+      trailerKey: 'zzrb40x96Sg',
+      description:
+        'A breezy, youthful romantic comedy directed by Anuj Saini and produced by Luv Ranjan and Ankur Garg. Ten years after high school, three lifelong friends reunite at a school event and embark on a humorous, heartwarming quest across cities to reconnect with their first loves to see if high-school romance deserves a second chance.',
+      cast: [
+        { name: 'Sparsh Walia', character: 'Kabir' },
+        { name: 'Alisha Chopra', character: 'Meera' },
+        { name: 'Kunal Aryan Vaid', character: 'Dhruv' },
+        { name: 'Sakshi Vaidya', character: 'Rhea' }
+      ]
+    },
+    {
       _id: '65f1b0000000000000000101',
       title: 'Udta Teer',
       aliases: ['UdtaTeer', 'Ayushmann Khurrana Udta Teer'],
@@ -422,8 +491,8 @@ const Home = () => {
         </div>
       )}
 
-      {/* Spotlight Premieres: Udta Teer, Hanuman Ansh, Nayi Naveli */}
-      <section aria-label="Featured Bollywood Premieres" className="bg-white border border-[#EAE2D5] rounded-3xl p-6 sm:p-8 space-y-6 shadow-xs">
+      {/* Spotlight Premieres: Ramayana, Drishyam, Udta Teer, Hanuman Ansh, Nayi Naveli, Pehla Pyaar */}
+      <section aria-label="Trending Spotlight Premieres" className="bg-white border border-[#EAE2D5] rounded-3xl p-6 sm:p-8 space-y-6 shadow-xs">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-[#EAE2D5] pb-4">
           <div className="space-y-1">
             <div className="inline-flex items-center gap-1.5 text-xs font-bold text-[#B91C1C] bg-gradient-to-r from-[#FDECEC] to-[#FFF6DC] border border-[#FECACA] px-3 py-1 rounded-lg shadow-xs">
@@ -431,7 +500,7 @@ const Home = () => {
               <span>Trending Spotlight Premieres</span>
             </div>
             <h2 className="text-xl sm:text-2xl font-extrabold text-[#1F2937] tracking-tight">
-              Spotlight Releases: Udta Teer, Hanuman Ansh & Nayi Naveli
+              Spotlight Premieres: Ramayana, Drishyam, Udta Teer, Hanuman Ansh, Nayi Naveli & Pehla Pyaar
             </h2>
             <p className="text-xs text-[#6B7280]">
               Verified cast details, high-definition official 4K trailers, and real-time seat reservation.
@@ -442,22 +511,31 @@ const Home = () => {
           </span>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          {spotlightMovies.map((spot) => (
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          {spotlightMovies.map((spot, idx) => (
             <div
-              key={spot._id}
+              key={`spot-${spot._id}-${idx}`}
               className="bg-[#FFF9F0] border border-[#EAE2D5] hover:border-[#E63946]/40 rounded-2xl overflow-hidden flex flex-col justify-between shadow-xs transition-all duration-300 group hover:-translate-y-1 hover:shadow-md"
             >
               <div>
                 {/* 16:9 Trailer Video & Poster Header - Full Canvas Edge-to-Edge */}
                 <div className="relative aspect-video w-full overflow-hidden bg-[#FAF6EE]">
                   <img
-                    src={spot.backdropUrl || spot.posterUrl}
+                    src={
+                      (spot.backdropUrl || spot.posterUrl)?.includes('wikimedia.org') || (spot.backdropUrl || spot.posterUrl)?.includes('wikipedia.org')
+                        ? `/api/images/proxy?url=${encodeURIComponent(spot.backdropUrl || spot.posterUrl)}`
+                        : (spot.backdropUrl || spot.posterUrl)
+                    }
                     alt={spot.title}
                     referrerPolicy="no-referrer"
                     loading="lazy"
                     decoding="async"
-                    className="w-full h-full object-cover object-center group-hover:scale-105 transition-transform duration-500"
+                    className="w-full h-full object-cover object-center group-hover:scale-105 transition-transform duration-500 will-change-transform"
+                    style={{
+                      imageRendering: '-webkit-optimize-contrast',
+                      transform: 'translateZ(0)',
+                      backfaceVisibility: 'hidden'
+                    }}
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent" />
 
@@ -473,7 +551,7 @@ const Home = () => {
 
                   <div className="absolute top-3 left-3 flex items-center gap-1.5">
                     <span className="text-[10px] uppercase font-bold bg-[#FFF6DC] text-[#7A5B14] border border-[#FFEDB0] px-2 py-0.5 rounded shadow-xs">
-                      Bollywood
+                      {spot.industry || 'Spotlight'}
                     </span>
                     <span className="text-[10px] font-bold bg-white/90 backdrop-blur-md text-[#7A5B14] border border-[#FFEDB0] px-2 py-0.5 rounded">
                       ★ {spot.rating}
@@ -950,9 +1028,9 @@ const Home = () => {
         </div>
       ) : (
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-          {movies.map((movie) => (
+          {movies.map((movie, idx) => (
             <MovieCard
-              key={movie._id}
+              key={`movie-${movie._id}-${idx}`}
               movie={movie}
               onWatchTrailer={(m) => setTrailerModal({ isOpen: true, movie: m })}
             />

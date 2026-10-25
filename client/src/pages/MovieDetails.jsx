@@ -219,15 +219,22 @@ const MovieDetails = () => {
         <div className="relative w-44 sm:w-60 aspect-[2/3] rounded-2xl overflow-hidden shadow-sm mx-auto md:mx-0 border border-[#EAE2D5] shrink-0 group bg-[#FAF6EE] flex items-center justify-center">
           <img
             src={
-              movie.posterUrl ||
-              'https://images.unsplash.com/photo-1489599849927-2ee91cede3ba?w=1000&auto=format&fit=crop&q=85'
+              movie.posterUrl
+                ? (movie.posterUrl.includes('wikimedia.org') || movie.posterUrl.includes('wikipedia.org')
+                    ? `/api/images/proxy?url=${encodeURIComponent(movie.posterUrl)}`
+                    : movie.posterUrl)
+                : 'https://images.unsplash.com/photo-1489599849927-2ee91cede3ba?w=1000&auto=format&fit=crop&q=85'
             }
             alt={movie.title}
             referrerPolicy="no-referrer"
             loading="eager"
             decoding="async"
-            className="w-full h-full object-cover object-center group-hover:scale-105 transition-transform duration-500"
-            style={{ imageRendering: 'auto' }}
+            className="w-full h-full object-cover object-center group-hover:scale-105 transition-transform duration-500 will-change-transform"
+            style={{
+              imageRendering: '-webkit-optimize-contrast',
+              transform: 'translateZ(0)',
+              backfaceVisibility: 'hidden'
+            }}
           />
 
           <button

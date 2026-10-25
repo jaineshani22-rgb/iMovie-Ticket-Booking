@@ -37,6 +37,7 @@ async function start() {
   app.use('/api/movies', require('./server/routes/movieRoutes'));
   app.use('/api/cinemas', require('./server/routes/cinemaRoutes'));
   app.use('/api/bookings', require('./server/routes/bookingRoutes'));
+  app.use('/api/images', require('./server/routes/imageRoutes'));
 
   app.get('/api/health', (req, res) => {
     res.json({ status: 'ok', time: new Date().toISOString() });
