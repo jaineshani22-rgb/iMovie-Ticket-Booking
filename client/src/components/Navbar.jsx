@@ -101,7 +101,7 @@ const Navbar = () => {
           </nav>
 
           {/* Universal Movie Search Bar (Desktop / Tablet) */}
-          <div className="hidden sm:block flex-1 max-w-xs md:max-w-sm lg:max-w-md mx-2 lg:mx-4">
+          <div className="hidden sm:block flex-1 max-w-sm md:max-w-md lg:max-w-lg xl:max-w-xl mx-2 sm:mx-4 lg:mx-6">
             <MovieSearchBar />
           </div>
 

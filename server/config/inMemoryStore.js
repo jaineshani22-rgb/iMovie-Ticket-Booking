@@ -1091,6 +1091,17 @@ const INITIAL_MOVIES = [
       "06:15 PM",
       "09:45 PM"
     ],
+    "countryAvailability": [
+      "IN",
+      "US",
+      "GB",
+      "CA",
+      "AU",
+      "DE",
+      "JP",
+      "SG",
+      "AE"
+    ],
     "availableCountries": [
       "IN",
       "US",
@@ -1122,7 +1133,7 @@ const INITIAL_MOVIES = [
     ],
     "duration": 152,
     "posterUrl": "/posters/hope.jpg",
-    "backdropUrl": "https://upload.wikimedia.org/wikipedia/commons/0/03/Hope_%282026_film%29_poster.png",
+    "backdropUrl": "/posters/hope.jpg",
     "releaseDate": "2026-09-28T00:00:00.000Z",
     "ticketPrice": 450,
     "theater": "iMovies IMAX 70mm Laser",
@@ -1163,6 +1174,17 @@ const INITIAL_MOVIES = [
       "02:15 PM",
       "05:45 PM",
       "09:15 PM"
+    ],
+    "countryAvailability": [
+      "IN",
+      "US",
+      "GB",
+      "CA",
+      "AU",
+      "DE",
+      "JP",
+      "SG",
+      "AE"
     ],
     "availableCountries": [
       "IN",

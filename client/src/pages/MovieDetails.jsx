@@ -183,10 +183,24 @@ const MovieDetails = () => {
     );
   }
 
-  const basePriceVal = movie.ticketPrice || 250;
+  const basePriceVal = (activeCinema?.basePrice) || movie.ticketPrice || 250;
   const rawUnitPrice = getRawPrice(basePriceVal);
   const formattedUnitPrice = formatPrice(basePriceVal);
-  const totalAmountFormatted = formatPrice(basePriceVal * (selectedSeats.length || 1));
+
+  const vipSeatsCount = selectedSeats.filter((s) => ['F', 'G', 'H'].includes(s[0])).length;
+  const standardSeatsCount = selectedSeats.length - vipSeatsCount;
+  const standardUnitPrice = rawUnitPrice;
+  const vipUnitPrice = Math.round(rawUnitPrice * 1.25);
+
+  const baseTicketsTotal =
+    selectedSeats.length > 0
+      ? standardSeatsCount * standardUnitPrice + vipSeatsCount * vipUnitPrice
+      : standardUnitPrice;
+
+  const convenienceFee = Math.round(baseTicketsTotal * 0.05);
+  const taxAmount = Math.round(baseTicketsTotal * 0.18);
+  const grandTotal = baseTicketsTotal + convenienceFee + taxAmount;
+  const totalAmountFormatted = formatPrice(grandTotal);
 
   const showtimesList =
     movie.showtimes && movie.showtimes.length > 0
@@ -671,11 +685,29 @@ const MovieDetails = () => {
                 {movie.title}
               </span>
             </div>
-            <div className="flex justify-between items-baseline gap-2">
-              <span className="text-[#6B7280]">Theatre</span>
-              <span className="text-[#E63946] font-semibold text-right truncate max-w-[170px]">
-                {activeCinema?.name || movie.theater}
-              </span>
+            <div className="flex justify-between items-center gap-2">
+              <span className="text-[#6B7280] shrink-0">Theatre</span>
+              {cinemas && cinemas.length > 1 ? (
+                <select
+                  value={activeCinema?._id || ''}
+                  onChange={(e) => {
+                    const c = cinemas.find((item) => item._id === e.target.value);
+                    if (c) setSelectedCinema(c);
+                  }}
+                  className="bg-[#FFF9F0] border border-[#EAE2D5] text-[#E63946] font-bold text-xs rounded-lg px-2 py-1 max-w-[180px] truncate focus:outline-none focus:border-[#E63946] cursor-pointer"
+                  title="Switch to another cinema in this location"
+                >
+                  {cinemas.map((c) => (
+                    <option key={c._id} value={c._id}>
+                      {c.name}
+                    </option>
+                  ))}
+                </select>
+              ) : (
+                <span className="text-[#E63946] font-semibold text-right truncate max-w-[170px]">
+                  {activeCinema?.name || movie.theater}
+                </span>
+              )}
             </div>
             <div className="flex justify-between">
               <span className="text-[#6B7280]">Screening Date</span>
@@ -688,17 +720,81 @@ const MovieDetails = () => {
             <div className="flex justify-between items-start">
               <span className="text-[#6B7280]">Reserved Seats</span>
               <span className="text-[#2B2B2B] font-bold font-mono text-right">
-                {selectedSeats.length > 0 ? selectedSeats.join(', ') : 'None selected'}
+                {selectedSeats.length > 0 ? (
+                  <span className="bg-[#FFF6DC] border border-[#FFEDB0] text-[#7A5B14] px-2 py-0.5 rounded-md font-mono">
+                    {selectedSeats.join(', ')}
+                  </span>
+                ) : (
+                  'None selected'
+                )}
               </span>
             </div>
           </div>
 
-          <div className="border-t border-[#EAE2D5] pt-4 flex items-center justify-between">
-            <span className="text-[#6B7280] font-bold text-xs sm:text-sm">Estimated Total</span>
-            <span className="text-2xl font-black text-[#E63946] font-mono tabular-nums">
-              {totalAmountFormatted}
-            </span>
-          </div>
+          {/* Checkout Payment Summary & Price Bifurcation when tickets are selected */}
+          {selectedSeats.length > 0 ? (
+            <div className="bg-[#FFFDF9] border border-[#FFEDB0] rounded-2xl p-3.5 space-y-2.5 text-xs animate-in fade-in">
+              <div className="flex items-center justify-between border-b border-[#FFEDB0]/80 pb-2">
+                <span className="font-bold text-[#7A5B14] uppercase tracking-wider text-[10px] flex items-center gap-1.5">
+                  <Ticket className="w-3.5 h-3.5 text-[#E63946]" />
+                  <span>Price Bifurcation</span>
+                </span>
+                <span className="text-[10px] font-mono text-[#D62839] font-bold">
+                  {selectedSeats.length} {selectedSeats.length === 1 ? 'ticket' : 'tickets'}
+                </span>
+              </div>
+
+              {standardSeatsCount > 0 && (
+                <div className="flex justify-between text-[#4B5563]">
+                  <span>
+                    Standard Seats ({standardSeatsCount} × {activeCountry.symbol}{standardUnitPrice})
+                  </span>
+                  <span className="font-mono font-semibold text-[#2B2B2B]">
+                    {activeCountry.symbol}{standardSeatsCount * standardUnitPrice}
+                  </span>
+                </div>
+              )}
+
+              {vipSeatsCount > 0 && (
+                <div className="flex justify-between text-[#7A5B14]">
+                  <span>
+                    VIP Recliners ({vipSeatsCount} × {activeCountry.symbol}{vipUnitPrice})
+                  </span>
+                  <span className="font-mono font-semibold text-[#B81D2D]">
+                    {activeCountry.symbol}{vipSeatsCount * vipUnitPrice}
+                  </span>
+                </div>
+              )}
+
+              <div className="flex justify-between text-[#6B7280]">
+                <span>Convenience Surcharge (5%)</span>
+                <span className="font-mono font-semibold text-[#2B2B2B]">
+                  {activeCountry.symbol}{convenienceFee}
+                </span>
+              </div>
+
+              <div className="flex justify-between text-[#6B7280]">
+                <span>Integrated GST / Tax (18%)</span>
+                <span className="font-mono font-semibold text-[#2B2B2B]">
+                  {activeCountry.symbol}{taxAmount}
+                </span>
+              </div>
+
+              <div className="border-t border-[#EAE2D5] pt-2 flex items-center justify-between text-sm font-bold text-[#2B2B2B]">
+                <span className="text-[#2B2B2B]">Total Payable ({activeCountry.currency})</span>
+                <span className="text-xl font-black text-[#E63946] font-mono tabular-nums">
+                  {totalAmountFormatted}
+                </span>
+              </div>
+            </div>
+          ) : (
+            <div className="border-t border-[#EAE2D5] pt-3 flex items-center justify-between">
+              <span className="text-[#6B7280] font-bold text-xs">Tickets From</span>
+              <span className="text-xl font-black text-[#E63946] font-mono tabular-nums">
+                {activeCountry.symbol}{rawUnitPrice} <span className="text-[10px] text-[#6B7280] font-normal">/ seat</span>
+              </span>
+            </div>
+          )}
 
           {bookingError && (
             <div className="flex items-center gap-2 bg-[#FDECEC] border border-[#FCD7D7] text-[#B81D2D] text-xs p-3 rounded-xl">

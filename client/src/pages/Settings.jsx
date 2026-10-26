@@ -21,6 +21,7 @@ import {
 } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import { useLocationContext, COUNTRIES } from '../context/LocationContext';
+import { PHONE_COUNTRY_CODES, parsePhoneNumber, getPhoneCodeByCountry } from '../data/phoneCodes';
 import API from '../services/api';
 
 const Settings = () => {
@@ -30,9 +31,10 @@ const Settings = () => {
 
   const [username, setUsername] = useState('');
   const [email, setEmail] = useState('');
-  const [phone, setPhone] = useState('');
-  const [preferredCountry, setPreferredCountry] = useState('US');
-  const [preferredCity, setPreferredCity] = useState('New York');
+  const [phoneCode, setPhoneCode] = useState('+91');
+  const [phoneNational, setPhoneNational] = useState('');
+  const [preferredCountry, setPreferredCountry] = useState('IN');
+  const [preferredCity, setPreferredCity] = useState('Mumbai');
   const [preferredCinema, setPreferredCinema] = useState('');
 
   // Password fields
@@ -54,9 +56,16 @@ const Settings = () => {
     if (user) {
       setUsername(user.username || '');
       setEmail(user.email || '');
-      setPhone(user.phone || '');
-      setPreferredCountry(user.preferredCountry || currentContextCountry || 'US');
-      setPreferredCity(user.preferredCity || currentContextCity || 'New York');
+      if (user.phone) {
+        const parsed = parsePhoneNumber(user.phone);
+        setPhoneCode(parsed.dialCode);
+        setPhoneNational(parsed.nationalNumber);
+      } else {
+        const defaultCode = getPhoneCodeByCountry(user.preferredCountry || currentContextCountry || 'IN');
+        setPhoneCode(defaultCode.code);
+      }
+      setPreferredCountry(user.preferredCountry || currentContextCountry || 'IN');
+      setPreferredCity(user.preferredCity || currentContextCity || 'Mumbai');
       setPreferredCinema(user.preferredCinema || '');
     }
   }, [user, currentContextCountry, currentContextCity]);
@@ -69,7 +78,11 @@ const Settings = () => {
         if (data) {
           if (data.username) setUsername(data.username);
           if (data.email) setEmail(data.email);
-          if (data.phone) setPhone(data.phone);
+          if (data.phone) {
+            const parsed = parsePhoneNumber(data.phone);
+            setPhoneCode(parsed.dialCode);
+            setPhoneNational(parsed.nationalNumber);
+          }
           if (data.preferredCountry) setPreferredCountry(data.preferredCountry);
           if (data.preferredCity) setPreferredCity(data.preferredCity);
           if (data.preferredCinema) setPreferredCinema(data.preferredCinema);
@@ -78,7 +91,11 @@ const Settings = () => {
         if (user) {
           if (user.username) setUsername(user.username);
           if (user.email) setEmail(user.email);
-          if (user.phone) setPhone(user.phone || '');
+          if (user.phone) {
+            const parsed = parsePhoneNumber(user.phone);
+            setPhoneCode(parsed.dialCode);
+            setPhoneNational(parsed.nationalNumber);
+          }
           if (user.preferredCountry) setPreferredCountry(user.preferredCountry);
           if (user.preferredCity) setPreferredCity(user.preferredCity);
           if (user.preferredCinema) setPreferredCinema(user.preferredCinema || '');
@@ -105,13 +122,18 @@ const Settings = () => {
   }
 
   const selectedCountryObj = COUNTRIES.find((c) => c.code === preferredCountry) || COUNTRIES[0];
-  const availableCities = selectedCountryObj?.cities || ['New York', 'Los Angeles'];
+  const availableCities = selectedCountryObj?.cities || ['Mumbai', 'Delhi', 'Bengaluru'];
+  const selectedPhoneObj = PHONE_COUNTRY_CODES.find((p) => p.code === phoneCode) || PHONE_COUNTRY_CODES[0];
 
   const handleCountryChange = (code) => {
     setPreferredCountry(code);
     const countryData = COUNTRIES.find((c) => c.code === code);
     if (countryData && countryData.cities && countryData.cities.length > 0) {
       setPreferredCity(countryData.cities[0]);
+    }
+    const matchingPhone = getPhoneCodeByCountry(code);
+    if (matchingPhone) {
+      setPhoneCode(matchingPhone.code);
     }
   };
 
@@ -147,10 +169,11 @@ const Settings = () => {
 
     try {
       setLoading(true);
+      const fullPhone = phoneNational.trim() ? `${phoneCode} ${phoneNational.trim()}` : '';
       await updateProfile({
         username: username.trim(),
         email: email.trim(),
-        phone: phone.trim(),
+        phone: fullPhone,
         preferredCountry,
         preferredCity,
         preferredCinema,
@@ -282,22 +305,55 @@ const Settings = () => {
             </div>
 
             <div className="space-y-1.5 sm:col-span-2">
-              <label className="text-xs font-semibold text-[#2B2B2B] flex items-center gap-1.5">
-                <Phone className="w-3.5 h-3.5 text-[#E63946]" />
-                <span>Phone Number (for SMS Passes & Instant Seat Hold Alerts)</span>
+              <label className="text-xs font-semibold text-[#2B2B2B] flex items-center justify-between gap-1.5">
+                <span className="flex items-center gap-1.5">
+                  <Phone className="w-3.5 h-3.5 text-[#E63946]" />
+                  <span>Phone Number (for SMS Passes & Instant Seat Hold Alerts)</span>
+                </span>
+                <span className="text-[11px] font-mono font-bold text-[#D62839]">
+                  {selectedPhoneObj?.flag} {selectedPhoneObj?.name} ({selectedPhoneObj?.code})
+                </span>
               </label>
-              <div className="relative">
-                <input
-                  type="tel"
-                  value={phone}
-                  onChange={(e) => setPhone(e.target.value)}
-                  placeholder="+1 (555) 000-1234 or +91 98765 43210"
-                  className="w-full bg-[#FFFDF9] border border-[#EAE2D5] focus:border-[#E63946] focus:ring-1 focus:ring-[#E63946]/30 rounded-xl px-4 py-2.5 text-xs sm:text-sm text-[#2B2B2B] placeholder-[#9CA3AF] focus:outline-none transition-colors"
-                />
+
+              <div className="flex flex-col sm:flex-row gap-2.5">
+                {/* Comprehensive Worldwide Country Dial Code Dropdown */}
+                <div className="relative sm:w-64 shrink-0">
+                  <select
+                    value={phoneCode}
+                    onChange={(e) => setPhoneCode(e.target.value)}
+                    aria-label="Country Dial Code"
+                    className="w-full bg-[#FFFDF9] hover:bg-[#FFF6DC]/50 border border-[#EAE2D5] focus:border-[#E63946] focus:ring-1 focus:ring-[#E63946]/30 rounded-xl px-3 py-2.5 text-xs text-[#2B2B2B] font-medium focus:outline-none transition-colors cursor-pointer"
+                  >
+                    {PHONE_COUNTRY_CODES.map((item) => (
+                      <option key={`${item.country}-${item.code}`} value={item.code}>
+                        {item.flag} {item.code} — {item.name}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+
+                {/* National Phone Number Input */}
+                <div className="relative flex-1">
+                  <input
+                    type="tel"
+                    value={phoneNational}
+                    onChange={(e) => setPhoneNational(e.target.value)}
+                    placeholder={selectedPhoneObj?.placeholder || '98765 43210'}
+                    className="w-full bg-[#FFFDF9] border border-[#EAE2D5] focus:border-[#E63946] focus:ring-1 focus:ring-[#E63946]/30 rounded-xl px-4 py-2.5 text-xs sm:text-sm text-[#2B2B2B] placeholder-[#9CA3AF] focus:outline-none transition-colors"
+                  />
+                </div>
               </div>
-              <p className="text-[11px] text-[#6B7280]">
-                Your phone number is used solely to deliver booking confirmation barcodes and auditorium gate passes.
-              </p>
+
+              <div className="flex flex-wrap items-center justify-between gap-2 text-[11px] text-[#6B7280] pt-0.5">
+                <span>
+                  Configured for all international country regions with instant SMS boarding pass links.
+                </span>
+                {phoneNational && (
+                  <span className="font-mono text-[#2B2B2B] font-bold text-[10px] bg-[#FFF6DC] border border-[#FFEDB0] px-2 py-0.5 rounded">
+                    Full Number: {phoneCode} {phoneNational}
+                  </span>
+                )}
+              </div>
             </div>
           </div>
         </div>
