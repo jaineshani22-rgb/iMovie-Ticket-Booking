@@ -12,6 +12,7 @@ if (!process.env.JWT_SECRET || process.env.JWT_SECRET.length < 32) {
 }
 
 const app = express();
+app.set('trust proxy', 1);
 
 app.use(cors());
 app.use(express.json());

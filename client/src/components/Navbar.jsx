@@ -101,7 +101,7 @@ const Navbar = () => {
           </nav>
 
           {/* Universal Movie Search Bar (Desktop / Tablet) */}
-          <div className="hidden sm:block flex-1 max-w-sm md:max-w-md lg:max-w-lg xl:max-w-xl mx-2 sm:mx-4 lg:mx-6">
+          <div className="hidden sm:block flex-1 max-w-md md:max-w-xl lg:max-w-2xl xl:max-w-3xl mx-2 sm:mx-4 lg:mx-8">
             <MovieSearchBar />
           </div>
 
@@ -184,9 +184,11 @@ const Navbar = () => {
               <div className="flex items-center gap-2">
                 <Link
                   to="/login"
-                  className="text-xs sm:text-sm font-bold text-[#2B2B2B] hover:text-[#E63946] bg-white hover:bg-[#FFF6DC] border border-[#EAE2D5] px-3 sm:px-3.5 py-1.5 rounded-xl transition-colors whitespace-nowrap shadow-xs"
+                  className="text-xs sm:text-sm font-bold text-[#2B2B2B] hover:text-[#E63946] bg-white hover:bg-[#FFF6DC] border border-[#EAE2D5] px-3 sm:px-3.5 py-1.5 rounded-xl transition-all whitespace-nowrap shadow-xs inline-flex items-center gap-1.5"
+                  title="Sign In to your account"
                 >
-                  Log In
+                  <User className="w-3.5 h-3.5 text-[#E63946]" />
+                  <span>Sign In</span>
                 </Link>
                 <Link
                   to="/settings"

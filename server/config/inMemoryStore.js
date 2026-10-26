@@ -23,6 +23,15 @@ const INITIAL_USERS = [
     role: 'user',
     favorites: ['65f1b0000000000000000001', '65f1b0000000000000000022'],
     createdAt: new Date().toISOString()
+  },
+  {
+    _id: '65f1a0000000000000000003',
+    username: 'Eshani Jain',
+    email: 'jaineshani22@gmail.com',
+    password: defaultUserPassHash,
+    role: 'user',
+    favorites: ['65f1b0000000000000000001', '65f1b0000000000000000022'],
+    createdAt: new Date().toISOString()
   }
 ];
 
@@ -2110,39 +2119,83 @@ const INITIAL_MOVIES = [
     ]
   },
   {
-    "votes": 240000,
+    "votes": 385000,
     "_id": "65f1b0000000000000000109",
     "title": "Avengers: Doomsday",
     "industry": "Hollywood",
-    "description": "Earth’s mightiest heroes collide with the multiverse’s supreme sovereign, Doctor Doom, threatening the complete collapse of reality itself.",
+    "description": "Earth’s Mightiest Heroes, the Fantastic Four, Thunderbolts, and the Multiversal X-Men collide with the supreme sovereign Victor von Doom (Robert Downey Jr.) in an apocalyptic clash to prevent the catastrophic collapse of the Multiverse.",
     "genre": [
       "Action",
       "Sci-Fi",
       "Adventure"
     ],
     "duration": 180,
-    "posterUrl": "https://image.tmdb.org/t/p/w780/or06FN3Dka5tukK1e9sl16pB3iy.jpg",
-    "backdropUrl": "https://image.tmdb.org/t/p/w1280/7RyHsO4yDXtBv1zUU3mTpHeQ0d5.jpg",
-    "releaseDate": "2026-05-01T00:00:00.000Z",
-    "ticketPrice": 400,
+    "posterUrl": "https://image.tmdb.org/t/p/original/jzPwsojjFStf5lR5Nm07w2hH56G.jpg",
+    "backdropUrl": "https://image.tmdb.org/t/p/original/6KDDoTq8Vq3HuQHULzuvPiCJbMI.jpg",
+    "releaseDate": "2026-12-18T00:00:00.000Z",
+    "ticketPrice": 420,
     "theater": "iMovies Lincoln Square IMAX",
-    "rating": 9.6,
+    "rating": 9.8,
     "language": "English",
-    "trailerKey": "TcMBFSGVi1c",
+    "trailerKey": "DovIZ6U-6qk",
     "director": "Anthony Russo, Joe Russo",
     "category": "upcoming",
     "cast": [
       {
         "name": "Robert Downey Jr.",
-        "character": "Victor Von Doom / Doctor Doom"
-      },
-      {
-        "name": "Benedict Cumberbatch",
-        "character": "Doctor Strange"
+        "character": "Victor von Doom / Doctor Doom"
       },
       {
         "name": "Pedro Pascal",
-        "character": "Reed Richards / Mr. Fantastic"
+        "character": "Reed Richards / Mister Fantastic"
+      },
+      {
+        "name": "Vanessa Kirby",
+        "character": "Sue Storm / Invisible Woman"
+      },
+      {
+        "name": "Joseph Quinn",
+        "character": "Johnny Storm / Human Torch"
+      },
+      {
+        "name": "Ebon Moss-Bachrach",
+        "character": "Ben Grimm / The Thing"
+      },
+      {
+        "name": "Benedict Cumberbatch",
+        "character": "Dr. Stephen Strange"
+      },
+      {
+        "name": "Anthony Mackie",
+        "character": "Sam Wilson / Captain America"
+      },
+      {
+        "name": "Chris Hemsworth",
+        "character": "Thor Odinson"
+      },
+      {
+        "name": "Tom Hiddleston",
+        "character": "Loki / God of Stories"
+      },
+      {
+        "name": "Florence Pugh",
+        "character": "Yelena Belova"
+      },
+      {
+        "name": "Sebastian Stan",
+        "character": "Bucky Barnes / Winter Soldier"
+      },
+      {
+        "name": "Hugh Jackman",
+        "character": "Logan / Wolverine"
+      },
+      {
+        "name": "Patrick Stewart",
+        "character": "Professor Charles Xavier"
+      },
+      {
+        "name": "Ian McKellen",
+        "character": "Erik Lehnsherr / Magneto"
       }
     ],
     "showtimes": [
@@ -6362,29 +6415,129 @@ class InMemoryStore {
     const citySlug = cityName.toLowerCase().replace(/[^a-z0-9]/g, '_').slice(0, 10);
 
     const countryMeta = {
-      IN: { name: 'India', cur: 'INR', sym: '₹', p1: 380, p2: 320, p3: 450 },
-      US: { name: 'United States', cur: 'USD', sym: '$', p1: 22, p2: 19, p3: 25 },
-      GB: { name: 'United Kingdom', cur: 'GBP', sym: '£', p1: 18, p2: 15, p3: 22 },
-      CA: { name: 'Canada', cur: 'CAD', sym: 'CA$', p1: 20, p2: 17, p3: 24 },
-      AU: { name: 'Australia', cur: 'AUD', sym: 'A$', p1: 26, p2: 22, p3: 30 },
-      DE: { name: 'Germany', cur: 'EUR', sym: '€', p1: 17, p2: 14, p3: 20 },
-      JP: { name: 'Japan', cur: 'JPY', sym: '¥', p1: 2200, p2: 1900, p3: 2600 },
-      SG: { name: 'Singapore', cur: 'SGD', sym: 'S$', p1: 19, p2: 16, p3: 22 },
-      AE: { name: 'United Arab Emirates', cur: 'AED', sym: 'AED ', p1: 75, p2: 60, p3: 90 }
+      IN: {
+        name: 'India', cur: 'INR', sym: '₹', p1: 380, p2: 320, p3: 450,
+        c1: `PVR INOX Director's Cut ${cityName} IMAX Laser`,
+        c2: `PVR ICON Megaplex ${cityName} Galleria`,
+        c3: `Cinepolis VIP Luxury Recliners ${cityName}`,
+        c4: `MovieMax Executive Suites ${cityName} Central`,
+        ad1: `Phoenix Marketcity Mall, Level 3, ${cityName}`,
+        ad2: `Inorbit Galleria, High Street, ${cityName}`,
+        ad3: `City Centre Mall, Ring Road, ${cityName}`,
+        ad4: `Celebration Mall, Station Road, ${cityName}`
+      },
+      US: {
+        name: 'United States', cur: 'USD', sym: '$', p1: 22, p2: 19, p3: 25,
+        c1: `AMC Theatres ${cityName} 16 IMAX Laser & Dolby`,
+        c2: `Regal Cinemas ${cityName} 4DX & ScreenX`,
+        c3: `Cinemark ${cityName} Century XD & Luxury Loungers`,
+        c4: `Alamo Drafthouse Cinema ${cityName} Downtown`,
+        ad1: `100 Commercial Promenade, Downtown ${cityName}`,
+        ad2: `Fashion Valley Plaza, Suite 400, ${cityName}`,
+        ad3: `Grand Central Boulevard, West ${cityName}`,
+        ad4: `Main Street Arts District, ${cityName}`
+      },
+      GB: {
+        name: 'United Kingdom', cur: 'GBP', sym: '£', p1: 18, p2: 15, p3: 22,
+        c1: `ODEON Luxe ${cityName} IMAX Laser & Bar`,
+        c2: `Vue Cinemas ${cityName} Dolby Atmos VIP`,
+        c3: `Cineworld ${cityName} Superscreen & 4DX`,
+        c4: `Everyman Cinema ${cityName} Luxury Sofa Suites`,
+        ad1: `High Street Galleria, City Centre, ${cityName}`,
+        ad2: `Westgate Shopping Center, ${cityName}`,
+        ad3: `Victoria Square, Commercial Way, ${cityName}`,
+        ad4: `Canal Wharf Arts Quarter, ${cityName}`
+      },
+      CA: {
+        name: 'Canada', cur: 'CAD', sym: 'CA$', p1: 20, p2: 17, p3: 24,
+        c1: `Cineplex Scotiabank Theatre ${cityName} IMAX`,
+        c2: `Cineplex VIP Cinemas ${cityName} Adults-Only`,
+        c3: `Landmark Cinemas ${cityName} Laser Ultra`,
+        c4: `Cineplex Odeon ${cityName} UltraAVX & D-BOX`,
+        ad1: `Metropolis Shopping Centre, ${cityName}`,
+        ad2: `Downtown Entertainment Quarter, ${cityName}`,
+        ad3: `Gateway Lifestyle Center, ${cityName}`,
+        ad4: `Lakeside Promenade, ${cityName}`
+      },
+      AU: {
+        name: 'Australia', cur: 'AUD', sym: 'A$', p1: 26, p2: 22, p3: 30,
+        c1: `Event Cinemas ${cityName} IMAX Laser & Vmax`,
+        c2: `Hoyts Cinemas ${cityName} Xtremescreen & D-BOX`,
+        c3: `Village Cinemas ${cityName} Gold Class Luxury`,
+        c4: `Palace Cinemas ${cityName} Platinum Suites`,
+        ad1: `Westfield Shopping Centre, Level 4, ${cityName}`,
+        ad2: `Broadway Promenade, Central ${cityName}`,
+        ad3: `Harbourview Complex, ${cityName}`,
+        ad4: `Cultural Precinct, South ${cityName}`
+      },
+      JP: {
+        name: 'Japan', cur: 'JPY', sym: '¥', p1: 2200, p2: 1900, p3: 2600,
+        c1: `TOHO Cinemas ${cityName} IMAX Laser 4K`,
+        c2: `Grand Cinema Sunshine ${cityName} IMAX Laser GT`,
+        c3: `109 Cinemas Premium ${cityName} SAION Sound`,
+        c4: `Aeon Cinema ${cityName} Theatus Dolby Atmos`,
+        ad1: `Roppongi Hills Complex, ${cityName}`,
+        ad2: `Sunshine City Square, ${cityName}`,
+        ad3: `Shinjuku East Gate Boulevard, ${cityName}`,
+        ad4: `Station Plaza Tower, ${cityName}`
+      },
+      SG: {
+        name: 'Singapore', cur: 'SGD', sym: 'S$', p1: 19, p2: 16, p3: 22,
+        c1: `Shaw Theatres Lido ${cityName} IMAX Laser 4K`,
+        c2: `Golden Village Suntec City ${cityName} Gold Class`,
+        c3: `Cathay Cineplexes ${cityName} Platinum Movie Suites`,
+        c4: `The Projector ${cityName} Grand Laser Hall`,
+        ad1: `350 Orchard Road, Shaw House, Singapore`,
+        ad2: `3 Temasek Blvd, Suntec City, Singapore`,
+        ad3: `50 Jurong Gateway Rd, Jem, Singapore`,
+        ad4: `6001 Beach Rd, Golden Mile Tower, Singapore`
+      },
+      AE: {
+        name: 'United Arab Emirates', cur: 'AED', sym: 'AED ', p1: 75, p2: 60, p3: 90,
+        c1: `VOX Cinemas ${cityName} IMAX Laser Sapphire`,
+        c2: `Reel Cinemas ${cityName} Platinum Luxury Suites`,
+        c3: `Roxy Cinemas ${cityName} Diamond Plus Lounge`,
+        c4: `Novo Cinemas ${cityName} 7-Star VIP`,
+        ad1: `Mall of the Emirates, Level 2, ${cityName}`,
+        ad2: `The Dubai Mall, Downtown ${cityName}`,
+        ad3: `Dubai Hills Mall, Boulevard, ${cityName}`,
+        ad4: `IMG Worlds Boulevard, ${cityName}`
+      },
+      DE: {
+        name: 'Germany', cur: 'EUR', sym: '€', p1: 17, p2: 14, p3: 20,
+        c1: `CineStar IMAX ${cityName} Laser Palace`,
+        c2: `UCI Luxe ${cityName} iSense & Recliners`,
+        c3: `Zoo Palast ${cityName} Club Kino & Dolby Atmos`,
+        c4: `Mathäser Filmpalast ${cityName} Dolby Cinema`,
+        ad1: `Potsdamer Platz 4, ${cityName}`,
+        ad2: `Mercedes Platz 1, ${cityName}`,
+        ad3: `Hardenbergstraße 29a, ${cityName}`,
+        ad4: `Bayerstraße 3-5, ${cityName}`
+      }
     };
 
-    const meta = countryMeta[code] || { name: countryCode, cur: 'USD', sym: '$', p1: 19, p2: 16, p3: 22 };
+    const meta = countryMeta[code] || {
+      name: countryCode, cur: 'USD', sym: '$', p1: 19, p2: 16, p3: 22,
+      c1: `Premier IMAX Laser ${cityName} Central`,
+      c2: `Dolby Cinema ${cityName} Grand`,
+      c3: `VIP Luxury Recliners ${cityName}`,
+      c4: `Cineplex ${cityName} Square`,
+      ad1: `City Grand Center, ${cityName}`,
+      ad2: `Downtown High Street, ${cityName}`,
+      ad3: `Fashion Boulevard, ${cityName}`,
+      ad4: `West Mall Promenade, ${cityName}`
+    };
 
     const c1 = {
       _id: `cin_${code.toLowerCase()}_${citySlug}_01`,
-      name: `iMovies PVR ICON ${cityName} Central`,
+      name: meta.c1,
       chain: 'iMovies VIP',
       country: code,
       countryName: meta.name,
       state: stateName || '',
       city: cityName,
-      address: `${cityName} Grand Mall, Commercial Boulevard, ${cityName}`,
-      screens: 9,
+      address: meta.ad1,
+      screens: 12,
       formats: ['IMAX Laser 4K', 'Dolby Atmos', '4DX Motion', 'VIP Recliners'],
       currency: meta.cur,
       currencySymbol: meta.sym,
@@ -6395,14 +6548,14 @@ class InMemoryStore {
 
     const c2 = {
       _id: `cin_${code.toLowerCase()}_${citySlug}_02`,
-      name: `iMovies INOX Megaplex ${cityName} Galleria`,
+      name: meta.c2,
       chain: 'iMovies VIP',
       country: code,
       countryName: meta.name,
       state: stateName || '',
       city: cityName,
-      address: `${cityName} Lifestyle Galleria, High Street, ${cityName}`,
-      screens: 11,
+      address: meta.ad2,
+      screens: 10,
       formats: ['INSIGNIA VIP', 'ScreenX 270°', 'Dolby Cinema', 'VIP Recliners'],
       currency: meta.cur,
       currencySymbol: meta.sym,
@@ -6413,13 +6566,13 @@ class InMemoryStore {
 
     const c3 = {
       _id: `cin_${code.toLowerCase()}_${citySlug}_03`,
-      name: `iMovies Cinepolis VIP ${cityName} Grand City`,
+      name: meta.c3,
       chain: 'iMovies VIP',
       country: code,
       countryName: meta.name,
       state: stateName || '',
       city: cityName,
-      address: `${cityName} City Centre Mall, Ring Road, ${cityName}`,
+      address: meta.ad3,
       screens: 8,
       formats: ['VIP Luxury Club', 'Dolby Atmos', 'RealD 3D', 'Macro XE'],
       currency: meta.cur,
@@ -6431,13 +6584,13 @@ class InMemoryStore {
 
     const c4 = {
       _id: `cin_${code.toLowerCase()}_${citySlug}_04`,
-      name: `iMovies MovieMax Cineplex ${cityName} Square`,
+      name: meta.c4,
       chain: 'iMovies VIP',
       country: code,
       countryName: meta.name,
       state: stateName || '',
       city: cityName,
-      address: `${cityName} Mega Mall, Station Road, ${cityName}`,
+      address: meta.ad4,
       screens: 6,
       formats: ['Laser 4K', 'Dolby 7.1', 'Executive Recliner Suites'],
       currency: meta.cur,

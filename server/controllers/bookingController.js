@@ -3,6 +3,8 @@ const Movie = require('../models/Movie');
 const mongoose = require('mongoose');
 const inMemoryStore = require('../config/inMemoryStore');
 
+const isMongoConnected = () => Boolean(mongoose.connection && mongoose.connection.readyState === 1);
+
 const isValidShowDate = (value) => {
   if (typeof value !== 'string' || !/^\d{4}-\d{2}-\d{2}$/.test(value)) {
     return false;
@@ -266,6 +268,11 @@ exports.cancelBooking = async (req, res) => {
 // @desc    Fetch logged-in user's bookings
 // @route   GET /api/bookings/user
 exports.getUserBookings = async (req, res) => {
+  if (!isMongoConnected()) {
+    const fallbackBookings = inMemoryStore.getUserBookings(req.user.id);
+    return res.status(200).json(fallbackBookings);
+  }
+
   try {
     const bookings = await Booking.find({ user: req.user.id })
       .populate('movie', 'title posterUrl theater duration genre language ticketPrice')
@@ -293,6 +300,11 @@ exports.getOccupiedSeats = async (req, res) => {
 
     if (!isValidShowDate(showDate) || typeof showTime !== 'string' || !showTime.trim()) {
       return res.status(400).json({ message: 'Valid showDate and showTime query parameters are required' });
+    }
+
+    if (!isMongoConnected()) {
+      const occupiedSeats = inMemoryStore.getOccupiedSeats(movieId, showDate, showTime);
+      return res.status(200).json({ occupiedSeats });
     }
 
     const query = { movie: movieId, showDate, showTime, status: { $ne: 'cancelled' } };

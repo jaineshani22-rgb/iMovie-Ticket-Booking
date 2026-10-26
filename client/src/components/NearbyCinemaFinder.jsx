@@ -94,14 +94,20 @@ const NearbyCinemaFinder = ({ className = '', defaultExpandedCinema = true }) =>
   };
 
   // Fetch showtimes for a cinema
-  const fetchSchedule = async (cinemaId) => {
+  const fetchSchedule = async (cinemaId, retryCount = 0) => {
     if (cinemaSchedules[cinemaId] || loadingSchedules[cinemaId]) return;
     try {
       setLoadingSchedules((prev) => ({ ...prev, [cinemaId]: true }));
       const { data } = await API.get(`/cinemas/${cinemaId}/showtimes`);
       setCinemaSchedules((prev) => ({ ...prev, [cinemaId]: data.schedule || [] }));
     } catch (err) {
-      console.error(`Failed to load showtimes for cinema ${cinemaId}:`, err);
+      if (retryCount < 1) {
+        setTimeout(() => fetchSchedule(cinemaId, retryCount + 1), 600);
+        return;
+      }
+      console.warn(`Cinema ${cinemaId} schedule lookup notice:`, err?.message || err);
+      // Fallback empty array so loading spinner resolves cleanly
+      setCinemaSchedules((prev) => ({ ...prev, [cinemaId]: [] }));
     } finally {
       setLoadingSchedules((prev) => ({ ...prev, [cinemaId]: false }));
     }

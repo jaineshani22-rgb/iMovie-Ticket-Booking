@@ -25,10 +25,17 @@ export const AuthProvider = ({ children }) => {
       }
     }
     setLoading(false);
+
+    const handleUnauthorized = () => {
+      setUser(null);
+    };
+    window.addEventListener('auth:unauthorized', handleUnauthorized);
+    return () => window.removeEventListener('auth:unauthorized', handleUnauthorized);
   }, []);
 
   const login = async (email, password) => {
-    const { data } = await API.post('/auth/login', { email, password });
+    const cleanEmail = typeof email === 'string' ? email.trim() : email;
+    const { data } = await API.post('/auth/login', { email: cleanEmail, password });
     localStorage.setItem('token', data.token);
     localStorage.setItem('user', JSON.stringify(data));
     setUser(data);

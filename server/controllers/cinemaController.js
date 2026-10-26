@@ -1,10 +1,19 @@
+const mongoose = require('mongoose');
 const Cinema = require('../models/Cinema');
 const inMemoryStore = require('../config/inMemoryStore');
+
+const isMongoConnected = () => Boolean(mongoose.connection && mongoose.connection.readyState === 1);
 
 // @desc    Get all cinemas with optional country, city & state filtering
 // @route   GET /api/cinemas
 exports.getCinemas = async (req, res) => {
   const { country, city, state } = req.query;
+
+  if (!isMongoConnected()) {
+    const fallback = inMemoryStore.getCinemas(country, city, state);
+    return res.status(200).json(fallback);
+  }
+
   try {
     const query = {};
     if (country) query.country = country.toUpperCase();
@@ -14,7 +23,6 @@ exports.getCinemas = async (req, res) => {
     if (cinemas && cinemas.length > 0) {
       return res.status(200).json(cinemas);
     }
-    // Fall back to in-memory store
     const fallback = inMemoryStore.getCinemas(country, city, state);
     return res.status(200).json(fallback);
   } catch (error) {
@@ -26,6 +34,12 @@ exports.getCinemas = async (req, res) => {
 // @desc    Get cinema by ID
 // @route   GET /api/cinemas/:id
 exports.getCinemaById = async (req, res) => {
+  if (!isMongoConnected()) {
+    const fallback = inMemoryStore.getCinemaById(req.params.id);
+    if (fallback) return res.status(200).json(fallback);
+    return res.status(404).json({ message: 'Cinema not found' });
+  }
+
   try {
     const cinema = await Cinema.findById(req.params.id);
     if (!cinema) {
