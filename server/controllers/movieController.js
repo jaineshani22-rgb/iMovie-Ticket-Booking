@@ -1,8 +1,11 @@
+const mongoose = require('mongoose');
 const Movie = require('../models/Movie');
 const inMemoryStore = require('../config/inMemoryStore');
 const https = require('https');
 
-const TMDB_API_KEY = process.env.TMDB_API_KEY || '';
+const isMongoConnected = () => Boolean(mongoose.connection && mongoose.connection.readyState === 1);
+const TMDB_API_KEY = (process.env.TMDB_API_KEY || '').trim();
+const hasValidTmdbKey = TMDB_API_KEY.length >= 10 && !TMDB_API_KEY.includes('your_');
 
 // Helper to make server-side HTTPS request to TMDB
 const fetchFromTmdb = (endpoint, params = {}) => {
@@ -88,7 +91,7 @@ exports.getMovies = async (req, res) => {
   const { search, genre, category, country, language, industry, sortBy, minRating } = req.query;
 
   // Attempt live TMDB if API key is provided and requested
-  if (TMDB_API_KEY && (category || search)) {
+  if (hasValidTmdbKey && (category || search)) {
     try {
       let tmdbEndpoint = '/movie/now_playing';
       if (category === 'upcoming') tmdbEndpoint = '/movie/upcoming';
@@ -112,7 +115,19 @@ exports.getMovies = async (req, res) => {
     }
   }
 
-  // Database Query with Mongoose
+  // Fast-path: When MongoDB is offline, immediately return inMemoryStore catalog with zero latency
+  if (!isMongoConnected()) {
+    let movies = inMemoryStore.getMovies(search, genre, category, country, language, industry, sortBy, minRating);
+    if (req.query.limit) {
+      const parsedLimit = parseInt(req.query.limit, 10);
+      if (!isNaN(parsedLimit) && parsedLimit > 0) {
+        movies = movies.slice(0, parsedLimit);
+      }
+    }
+    return res.status(200).json(movies);
+  }
+
+  // Database Query with Mongoose (when connected)
   try {
     const query = {};
 
@@ -166,17 +181,29 @@ exports.getMovies = async (req, res) => {
     if (sortBy === 'past_first') sortObj = { releaseDate: 1 };
     if (sortBy === 'releaseDate') sortObj = { releaseDate: -1 };
 
-    const movies = await Movie.find(query).sort(sortObj);
+    let movies = await Movie.find(query).sort(sortObj);
     if (movies && movies.length > 0) {
+      if (req.query.limit) {
+        const parsedLimit = parseInt(req.query.limit, 10);
+        if (!isNaN(parsedLimit) && parsedLimit > 0) movies = movies.slice(0, parsedLimit);
+      }
       return res.status(200).json(movies);
     }
 
     // In-memory fallback
-    const fallbackMovies = inMemoryStore.getMovies(search, genre, category, country, language, industry, sortBy, minRating);
+    let fallbackMovies = inMemoryStore.getMovies(search, genre, category, country, language, industry, sortBy, minRating);
+    if (req.query.limit) {
+      const parsedLimit = parseInt(req.query.limit, 10);
+      if (!isNaN(parsedLimit) && parsedLimit > 0) fallbackMovies = fallbackMovies.slice(0, parsedLimit);
+    }
     return res.status(200).json(fallbackMovies);
   } catch (error) {
     // In-memory fallback if MongoDB is offline
-    const movies = inMemoryStore.getMovies(search, genre, category, country, language, industry, sortBy, minRating);
+    let movies = inMemoryStore.getMovies(search, genre, category, country, language, industry, sortBy, minRating);
+    if (req.query.limit) {
+      const parsedLimit = parseInt(req.query.limit, 10);
+      if (!isNaN(parsedLimit) && parsedLimit > 0) movies = movies.slice(0, parsedLimit);
+    }
     return res.status(200).json(movies);
   }
 };
@@ -187,7 +214,7 @@ exports.getMovieById = async (req, res) => {
   const { id } = req.params;
 
   // If TMDB ID format: tmdb_XXXXX
-  if (id.startsWith('tmdb_') && TMDB_API_KEY) {
+  if (id.startsWith('tmdb_') && hasValidTmdbKey) {
     const rawTmdbId = id.replace('tmdb_', '');
     try {
       const tmdbMovie = await fetchFromTmdb(`/movie/${rawTmdbId}`, {
@@ -199,6 +226,15 @@ exports.getMovieById = async (req, res) => {
     } catch (err) {
       console.warn('[TMDB Details] Fallback:', err.message);
     }
+  }
+
+  // Fast-path: When MongoDB is offline, use inMemoryStore immediately
+  if (!isMongoConnected()) {
+    const movie = inMemoryStore.getMovieById(id);
+    if (!movie) {
+      return res.status(404).json({ message: 'Movie not found' });
+    }
+    return res.status(200).json(movie);
   }
 
   try {
@@ -243,6 +279,11 @@ exports.addMovie = async (req, res) => {
 
   if (!title) {
     return res.status(400).json({ message: 'Movie title is required' });
+  }
+
+  if (!isMongoConnected()) {
+    const movie = inMemoryStore.createMovie(req.body);
+    return res.status(201).json(movie);
   }
 
   try {

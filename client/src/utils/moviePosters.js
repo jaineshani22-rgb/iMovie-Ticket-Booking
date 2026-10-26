@@ -1,4 +1,12 @@
 export const KNOWN_POSTERS = {
+  'avengers: doomsday': {
+    local: '/posters/avengers-doomsday.jpg',
+    remote: 'https://image.tmdb.org/t/p/original/jzPwsojjFStf5lR5Nm07w2hH56G.jpg'
+  },
+  'avengers doomsday': {
+    local: '/posters/avengers-doomsday.jpg',
+    remote: 'https://image.tmdb.org/t/p/original/jzPwsojjFStf5lR5Nm07w2hH56G.jpg'
+  },
   'pehla pyaar dusri baar': {
     local: '/posters/pehla-pyaar-dusri-baar.jpg',
     remote: 'https://www.bollywoodhungama.com/wp-content/uploads/2026/09/Pehla-Pyaar.jpg'

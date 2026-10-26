@@ -4,7 +4,7 @@ const jwt = require('jsonwebtoken');
 const crypto = require('crypto');
 const inMemoryStore = require('../config/inMemoryStore');
 
-const getJwtSecret = () => process.env.JWT_SECRET || 'imovies_default_super_secret_jwt_key_32_chars_min';
+const getJwtSecret = () => process.env.JWT_SECRET || 'imovies_super_secret_jwt_key_that_is_at_least_32_characters_long';
 
 const generateToken = (user) => {
   return jwt.sign(

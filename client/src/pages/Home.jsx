@@ -130,7 +130,7 @@ const Home = () => {
   });
   const [submitting, setSubmitting] = useState(false);
 
-  const fetchMovies = async () => {
+  const fetchMovies = async (retryCount = 0) => {
     try {
       setLoading(true);
       const { data } = await API.get('/movies', {
@@ -147,7 +147,11 @@ const Home = () => {
       });
       setMovies(data || []);
     } catch (error) {
-      console.error('Error fetching movies:', error);
+      if (retryCount < 1) {
+        setTimeout(() => fetchMovies(retryCount + 1), 350);
+        return;
+      }
+      console.warn('Unable to load movies temporarily:', error.message);
     } finally {
       setLoading(false);
     }

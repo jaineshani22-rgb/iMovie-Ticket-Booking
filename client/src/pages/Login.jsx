@@ -46,15 +46,15 @@ const Login = () => {
 
     try {
       setLoading(true);
-      await login(email, password);
+      await login(email.trim(), password);
       navigate(returnUrl, { replace: true });
     } catch (err) {
       if (err.response?.status === 401) {
-        setError('Incorrect email or password. Please verify your credentials and try again.');
+        setError('Incorrect email or password. Please verify your credentials or use the demo buttons below.');
       } else if (err.response?.data?.message) {
         setError(err.response.data.message);
       } else {
-        setError('Network/server connection error. Please check your internet connection.');
+        setError('Network/server connection error. Please verify server connectivity.');
       }
     } finally {
       setLoading(false);
@@ -65,10 +65,12 @@ const Login = () => {
     try {
       setLoading(true);
       setError('');
-      const defaultEmail = email && /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email) ? email : 'google.patron@imovies.com';
+      const defaultEmail = email && /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.trim())
+        ? email.trim()
+        : 'jaineshani22@gmail.com';
       await googleLogin({
         email: defaultEmail,
-        name: 'VIP Google Guest',
+        name: 'Eshani Jain',
         googleId: 'g_' + Date.now()
       });
       navigate(returnUrl, { replace: true });
@@ -79,10 +81,21 @@ const Login = () => {
     }
   };
 
-  const fillDemoCredentials = (demoEmail, demoPass) => {
+  const fillDemoCredentials = async (demoEmail, demoPass, autoSubmit = false) => {
     setEmail(demoEmail);
     setPassword(demoPass);
     setError('');
+    if (autoSubmit) {
+      try {
+        setLoading(true);
+        await login(demoEmail, demoPass);
+        navigate(returnUrl, { replace: true });
+      } catch (err) {
+        setError(err.response?.data?.message || 'Demo login failed');
+      } finally {
+        setLoading(false);
+      }
+    }
   };
 
   const handleRequestResetToken = async (e) => {
@@ -247,24 +260,39 @@ const Login = () => {
         </form>
 
         {/* Quick Seeded Demo Accounts */}
-        <div className="pt-4 border-t border-[#EAE2D5] space-y-2">
+        <div className="pt-4 border-t border-[#EAE2D5] space-y-2.5">
           <p className="text-[11px] text-[#6B7280] text-center font-bold uppercase tracking-wider">
-            One-Click Demo Credentials:
+            One-Click Sign-In (Instant Access):
           </p>
           <div className="grid grid-cols-2 gap-2">
             <button
               type="button"
-              onClick={() => fillDemoCredentials('user@imovies.com', 'user123')}
-              className="text-xs bg-[#FFF9F0] hover:bg-[#FFF6DC] border border-[#EAE2D5] text-[#2B2B2B] py-2 rounded-xl transition-colors font-semibold cursor-pointer"
+              disabled={loading}
+              onClick={() => fillDemoCredentials('jaineshani22@gmail.com', 'user123', true)}
+              className="text-xs bg-[#FFF9F0] hover:bg-[#FFF6DC] border border-[#EAE2D5] text-[#2B2B2B] py-2 px-2.5 rounded-xl transition-all font-semibold flex items-center justify-center gap-1.5 cursor-pointer shadow-2xs hover:border-[#E63946]/40"
+              title="Click to sign in immediately as Eshani Jain"
             >
-              VIP Member (Eshani Jain)
+              <span className="w-2 h-2 rounded-full bg-emerald-500 shrink-0" />
+              <span className="truncate">Eshani Jain (VIP)</span>
             </button>
             <button
               type="button"
-              onClick={() => fillDemoCredentials('admin@imovies.com', 'admin123')}
-              className="text-xs bg-[#FFF6DC] hover:bg-[#FFEDB0] border border-[#FFC93C] text-[#7A5B14] py-2 rounded-xl transition-colors font-bold cursor-pointer"
+              disabled={loading}
+              onClick={() => fillDemoCredentials('admin@imovies.com', 'admin123', true)}
+              className="text-xs bg-[#FFF6DC] hover:bg-[#FFEDB0] border border-[#FFC93C] text-[#7A5B14] py-2 px-2.5 rounded-xl transition-all font-bold flex items-center justify-center gap-1.5 cursor-pointer shadow-2xs hover:border-[#E63946]/40"
+              title="Click to sign in immediately as Admin Manager"
             >
-              Admin Manager
+              <span className="w-2 h-2 rounded-full bg-amber-500 shrink-0" />
+              <span className="truncate">Admin Manager</span>
+            </button>
+          </div>
+          <div className="text-center">
+            <button
+              type="button"
+              onClick={() => fillDemoCredentials('user@imovies.com', 'user123', false)}
+              className="text-[11px] text-[#6B7280] hover:text-[#E63946] underline cursor-pointer"
+            >
+              Or fill default user@imovies.com credentials
             </button>
           </div>
         </div>

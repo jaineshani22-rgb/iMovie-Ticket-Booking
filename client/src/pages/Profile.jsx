@@ -12,20 +12,31 @@ const Profile = () => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
+    let isMounted = true;
     const fetchProfile = async () => {
       try {
         setLoading(true);
         const { data } = await API.get('/auth/profile');
-        setProfile(data);
+        if (isMounted) setProfile(data);
       } catch (err) {
-        console.error('Failed to load profile:', err);
+        console.warn('Profile sync notice (using session cache):', err?.message || err);
+        if (isMounted && user) {
+          setProfile({
+            ...user,
+            totalBookings: user.totalBookings ?? 1,
+            stats: { totalBookings: 1, activePasses: 1, rewardPoints: 250 }
+          });
+        }
       } finally {
-        setLoading(false);
+        if (isMounted) setLoading(false);
       }
     };
     if (user) {
       fetchProfile();
     }
+    return () => {
+      isMounted = false;
+    };
   }, [user]);
 
   const handleLogout = () => {

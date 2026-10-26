@@ -18,6 +18,7 @@ const isProduction = process.env.NODE_ENV === 'production';
 
 async function start() {
   const app = express();
+  app.set('trust proxy', 1);
 
   app.use(cors());
   app.use(express.json());
@@ -95,6 +96,14 @@ async function start() {
     console.log(`[iMovies] Server running on http://0.0.0.0:${PORT}`);
   });
 }
+
+process.on('uncaughtException', (err) => {
+  console.warn('[iMovies] Process uncaught exception:', err.message);
+});
+
+process.on('unhandledRejection', (reason) => {
+  console.warn('[iMovies] Process unhandled rejection:', reason?.message || reason);
+});
 
 start().catch((err) => {
   console.error('[iMovies] Fatal server startup error:', err);

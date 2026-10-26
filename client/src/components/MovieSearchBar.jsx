@@ -63,7 +63,7 @@ const MovieSearchBar = ({ className = '', onSearchSubmit }) => {
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, []);
 
-  // Fetch suggestions when query changes (debounced)
+  // Fetch suggestions when query changes (debounced with AbortController)
   useEffect(() => {
     const trimmed = query.trim();
     if (!trimmed) {
@@ -72,22 +72,31 @@ const MovieSearchBar = ({ className = '', onSearchSubmit }) => {
       return;
     }
 
+    const controller = new AbortController();
+
     const timer = setTimeout(async () => {
       try {
         setLoading(true);
         const { data } = await API.get('/movies', {
-          params: { search: trimmed, limit: 6 }
+          params: { search: trimmed, limit: 6 },
+          signal: controller.signal
         });
         setSuggestions(Array.isArray(data) ? data.slice(0, 6) : []);
       } catch (err) {
-        console.error('Failed to fetch search suggestions:', err);
+        if (err.name === 'CanceledError' || err.code === 'ERR_CANCELED' || (err.message && err.message.includes('canceled'))) {
+          // Expected cancellation when user continues typing
+          return;
+        }
         setSuggestions([]);
       } finally {
         setLoading(false);
       }
-    }, 180);
+    }, 220);
 
-    return () => clearTimeout(timer);
+    return () => {
+      clearTimeout(timer);
+      controller.abort();
+    };
   }, [query]);
 
   const handleSubmit = (e) => {
@@ -161,7 +170,7 @@ const MovieSearchBar = ({ className = '', onSearchSubmit }) => {
       {/* Search Input Container */}
       <form onSubmit={handleSubmit} className="relative flex items-center">
         <div className="relative w-full">
-          <Search className="w-4 h-4 text-[#E63946] absolute left-3.5 top-1/2 -translate-y-1/2 pointer-events-none" />
+          <Search className="w-4.5 h-4.5 text-[#E63946] absolute left-3.5 top-1/2 -translate-y-1/2 pointer-events-none" />
           
           <input
             ref={inputRef}
@@ -174,11 +183,11 @@ const MovieSearchBar = ({ className = '', onSearchSubmit }) => {
             }}
             onFocus={() => setIsOpen(true)}
             onKeyDown={handleKeyDown}
-            placeholder="Search Movies..."
-            className="w-full bg-[#FFF9F0] hover:bg-[#FFF6DC] focus:bg-white text-[#2B2B2B] text-xs sm:text-sm pl-10 pr-16 py-2.5 rounded-xl border border-[#EAE2D5] focus:border-[#E63946] focus:ring-1 focus:ring-[#E63946] focus:outline-none transition-all placeholder:text-[#9CA3AF] shadow-xs"
+            placeholder="Search movies by title, actor, or genre..."
+            className="w-full bg-[#FFF9F0] hover:bg-[#FFF6DC] focus:bg-white text-[#2B2B2B] text-xs sm:text-sm font-medium pl-11 pr-20 py-2.5 sm:py-3 rounded-2xl border border-[#EAE2D5] focus:border-[#E63946] focus:ring-2 focus:ring-[#FFC93C]/30 focus:outline-none transition-all placeholder:text-[#9CA3AF] shadow-xs"
           />
 
-          <div className="absolute right-2.5 top-1/2 -translate-y-1/2 flex items-center gap-1">
+          <div className="absolute right-3 top-1/2 -translate-y-1/2 flex items-center gap-1.5">
             {loading && (
               <Loader2 className="w-3.5 h-3.5 text-[#E63946] animate-spin mr-1" />
             )}
@@ -196,14 +205,15 @@ const MovieSearchBar = ({ className = '', onSearchSubmit }) => {
                     navigate(`/?${params.toString()}`);
                   }
                 }}
-                className="text-[#9CA3AF] hover:text-[#2B2B2B] p-1 rounded-md hover:bg-[#F3EFE6] transition-colors cursor-pointer"
+                className="text-[#9CA3AF] hover:text-[#2B2B2B] p-1.5 rounded-lg hover:bg-[#F3EFE6] transition-colors cursor-pointer"
                 title="Clear search"
               >
-                <X className="w-3.5 h-3.5" />
+                <X className="w-4 h-4" />
               </button>
             ) : (
-              <span className="hidden sm:inline-block text-[10px] font-mono font-medium text-[#9CA3AF] bg-[#FAF5EE] border border-[#EAE2D5] px-1.5 py-0.5 rounded">
-                /
+              <span className="hidden md:inline-flex items-center gap-1 text-[10px] font-mono font-semibold text-[#9CA3AF] bg-[#FAF5EE] border border-[#EAE2D5] px-2 py-0.5 rounded-md shadow-2xs">
+                <span>Press</span>
+                <kbd className="font-sans font-bold text-[#E63946]">/</kbd>
               </span>
             )}
           </div>

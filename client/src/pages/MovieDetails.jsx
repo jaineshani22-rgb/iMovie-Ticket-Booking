@@ -14,7 +14,8 @@ import {
   Building,
   User,
   ShieldCheck,
-  Compass
+  Compass,
+  Globe
 } from 'lucide-react';
 import API from '../services/api';
 import { useAuth } from '../context/AuthContext';
@@ -22,6 +23,7 @@ import { useLocationContext } from '../context/LocationContext';
 import TrailerModal from '../components/TrailerModal';
 import CheckoutModal from '../components/CheckoutModal';
 import MovieReviews from '../components/MovieReviews';
+import LocationPickerModal from '../components/LocationPickerModal';
 import { resolveMoviePoster, getFallbackMoviePoster, DEFAULT_FALLBACK_POSTER } from '../utils/moviePosters';
 
 const ROWS = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H'];
@@ -36,6 +38,8 @@ const MovieDetails = () => {
 
   const [movie, setMovie] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [showLocationModal, setShowLocationModal] = useState(false);
+  const [showAllCast, setShowAllCast] = useState(false);
 
   // Screening Date (generate today + next 6 days)
   const availableDates = Array.from({ length: 7 }, (_, i) => {
@@ -183,6 +187,7 @@ const MovieDetails = () => {
     );
   }
 
+  const activeCinema = selectedCinema || cinemas[0] || { name: movie.theater || 'iMovies VIP Cinema' };
   const basePriceVal = (activeCinema?.basePrice) || movie.ticketPrice || 250;
   const rawUnitPrice = getRawPrice(basePriceVal);
   const formattedUnitPrice = formatPrice(basePriceVal);
@@ -208,7 +213,6 @@ const MovieDetails = () => {
       : ['10:30 AM', '02:00 PM', '06:30 PM', '09:45 PM'];
 
   const genres = Array.isArray(movie.genre) ? movie.genre : [movie.genre];
-  const activeCinema = selectedCinema || cinemas[0] || { name: movie.theater || 'iMovies VIP Cinema' };
 
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-8">
@@ -321,20 +325,38 @@ const MovieDetails = () => {
             {movie.description}
           </p>
 
-          {/* Cast list if available */}
+          {/* Cast list with roles and expand toggle */}
           {movie.cast && movie.cast.length > 0 && (
             <div className="pt-1">
-              <span className="text-[10px] uppercase font-bold text-[#9CA3AF] tracking-wider block mb-1.5">
-                Starring
-              </span>
-              <div className="flex flex-wrap gap-2 text-xs">
-                {movie.cast.slice(0, 4).map((actor, idx) => (
-                  <span
-                    key={idx}
-                    className="bg-[#FFF9F0] border border-[#EAE2D5] text-[#2B2B2B] px-2.5 py-1 rounded-md text-[11px]"
+              <div className="flex items-center justify-between mb-2">
+                <span className="text-[10px] uppercase font-bold text-[#9CA3AF] tracking-wider flex items-center gap-1.5">
+                  <User className="w-3 h-3 text-[#E63946]" />
+                  Starring Ensemble ({movie.cast.length} Cast Members)
+                </span>
+                {movie.cast.length > 6 && (
+                  <button
+                    type="button"
+                    onClick={() => setShowAllCast((prev) => !prev)}
+                    className="text-[11px] font-bold text-[#E63946] hover:underline cursor-pointer"
                   >
-                    <strong className="text-[#B81D2D]">{actor.name}</strong> {actor.character ? `(${actor.character})` : ''}
-                  </span>
+                    {showAllCast ? 'Show Fewer' : `View All (${movie.cast.length})`}
+                  </button>
+                )}
+              </div>
+              <div className="flex flex-wrap gap-2 text-xs">
+                {(showAllCast ? movie.cast : movie.cast.slice(0, 6)).map((actor, idx) => (
+                  <div
+                    key={idx}
+                    className="bg-[#FFF9F0] border border-[#EAE2D5] text-[#2B2B2B] px-3 py-1.5 rounded-lg text-[11px] flex items-center gap-1.5 shadow-2xs hover:border-[#E63946]/40 transition-colors"
+                  >
+                    <span className="w-1.5 h-1.5 rounded-full bg-[#E63946]" />
+                    <strong className="text-[#2B2B2B] font-bold">{actor.name}</strong>
+                    {actor.character && (
+                      <span className="text-[#B81D2D] font-medium bg-[#FDECEC] border border-[#FCD7D7] px-1.5 py-0.5 rounded text-[10px]">
+                        as {actor.character}
+                      </span>
+                    )}
+                  </div>
                 ))}
               </div>
             </div>
@@ -366,14 +388,26 @@ const MovieDetails = () => {
             </div>
           ) : (
             <div className="pt-4 border-t border-[#EAE2D5] space-y-4">
-              {/* Preferred Cinema Selector in city */}
+              {/* Preferred Cinema Selector in city with worldwide location switcher */}
               {cinemas && cinemas.length > 0 && (
                 <div>
-                  <div className="flex items-center justify-between mb-1.5">
-                    <label className="text-xs font-bold text-[#2B2B2B] flex items-center gap-1.5">
-                      <Building className="w-3.5 h-3.5 text-[#E63946]" />
-                      Select Cinema House in {city} ({cinemas.length} available)
-                    </label>
+                  <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 mb-2">
+                    <div>
+                      <label className="text-xs font-bold text-[#2B2B2B] flex items-center gap-1.5">
+                        <Building className="w-3.5 h-3.5 text-[#E63946]" />
+                        Cinemas in {city}, {activeCountry?.name || activeCountry?.code} ({cinemas.length} available)
+                      </label>
+                      <p className="text-[11px] text-[#6B7280]">Real-time theatrical screens & premium formats worldwide</p>
+                    </div>
+                    <button
+                      type="button"
+                      onClick={() => setShowLocationModal(true)}
+                      className="inline-flex items-center gap-1.5 text-[11px] font-bold text-[#E63946] hover:text-[#B81D2D] bg-[#FFF0F0] hover:bg-[#FEE2E2] px-2.5 py-1 rounded-lg border border-[#FCD7D7] transition-all cursor-pointer self-start sm:self-auto"
+                      title="Change your city or country worldwide"
+                    >
+                      <Globe className="w-3 h-3" />
+                      <span>Change City ({city})</span>
+                    </button>
                   </div>
                   <div className="flex flex-wrap gap-2">
                     {cinemas.map((cin) => {
@@ -391,6 +425,15 @@ const MovieDetails = () => {
                         >
                           {isSelected && <CheckCircle2 className="w-3 h-3" />}
                           <span>{cin.name}</span>
+                          {cin.formats && cin.formats.length > 0 && (
+                            <span
+                              className={`text-[9px] px-1.5 py-0.2 rounded font-black tracking-wider ${
+                                isSelected ? 'bg-white/20 text-white' : 'bg-[#EAE2D5] text-[#6B7280]'
+                              }`}
+                            >
+                              {cin.formats[0]}
+                            </span>
+                          )}
                         </button>
                       );
                     })}
@@ -862,6 +905,12 @@ const MovieDetails = () => {
         currencyCode={activeCountry.currency}
         user={user}
         onBookingSuccess={handleBookingSuccess}
+      />
+
+      {/* Worldwide Location Picker Modal */}
+      <LocationPickerModal
+        isOpen={showLocationModal}
+        onClose={() => setShowLocationModal(false)}
       />
     </div>
   );
