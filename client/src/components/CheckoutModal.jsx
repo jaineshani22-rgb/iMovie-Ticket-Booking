@@ -92,10 +92,17 @@ const CheckoutModal = ({
   const seconds = timeLeft % 60;
   const timerFormatted = `${minutes}:${seconds < 10 ? '0' : ''}${seconds}`;
 
-  const subtotal = selectedSeats.length * unitPrice;
-  const bookingFee = Math.round(subtotal * 0.05);
-  const discountAmount = discountApplied ? Math.round(subtotal * 0.15) : 0;
-  const finalTotal = subtotal + bookingFee - discountAmount;
+  const vipSeatsCount = selectedSeats.filter((s) => ['F', 'G', 'H'].includes(s[0])).length;
+  const standardSeatsCount = selectedSeats.length - vipSeatsCount;
+  const standardUnitPrice = unitPrice;
+  const vipUnitPrice = Math.round(unitPrice * 1.25);
+
+  const admissionsSubtotal =
+    standardSeatsCount * standardUnitPrice + vipSeatsCount * vipUnitPrice;
+  const bookingFee = Math.round(admissionsSubtotal * 0.05);
+  const taxAmount = Math.round(admissionsSubtotal * 0.18);
+  const discountAmount = discountApplied ? Math.round(admissionsSubtotal * 0.15) : 0;
+  const finalTotal = admissionsSubtotal + bookingFee + taxAmount - discountAmount;
 
   const handleApplyPromo = (e) => {
     e.preventDefault();
@@ -420,41 +427,69 @@ const CheckoutModal = ({
                 </button>
               </div>
 
-              {/* Itemized Price Breakdown */}
-              <div className="space-y-2.5 pt-2 border-t border-[#EAE2D5] text-xs">
-                <div className="flex justify-between text-[#6B7280]">
-                  <span>
-                    Admissions ({selectedSeats.length} × {currencySymbol}
-                    {unitPrice})
+              {/* Detailed Itemized Price Bifurcation */}
+              <div className="bg-[#FFFDF9] border border-[#FFEDB0] rounded-2xl p-4 space-y-3 text-xs">
+                <div className="flex items-center justify-between border-b border-[#FFEDB0] pb-2">
+                  <span className="font-bold text-[#7A5B14] uppercase tracking-wider text-[11px] flex items-center gap-1.5">
+                    <Ticket className="w-3.5 h-3.5 text-[#E63946]" />
+                    <span>Payment Summary &amp; Price Bifurcation</span>
                   </span>
-                  <span className="font-mono text-[#2B2B2B] font-bold">
-                    {currencySymbol}
-                    {subtotal}
-                  </span>
-                </div>
-                <div className="flex justify-between text-[#6B7280]">
-                  <span>Convenience & Laser Projection Surcharge</span>
-                  <span className="font-mono text-[#2B2B2B] font-bold">
-                    {currencySymbol}
-                    {bookingFee}
+                  <span className="text-[10px] font-mono text-[#D62839] font-bold">
+                    {selectedSeats.length} {selectedSeats.length === 1 ? 'ticket' : 'tickets'}
                   </span>
                 </div>
-                {discountApplied && (
-                  <div className="flex justify-between text-[#047857] font-semibold">
-                    <span className="flex items-center gap-1">
-                      <Sparkles className="w-3.5 h-3.5" /> VIP Privilege Discount (15%)
+
+                {standardSeatsCount > 0 && (
+                  <div className="flex justify-between text-[#4B5563]">
+                    <span>
+                      Standard Auditorium Seats ({standardSeatsCount} × {currencySymbol}{standardUnitPrice})
                     </span>
-                    <span className="font-mono">
-                      -{currencySymbol}
-                      {discountAmount}
+                    <span className="font-mono text-[#2B2B2B] font-bold">
+                      {currencySymbol}{standardSeatsCount * standardUnitPrice}
                     </span>
                   </div>
                 )}
-                <div className="flex justify-between pt-3 border-t border-[#EAE2D5] text-sm font-bold text-[#2B2B2B]">
-                  <span>Total Due ({currencyCode})</span>
+
+                {vipSeatsCount > 0 && (
+                  <div className="flex justify-between text-[#7A5B14]">
+                    <span>
+                      VIP Recliner Suites ({vipSeatsCount} × {currencySymbol}{vipUnitPrice})
+                    </span>
+                    <span className="font-mono text-[#B81D2D] font-bold">
+                      {currencySymbol}{vipSeatsCount * vipUnitPrice}
+                    </span>
+                  </div>
+                )}
+
+                <div className="flex justify-between text-[#6B7280]">
+                  <span>Convenience &amp; Laser Projection Surcharge (5%)</span>
+                  <span className="font-mono text-[#2B2B2B] font-bold">
+                    {currencySymbol}{bookingFee}
+                  </span>
+                </div>
+
+                <div className="flex justify-between text-[#6B7280]">
+                  <span>Integrated GST / Entertainment Tax (18%)</span>
+                  <span className="font-mono text-[#2B2B2B] font-bold">
+                    {currencySymbol}{taxAmount}
+                  </span>
+                </div>
+
+                {discountApplied && (
+                  <div className="flex justify-between text-[#047857] font-semibold bg-[#ECFDF5] border border-[#A7F3D0] p-2 rounded-xl">
+                    <span className="flex items-center gap-1">
+                      <Sparkles className="w-3.5 h-3.5 text-emerald-600" /> VIP Privilege Discount (15%)
+                    </span>
+                    <span className="font-mono">
+                      -{currencySymbol}{discountAmount}
+                    </span>
+                  </div>
+                )}
+
+                <div className="flex justify-between pt-2.5 border-t border-[#EAE2D5] text-sm font-bold text-[#2B2B2B]">
+                  <span>Grand Total Payable ({currencyCode})</span>
                   <span className="text-xl font-black text-[#E63946] font-mono">
-                    {currencySymbol}
-                    {finalTotal}
+                    {currencySymbol}{finalTotal}
                   </span>
                 </div>
               </div>
@@ -462,6 +497,22 @@ const CheckoutModal = ({
           ) : (
             /* STEP 2: Simulated Payment Gateway (Test Mode) */
             <div className="space-y-5">
+              {/* Step 2 Price Bifurcation Quick Summary Strip */}
+              <div className="bg-[#FFF9F0] border border-[#EAE2D5] rounded-2xl p-3 flex items-center justify-between text-xs">
+                <div>
+                  <span className="text-[#6B7280] block text-[10px] uppercase font-bold">Bifurcation Overview</span>
+                  <span className="text-[#2B2B2B] font-semibold">
+                    Admissions: <strong className="font-mono">{currencySymbol}{admissionsSubtotal}</strong> · Fees &amp; Tax: <strong className="font-mono">{currencySymbol}{bookingFee + taxAmount}</strong>
+                  </span>
+                </div>
+                <div className="text-right">
+                  <span className="text-[10px] text-[#6B7280] uppercase font-bold block">Total Due</span>
+                  <span className="text-base font-black text-[#E63946] font-mono">
+                    {currencySymbol}{finalTotal}
+                  </span>
+                </div>
+              </div>
+
               <div className="flex flex-wrap items-center justify-between gap-2 bg-[#FFF6DC] border border-[#FFEDB0] rounded-2xl p-3 text-xs text-[#7A5B14]">
                 <div className="flex items-center gap-2">
                   <Zap className="w-4 h-4 text-[#E5B129] shrink-0" />

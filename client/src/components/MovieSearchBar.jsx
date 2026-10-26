@@ -174,8 +174,8 @@ const MovieSearchBar = ({ className = '', onSearchSubmit }) => {
             }}
             onFocus={() => setIsOpen(true)}
             onKeyDown={handleKeyDown}
-            placeholder="Search movies, cast, genres (e.g. Lapata Ladies, Ratatouille)..."
-            className="w-full bg-[#FFF9F0] hover:bg-[#FFF6DC] focus:bg-white text-[#2B2B2B] text-xs sm:text-sm pl-10 pr-16 py-2 rounded-xl border border-[#EAE2D5] focus:border-[#E63946] focus:ring-1 focus:ring-[#E63946] focus:outline-none transition-all placeholder:text-[#9CA3AF] shadow-xs"
+            placeholder="Search Movies..."
+            className="w-full bg-[#FFF9F0] hover:bg-[#FFF6DC] focus:bg-white text-[#2B2B2B] text-xs sm:text-sm pl-10 pr-16 py-2.5 rounded-xl border border-[#EAE2D5] focus:border-[#E63946] focus:ring-1 focus:ring-[#E63946] focus:outline-none transition-all placeholder:text-[#9CA3AF] shadow-xs"
           />
 
           <div className="absolute right-2.5 top-1/2 -translate-y-1/2 flex items-center gap-1">
@@ -210,11 +210,11 @@ const MovieSearchBar = ({ className = '', onSearchSubmit }) => {
         </div>
       </form>
 
-      {/* Autocomplete Dropdown */}
-      {isOpen && (
+      {/* Autocomplete Dropdown - Only shown when typing */}
+      {isOpen && query.trim() && (
         <div className="absolute left-0 right-0 top-full mt-2 bg-white border border-[#EAE2D5] rounded-2xl shadow-xl overflow-hidden z-50 backdrop-blur-xl animate-in fade-in duration-150 max-h-[420px] overflow-y-auto">
           {/* If user is typing and has matching suggestions */}
-          {query.trim() && suggestions.length > 0 && (
+          {suggestions.length > 0 && (
             <div>
               <div className="px-3.5 py-2 text-[11px] font-bold text-[#6B7280] uppercase tracking-wider border-b border-[#EAE2D5] flex items-center justify-between bg-[#FFF9F0]">
                 <span>Matching Movies ({suggestions.length})</span>
@@ -307,63 +307,15 @@ const MovieSearchBar = ({ className = '', onSearchSubmit }) => {
           )}
 
           {/* If user is typing and no suggestions found */}
-          {query.trim() && !loading && suggestions.length === 0 && (
+          {!loading && suggestions.length === 0 && (
             <div className="p-6 text-center space-y-2 bg-white">
               <Film className="w-8 h-8 text-[#9CA3AF] mx-auto" />
               <div className="text-sm font-bold text-[#2B2B2B]">
                 No movies found for &quot;{query}&quot;
               </div>
               <p className="text-xs text-[#6B7280] max-w-xs mx-auto">
-                Try searching by title (e.g. Lapata Ladies, Titanic), genre (Animation, Mystery), or actors.
+                Try searching by movie title, cast members, or genres.
               </p>
-              <div className="pt-2 flex flex-wrap justify-center gap-1.5">
-                {TRENDING_SUGGESTIONS.slice(0, 3).map((item) => (
-                  <button
-                    key={item.title}
-                    type="button"
-                    onClick={() => handleSelectSuggestionQuery(item.title)}
-                    className="text-[11px] bg-[#FFF9F0] hover:bg-[#FFF6DC] text-[#7A5B14] font-medium border border-[#EAE2D5] px-2.5 py-1 rounded-lg transition-colors cursor-pointer"
-                  >
-                    {item.title}
-                  </button>
-                ))}
-              </div>
-            </div>
-          )}
-
-          {/* When query is empty, show Quick Discovery / Trending */}
-          {!query.trim() && (
-            <div className="p-4 space-y-3 bg-white">
-              <div className="flex items-center gap-1.5 text-[11px] font-bold text-[#E63946] uppercase tracking-wider">
-                <Sparkles className="w-3.5 h-3.5" />
-                <span>Trending & Quick Searches</span>
-              </div>
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-1.5">
-                {TRENDING_SUGGESTIONS.map((item) => (
-                  <button
-                    key={item.title}
-                    type="button"
-                    onClick={() => handleSelectSuggestionQuery(item.title)}
-                    className="text-left p-2.5 rounded-xl bg-[#FFF9F0] hover:bg-[#FFF6DC] border border-[#EAE2D5] hover:border-[#FFEDB0] transition-all flex items-center justify-between group cursor-pointer"
-                  >
-                    <div>
-                      <div className="text-xs font-bold text-[#2B2B2B] group-hover:text-[#E63946] transition-colors">
-                        {item.title}
-                      </div>
-                      <div className="text-[10px] text-[#6B7280]">{item.genre}</div>
-                    </div>
-                    <span
-                      className={`text-[9px] px-1.5 py-0.5 rounded font-bold ${
-                        item.industry === 'Bollywood'
-                          ? 'bg-[#FFF6DC] text-[#7A5B14] border border-[#FFEDB0]'
-                          : 'bg-[#FDECEC] text-[#B81D2D] border border-[#FCD7D7]'
-                      }`}
-                    >
-                      {item.industry}
-                    </span>
-                  </button>
-                ))}
-              </div>
             </div>
           )}
         </div>

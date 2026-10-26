@@ -197,7 +197,7 @@ const Home = () => {
       ticketPrice: 420,
       theater: 'iMovies IMAX Laser 4K',
       posterUrl: '/posters/clayface.jpg',
-      backdropUrl: 'https://upload.wikimedia.org/wikipedia/en/4/4f/Clayface_%28film%29_poster.jpg',
+      backdropUrl: '/posters/clayface.jpg',
       trailerKey: 'ClayfaceOfficialTrailer',
       description:
         'A terrifying psychological body-horror thriller from director Mike Flanagan. When actor Basil Karlo is brutally disfigured, an experimental cosmetic compound mutates his body into a horrifying shapeshifter, unleashing vengeance across Gotham City.',
@@ -220,7 +220,7 @@ const Home = () => {
       ticketPrice: 450,
       theater: 'iMovies IMAX 70mm Laser',
       posterUrl: '/posters/hope.jpg',
-      backdropUrl: 'https://upload.wikimedia.org/wikipedia/commons/0/03/Hope_%282026_film%29_poster.png',
+      backdropUrl: '/posters/hope.jpg',
       trailerKey: 'HopeOfficialTeaser',
       description:
         'Directed by visionary auteur Na Hong-jin (The Wailing), Hope chronicles residents of an isolated seaside harbor town thrust into a desperate survival fight when an enigmatic alien phenomenon lands on the outskirts of their village.',
@@ -539,7 +539,7 @@ const Home = () => {
         </div>
       )}
 
-      {/* Spotlight Premieres: Ramayana, Drishyam, Udta Teer, Hanuman Ansh, Nayi Naveli, Pehla Pyaar */}
+      {/* Spotlight Premieres: Clayface, Hope, Ramayana, Drishyam, Udta Teer, Hanuman Ansh, Nayi Naveli, Pehla Pyaar */}
       <section aria-label="Trending Spotlight Premieres" className="bg-white border border-[#EAE2D5] rounded-3xl p-6 sm:p-8 space-y-6 shadow-xs">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-[#EAE2D5] pb-4">
           <div className="space-y-1">
@@ -548,10 +548,10 @@ const Home = () => {
               <span>Trending Spotlight Premieres</span>
             </div>
             <h2 className="text-xl sm:text-2xl font-extrabold text-[#1F2937] tracking-tight">
-              Spotlight Premieres: Ramayana, Drishyam, Udta Teer, Hanuman Ansh, Nayi Naveli & Pehla Pyaar
+              Spotlight Premieres: Clayface, Hope, Ramayana, Drishyam, Udta Teer &amp; Pehla Pyaar
             </h2>
             <p className="text-xs text-[#6B7280]">
-              Verified cast details, high-definition official 4K trailers, and real-time seat reservation.
+              Verified cast details, high-definition official 4K trailers, and real-time seat reservation for blockbuster premieres.
             </p>
           </div>
           <span className="text-xs font-extrabold text-[#065F46] bg-gradient-to-r from-[#ECFDF5] to-[#D1FAE5] border border-[#A7F3D0] px-3.5 py-1.5 rounded-xl self-start sm:self-auto shadow-xs">
@@ -566,15 +566,24 @@ const Home = () => {
               className="bg-[#FFF9F0] border border-[#EAE2D5] hover:border-[#E63946]/40 rounded-2xl overflow-hidden flex flex-col justify-between shadow-xs transition-all duration-300 group hover:-translate-y-1 hover:shadow-md"
             >
               <div>
-                {/* 16:9 Trailer Video & Poster Header - Full Canvas Edge-to-Edge */}
-                <div className="relative aspect-video w-full overflow-hidden bg-[#FAF6EE]">
+                {/* Dual-Layer Cinema Poster Header: Ambient Backdrop + Crisp Centered Thumbnail */}
+                <div className="relative aspect-video w-full overflow-hidden bg-gradient-to-b from-[#1A1D20] to-[#2B2B2B] flex items-center justify-center">
+                  {/* Atmospheric blurred ambient backdrop */}
+                  <img
+                    src={resolveMoviePoster(spot.title, spot.posterUrl || spot.backdropUrl)}
+                    alt=""
+                    aria-hidden="true"
+                    className="absolute inset-0 w-full h-full object-cover filter blur-md opacity-35 scale-110 pointer-events-none"
+                  />
+
+                  {/* Crisp, clear uncropped theatrical thumbnail poster */}
                   <img
                     src={resolveMoviePoster(spot.title, spot.posterUrl || spot.backdropUrl)}
                     alt={spot.title}
                     referrerPolicy="no-referrer"
                     loading="lazy"
                     decoding="async"
-                    className="w-full h-full object-cover object-center group-hover:scale-105 transition-transform duration-500 will-change-transform"
+                    className="relative z-10 h-full max-w-full object-contain group-hover:scale-105 transition-transform duration-500 will-change-transform shadow-lg"
                     onError={(e) => {
                       const fallback = getFallbackMoviePoster(spot.title, e.currentTarget.src);
                       if (fallback && fallback !== e.currentTarget.src) {
@@ -593,13 +602,13 @@ const Home = () => {
                       backfaceVisibility: 'hidden'
                     }}
                   />
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent" />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent pointer-events-none z-10" />
 
                   {/* Play Trailer Overlay Button */}
                   <button
                     type="button"
                     onClick={() => setTrailerModal({ isOpen: true, movie: spot })}
-                    className="absolute inset-0 m-auto w-12 h-12 rounded-full bg-[#E63946] hover:bg-[#D62839] text-white flex items-center justify-center transition-all shadow-md transform scale-90 group-hover:scale-100 cursor-pointer"
+                    className="absolute inset-0 m-auto w-12 h-12 rounded-full bg-[#E63946] hover:bg-[#D62839] text-white flex items-center justify-center transition-all shadow-md transform scale-90 group-hover:scale-100 cursor-pointer z-20"
                     title={`Watch Official ${spot.title} Trailer`}
                   >
                     <Play className="w-5 h-5 fill-white ml-0.5" />
@@ -787,7 +796,6 @@ const Home = () => {
                 </select>
               </div>
             </div>
-          </div>
 
         {/* Dedicated Minimum Rating Slider & Dropdown Control */}
         <div className="bg-white border border-[#EAE2D5] rounded-2xl p-3.5 sm:p-4 space-y-3 shadow-xs">
