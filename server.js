@@ -16,7 +16,12 @@ if (!process.env.JWT_SECRET || process.env.JWT_SECRET.length < 32) {
 const PORT = parseInt(process.env.PORT || '3000', 10);
 const isProduction = process.env.NODE_ENV === 'production';
 
-async function start() {
+// Cache the app instance for serverless environments (like Vercel)
+let cachedApp = null;
+
+async function createApp() {
+  if (cachedApp) return cachedApp;
+
   const app = express();
   app.set('trust proxy', 1);
 
@@ -72,7 +77,7 @@ async function start() {
       res.sendFile(path.join(clientDist, 'index.html'));
     });
   } else {
-    // Mount Vite dev server middleware
+    // Mount Vite dev server middleware (only if not in serverless production)
     try {
       const { createServer: createViteServer } = require('vite');
       const vite = await createViteServer({
@@ -92,8 +97,25 @@ async function start() {
     }
   }
 
-  app.listen(PORT, '0.0.0.0', () => {
-    console.log(`[iMovies] Server running on http://0.0.0.0:${PORT}`);
+  cachedApp = app;
+  return app;
+}
+
+// Export for Vercel Serverless Functions
+module.exports = async (req, res) => {
+  const app = await createApp();
+  return app(req, res);
+};
+
+// Local development server startup
+if (process.env.NODE_ENV !== 'production') {
+  createApp().then(app => {
+    app.listen(PORT, '0.0.0.0', () => {
+      console.log(`[iMovies] Server running on http://0.0.0.0:${PORT}`);
+    });
+  }).catch((err) => {
+    console.error('[iMovies] Fatal server startup error:', err);
+    process.exit(1);
   });
 }
 
@@ -103,9 +125,4 @@ process.on('uncaughtException', (err) => {
 
 process.on('unhandledRejection', (reason) => {
   console.warn('[iMovies] Process unhandled rejection:', reason?.message || reason);
-});
-
-start().catch((err) => {
-  console.error('[iMovies] Fatal server startup error:', err);
-  process.exit(1);
 });

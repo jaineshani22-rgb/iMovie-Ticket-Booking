@@ -9,6 +9,7 @@
     "start": "node server.js",
     "lint": "node --check server.js && node --check server/server.js",
     "test": "node --test server/test/security.test.js"
+    
   },
   "dependencies": {
     "axios": "^1.7.2",
