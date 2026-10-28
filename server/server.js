@@ -1,6 +1,7 @@
 const express = require('express');
 const dotenv = require('dotenv');
 const cors = require('cors');
+const path = require('path');
 const mongoose = require('mongoose');
 const connectDB = require('./config/db');
 const Booking = require('./models/Booking');
@@ -17,8 +18,39 @@ app.set('trust proxy', 1);
 app.use(cors());
 app.use(express.json());
 
+// Serverless DB connection middleware: ensure cached DB connection is active
+let isConnecting = false;
+app.use(async (req, res, next) => {
+  if (mongoose.connection.readyState === 0 && !isConnecting) {
+    isConnecting = true;
+    try {
+      await connectDB();
+      if (mongoose.connection.readyState === 1) {
+        try {
+          await Booking.init();
+        } catch {
+          // ignore
+        }
+      }
+    } catch {
+      // Graceful fallback to memory store
+    } finally {
+      isConnecting = false;
+    }
+  }
+  next();
+});
+
 app.get('/', (req, res) => {
   res.json({ message: 'Welcome to iMovies API - Server is running' });
+});
+
+app.get('/api/health', (req, res) => {
+  res.json({
+    status: 'ok',
+    database: mongoose.connection.readyState === 1 ? 'connected' : 'in-memory-fallback',
+    time: new Date().toISOString()
+  });
 });
 
 app.use('/api/auth', require('./routes/authRoutes'));
@@ -27,13 +59,19 @@ app.use('/api/cinemas', require('./routes/cinemaRoutes'));
 app.use('/api/bookings', require('./routes/bookingRoutes'));
 app.use('/api/images', require('./routes/imageRoutes'));
 
+// Serve movie posters statically if requested through API server
+app.use('/posters', express.static(path.resolve(__dirname, '../client/public/posters'), {
+  maxAge: '7d',
+  immutable: true
+}));
+
 app.use((err, req, res, next) => {
   if (
     err.name === 'MongooseError' ||
     err.name === 'MongoNetworkError' ||
     (err.message && err.message.includes('buffering timed out'))
   ) {
-    console.warn('[AI Studio] Database offline — returning fallback response');
+    console.warn('[iMovies] Database offline — returning fallback response');
     if (req.method === 'GET') {
       return res.json(req.path.endsWith('s') || req.path.endsWith('s/') ? [] : {});
     }
@@ -42,7 +80,7 @@ app.use((err, req, res, next) => {
   next(err);
 });
 
-const PORT = process.env.PORT || 3000;
+const PORT = parseInt(process.env.PORT || '3000', 10);
 
 const startServer = async () => {
   try {
@@ -60,7 +98,7 @@ const startServer = async () => {
       server.once('listening', resolve);
       server.once('error', reject);
     });
-    console.log(`iMovies Server running on http://0.0.0.0:${PORT}`);
+    console.log(`[iMovies] Server listening on http://0.0.0.0:${PORT}`);
   } catch (error) {
     console.error(`Failed to start iMovies Server: ${error.message}`);
     await mongoose.disconnect();
@@ -68,8 +106,11 @@ const startServer = async () => {
   }
 };
 
-if (require.main === module) {
+// Keep app.listen only for standalone process execution (local dev / Docker / Cloud Run)
+// On Vercel, requests are routed to the exported serverless app
+if (require.main === module || (process.env.NODE_ENV !== 'production' && !process.env.VERCEL && !process.env.AWS_LAMBDA_FUNCTION_NAME)) {
   startServer();
 }
 
 module.exports = app;
+module.exports.default = app;

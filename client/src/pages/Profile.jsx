@@ -105,6 +105,15 @@ const Profile = () => {
             <Settings className="w-4 h-4 text-[#E63946]" />
             <span>Settings</span>
           </Link>
+          <button
+            type="button"
+            onClick={handleLogout}
+            className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-[#FDECEC] hover:bg-rose-100 border border-rose-200 text-[#E63946] hover:text-[#D62839] text-xs font-bold transition-all shadow-sm cursor-pointer"
+            title="Log out of this device"
+          >
+            <LogOut className="w-4 h-4 text-[#E63946]" />
+            <span>Sign Out</span>
+          </button>
         </div>
       </div>
 

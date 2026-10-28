@@ -3,6 +3,7 @@ import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { AuthProvider } from './context/AuthContext';
 import { LocationProvider } from './context/LocationContext';
 import Navbar from './components/Navbar';
+import BottomNav from './components/BottomNav';
 import ProtectedRoute from './components/ProtectedRoute';
 import Home from './pages/Home';
 import Login from './pages/Login';
@@ -20,7 +21,7 @@ const App = () => {
         <Router>
           <div className="min-h-screen bg-[#FFF9F0] text-[#2B2B2B] flex flex-col selection:bg-[#FFC93C] selection:text-[#2B2B2B]">
             <Navbar />
-            <main className="flex-1">
+            <main className="flex-1 pb-20 sm:pb-0">
               <Routes>
                 <Route path="/" element={<Home />} />
                 <Route path="/cinemas" element={<Cinemas />} />
@@ -61,6 +62,7 @@ const App = () => {
                 <p>© {new Date().getFullYear()} iMovies. 4K IMAX Laser · Dolby Atmos · Reserve Suites · Cinema Verified.</p>
               </div>
             </footer>
+            <BottomNav />
           </div>
         </Router>
       </LocationProvider>

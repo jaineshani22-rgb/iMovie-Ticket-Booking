@@ -2,7 +2,10 @@ const User = require('../models/User');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const crypto = require('crypto');
+const mongoose = require('mongoose');
 const inMemoryStore = require('../config/inMemoryStore');
+
+const isMongoConnected = () => Boolean(mongoose.connection && mongoose.connection.readyState === 1);
 
 const getJwtSecret = () => process.env.JWT_SECRET || 'imovies_super_secret_jwt_key_that_is_at_least_32_characters_long';
 
@@ -68,63 +71,63 @@ exports.registerUser = async (req, res) => {
       return res.status(400).json({ message: 'Password must be at least 6 characters long' });
     }
 
-    let userExists = null;
-    let usingFallback = false;
+    const cleanEmail = email.toLowerCase().trim();
 
-    try {
-      userExists = await User.findOne({ email: email.toLowerCase().trim() });
-    } catch (err) {
-      usingFallback = true;
-      userExists = inMemoryStore.findUserByEmail(email.trim());
+    // Check if user already exists in memory or MongoDB
+    let userExists = inMemoryStore.findUserByEmail(cleanEmail);
+    if (!userExists) {
+      try {
+        userExists = await User.findOne({ email: cleanEmail });
+      } catch (err) {
+        // Fall back to inMemoryStore result
+      }
     }
 
     if (userExists) {
-      return res.status(400).json({ message: 'An account with this email already exists. Please sign in.' });
+      return res.status(400).json({
+        message: 'An account with this email already exists. Please sign in.',
+        emailExists: true,
+        existingEmail: cleanEmail
+      });
     }
 
     const salt = await bcrypt.genSalt(10);
     const hashedPassword = await bcrypt.hash(password, salt);
 
-    let user;
-    if (!usingFallback) {
-      try {
-        user = await User.create({
-          username: username.trim(),
-          email: email.toLowerCase().trim(),
-          password: hashedPassword,
-          role: 'user',
-          preferredCountry: preferredCountry || 'US',
-          preferredCity: preferredCity || 'New York'
-        });
-      } catch (err) {
-        user = inMemoryStore.createUser({
-          username: username.trim(),
-          email: email.toLowerCase().trim(),
-          password: hashedPassword,
-          role: 'user',
-          preferredCountry: preferredCountry || 'US',
-          preferredCity: preferredCity || 'New York'
-        });
-      }
-    } else {
-      user = inMemoryStore.createUser({
+    // Always create user in inMemoryStore so deployed instance has instant local cache
+    const memUser = inMemoryStore.createUser({
+      username: username.trim(),
+      email: cleanEmail,
+      password: hashedPassword,
+      role: 'user',
+      preferredCountry: preferredCountry || 'IN',
+      preferredCity: preferredCity || 'Indore'
+    });
+
+    let dbUser = null;
+    try {
+      dbUser = await User.create({
         username: username.trim(),
-        email: email.toLowerCase().trim(),
+        email: cleanEmail,
         password: hashedPassword,
         role: 'user',
-        preferredCountry: preferredCountry || 'US',
-        preferredCity: preferredCity || 'New York'
+        preferredCountry: preferredCountry || 'IN',
+        preferredCity: preferredCity || 'Indore'
       });
+    } catch (err) {
+      // Ignored if offline; inMemoryStore user is active
     }
 
+    const activeUser = dbUser || memUser;
+
     return res.status(201).json({
-      _id: user._id,
-      username: user.username,
-      email: user.email,
-      role: user.role,
-      preferredCountry: user.preferredCountry || 'US',
-      preferredCity: user.preferredCity || 'New York',
-      token: generateToken(user)
+      _id: activeUser._id,
+      username: activeUser.username,
+      email: activeUser.email,
+      role: activeUser.role,
+      preferredCountry: activeUser.preferredCountry || 'IN',
+      preferredCity: activeUser.preferredCity || 'Indore',
+      token: generateToken(activeUser)
     });
   } catch (error) {
     return res.status(500).json({ message: 'Server error during registration', error: error.message });
@@ -149,21 +152,38 @@ exports.loginUser = async (req, res) => {
       return res.status(429).json({ message: lockMessage });
     }
 
-    let user = null;
-    try {
-      user = await User.findOne({ email: trimmedEmail });
-    } catch (err) {
-      user = inMemoryStore.findUserByEmail(trimmedEmail);
-    }
+    // 1. Check inMemoryStore first (fastest and always available in deployment)
+    let user = inMemoryStore.findUserByEmail(trimmedEmail);
 
-    // Also check in-memory store if not found in db
-    if (!user) {
-      user = inMemoryStore.findUserByEmail(trimmedEmail);
+    // 2. If not found in memory, query MongoDB if connected
+    if (!user && isMongoConnected()) {
+      try {
+        const mongoUser = await User.findOne({ email: trimmedEmail });
+        if (mongoUser) {
+          user = mongoUser;
+          // Sync into inMemoryStore for fast subsequent lookups
+          inMemoryStore.createUser({
+            _id: mongoUser._id,
+            username: mongoUser.username,
+            email: mongoUser.email,
+            password: mongoUser.password,
+            role: mongoUser.role,
+            preferredCountry: mongoUser.preferredCountry || 'IN',
+            preferredCity: mongoUser.preferredCity || 'Indore'
+          });
+        }
+      } catch (err) {
+        // Fall back
+      }
     }
 
     if (!user) {
       recordFailedAttempt(rateLimitKey);
-      return res.status(401).json({ message: 'Invalid email or password' });
+      return res.status(401).json({
+        message: 'Invalid email or password',
+        userNotFound: true,
+        attemptedEmail: trimmedEmail
+      });
     }
 
     const isMatch = await bcrypt.compare(password, user.password);
@@ -179,8 +199,8 @@ exports.loginUser = async (req, res) => {
       username: user.username,
       email: user.email,
       role: user.role,
-      preferredCountry: user.preferredCountry || 'US',
-      preferredCity: user.preferredCity || 'New York',
+      preferredCountry: user.preferredCountry || 'IN',
+      preferredCity: user.preferredCity || 'Indore',
       token: generateToken(user)
     });
   } catch (error) {
