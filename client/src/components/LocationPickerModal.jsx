@@ -1,5 +1,17 @@
 import React, { useState } from 'react';
-import { Globe, MapPin, Check, X, Search, Building, Compass, Layers, ChevronRight, AlertCircle } from 'lucide-react';
+import {
+  Globe,
+  MapPin,
+  Check,
+  X,
+  Search,
+  Building,
+  Compass,
+  Layers,
+  ChevronRight,
+  AlertCircle,
+  Sparkles
+} from 'lucide-react';
 import { useLocationContext } from '../context/LocationContext';
 import { LOCATION_HIERARCHY } from '../data/locations';
 
@@ -29,8 +41,37 @@ const LocationPickerModal = ({ isOpen, onClose }) => {
   const statesList = currentCountryObj.states || [];
   const currentCitiesList = currentState?.cities || [];
 
-  // Filter countries or states or cities based on search
+  // Instant quick matches across all countries, states and cities
+  const searchMatches = search.trim().length >= 2 ? (() => {
+    const q = search.trim().toLowerCase();
+    const results = [];
+    for (const c of LOCATION_HIERARCHY) {
+      for (const st of (c.states || [])) {
+        for (const ct of (st.cities || [])) {
+          if (
+            ct.toLowerCase().includes(q) ||
+            st.name.toLowerCase().includes(q) ||
+            `${ct} ${st.name}`.toLowerCase().includes(q)
+          ) {
+            results.push({
+              city: ct,
+              state: st.name,
+              countryCode: c.code,
+              countryName: c.name,
+              currency: c.currency,
+              flag: c.flag
+            });
+            if (results.length >= 8) return results;
+          }
+        }
+      }
+    }
+    return results;
+  })() : [];
+
+  // Filter countries based on search
   const filteredCountries = LOCATION_HIERARCHY.filter((c) => {
+    if (!search.trim()) return true;
     const q = search.toLowerCase();
     return (
       c.name.toLowerCase().includes(q) ||
@@ -39,6 +80,20 @@ const LocationPickerModal = ({ isOpen, onClose }) => {
         st.name.toLowerCase().includes(q) || st.cities.some((ct) => ct.toLowerCase().includes(q))
       )
     );
+  });
+
+  // Filter states based on search
+  const filteredStates = statesList.filter((st) => {
+    if (!search.trim()) return true;
+    const q = search.toLowerCase();
+    return st.name.toLowerCase().includes(q) || st.cities.some((ct) => ct.toLowerCase().includes(q));
+  });
+
+  // Filter cities based on search
+  const filteredCities = currentCitiesList.filter((ct) => {
+    if (!search.trim()) return true;
+    const q = search.toLowerCase();
+    return ct.toLowerCase().includes(q);
   });
 
   return (
@@ -124,13 +179,42 @@ const LocationPickerModal = ({ isOpen, onClose }) => {
             <Search className="w-4 h-4 text-[#9CA3AF] absolute left-3.5 top-1/2 -translate-y-1/2" />
             <input
               type="text"
-              placeholder="Search country, state, or city name..."
+              placeholder="Search country, state, or city name (e.g. Indore)..."
               value={search}
               onChange={(e) => setSearch(e.target.value)}
               className="w-full bg-[#FFF9F0] border border-[#DCD3C5] rounded-xl pl-10 pr-4 py-2 text-xs text-[#2B2B2B] placeholder-[#9CA3AF] focus:outline-none focus:border-[#E63946] focus:bg-white"
             />
           </div>
         </div>
+
+        {/* 1-Click Instant Search Match Bar */}
+        {searchMatches.length > 0 && (
+          <div className="p-3 bg-[#FFF6DC] border-b border-[#FFEDB0] space-y-1.5 animate-in fade-in">
+            <div className="text-[11px] font-bold text-[#7A5B14] uppercase tracking-wider flex items-center gap-1.5">
+              <Sparkles className="w-3.5 h-3.5 text-[#E5B129]" />
+              <span>Matching Locations (Click to jump immediately):</span>
+            </div>
+            <div className="flex flex-wrap gap-1.5">
+              {searchMatches.map((m) => (
+                <button
+                  key={`${m.countryCode}_${m.state}_${m.city}`}
+                  type="button"
+                  onClick={() => {
+                    setCountry(m.countryCode);
+                    setState(m.state);
+                    setCity(m.city);
+                    setSearch('');
+                  }}
+                  className="px-3 py-1.5 rounded-xl bg-white hover:bg-[#FFC93C] border border-[#FFEDB0] text-[#2B2B2B] text-xs font-semibold flex items-center gap-1.5 shadow-2xs transition-colors cursor-pointer"
+                >
+                  <span>{m.flag}</span>
+                  <span className="font-bold text-[#E63946]">{m.city}</span>
+                  <span className="text-[10px] text-[#6B7280]">({m.state})</span>
+                </button>
+              ))}
+            </div>
+          </div>
+        )}
 
         {/* 3-Step Selection Scrollable Container */}
         <div className="p-6 overflow-y-auto space-y-6 flex-1 text-xs scrollbar-thin bg-white">
@@ -180,11 +264,11 @@ const LocationPickerModal = ({ isOpen, onClose }) => {
                 <span>Select State / Province / Region ({currentCountryObj.name})</span>
               </label>
               <span className="text-[10px] text-[#6B7280]">
-                {statesList.length} regions
+                {filteredStates.length} regions
               </span>
             </div>
             <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
-              {statesList.map((st) => {
+              {filteredStates.map((st) => {
                 const isSelected = st.name.toLowerCase() === (state || '').toLowerCase();
                 return (
                   <button
@@ -216,9 +300,9 @@ const LocationPickerModal = ({ isOpen, onClose }) => {
                 <span>Select City in {state || currentCountryObj.name}</span>
               </label>
             </div>
-            {currentCitiesList.length > 0 ? (
+            {filteredCities.length > 0 ? (
               <div className="flex flex-wrap gap-2">
-                {currentCitiesList.map((ct) => {
+                {filteredCities.map((ct) => {
                   const isSelected = ct.toLowerCase() === (city || '').toLowerCase();
                   return (
                     <button

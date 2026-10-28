@@ -184,7 +184,7 @@ const MovieSearchBar = ({ className = '', onSearchSubmit }) => {
             onFocus={() => setIsOpen(true)}
             onKeyDown={handleKeyDown}
             placeholder="Search movies by title, actor, or genre..."
-            className="w-full bg-[#FFF9F0] hover:bg-[#FFF6DC] focus:bg-white text-[#2B2B2B] text-xs sm:text-sm font-medium pl-11 pr-20 py-2.5 sm:py-3 rounded-2xl border border-[#EAE2D5] focus:border-[#E63946] focus:ring-2 focus:ring-[#FFC93C]/30 focus:outline-none transition-all placeholder:text-[#9CA3AF] shadow-xs"
+            className="w-full bg-[#FFF9F0] hover:bg-[#FFF6DC] focus:bg-white text-[#2B2B2B] text-xs sm:text-sm font-medium pl-11 pr-10 py-2.5 sm:py-3 rounded-2xl border border-[#EAE2D5] focus:border-[#E63946] focus:ring-2 focus:ring-[#FFC93C]/30 focus:outline-none transition-all placeholder:text-[#9CA3AF] shadow-xs"
           />
 
           <div className="absolute right-3 top-1/2 -translate-y-1/2 flex items-center gap-1.5">
@@ -210,12 +210,7 @@ const MovieSearchBar = ({ className = '', onSearchSubmit }) => {
               >
                 <X className="w-4 h-4" />
               </button>
-            ) : (
-              <span className="hidden md:inline-flex items-center gap-1 text-[10px] font-mono font-semibold text-[#9CA3AF] bg-[#FAF5EE] border border-[#EAE2D5] px-2 py-0.5 rounded-md shadow-2xs">
-                <span>Press</span>
-                <kbd className="font-sans font-bold text-[#E63946]">/</kbd>
-              </span>
-            )}
+            ) : null}
           </div>
         </div>
       </form>

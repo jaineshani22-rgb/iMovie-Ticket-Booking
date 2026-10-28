@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
-import { Film, Ticket, LogOut, User, Crown, Globe, Building, Search, Compass, Settings } from 'lucide-react';
+import { Film, Ticket, LogOut, User, Crown, Globe, Building, Search, Compass, Settings, Sparkles } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import { useLocationContext } from '../context/LocationContext';
 import LocationPickerModal from './LocationPickerModal';
@@ -105,8 +105,8 @@ const Navbar = () => {
             <MovieSearchBar />
           </div>
 
-          {/* Right Section: Mobile Search Toggle + Location Selector & Profile */}
-          <div className="flex items-center gap-2 sm:gap-3 shrink-0">
+          {/* Right Section: Location Selector, Search & Auth */}
+          <div className="flex items-center gap-1.5 sm:gap-2.5 shrink-0">
             {/* Mobile Search Toggle */}
             <button
               type="button"
@@ -121,7 +121,7 @@ const Navbar = () => {
               <Search className="w-4 h-4" />
             </button>
 
-            {/* Quick Live Location Button */}
+            {/* Quick Live Location Button (Desktop only, mobile has it inside location modal) */}
             <button
               type="button"
               onClick={async () => {
@@ -133,7 +133,7 @@ const Navbar = () => {
               }}
               disabled={detectingLocation}
               title="Fetch live location automatically"
-              className="w-8 h-8 rounded-xl bg-white hover:bg-[#FFF6DC] border border-[#EAE2D5] text-[#E63946] flex items-center justify-center transition-all shadow-xs cursor-pointer disabled:opacity-50"
+              className="hidden sm:flex w-8 h-8 rounded-xl bg-white hover:bg-[#FFF6DC] border border-[#EAE2D5] text-[#E63946] items-center justify-center transition-all shadow-xs cursor-pointer disabled:opacity-50"
             >
               <Compass className={`w-3.5 h-3.5 ${detectingLocation ? 'animate-spin' : ''}`} />
             </button>
@@ -142,11 +142,11 @@ const Navbar = () => {
             <button
               type="button"
               onClick={() => setShowLocationModal(true)}
-              className="flex items-center gap-1.5 text-xs text-[#2B2B2B] bg-[#FFF9F0] hover:bg-[#FFF6DC] border border-[#EAE2D5] px-2.5 sm:px-3 py-1.5 rounded-xl transition-all shadow-xs cursor-pointer"
+              className="flex items-center gap-1 sm:gap-1.5 text-xs text-[#2B2B2B] bg-[#FFF9F0] hover:bg-[#FFF6DC] border border-[#EAE2D5] px-2 sm:px-3 py-1.5 rounded-xl transition-all shadow-xs cursor-pointer"
               title={`Change Country, State & City (${city}, ${state || ''}, ${activeCountry?.name || ''})`}
             >
-              <Globe className="w-3.5 h-3.5 text-[#E63946]" aria-hidden="true" />
-              <span className="font-bold text-[#2B2B2B] max-w-[80px] sm:max-w-[100px] truncate">
+              <Globe className="w-3.5 h-3.5 text-[#E63946] shrink-0" aria-hidden="true" />
+              <span className="font-bold text-[#2B2B2B] max-w-[65px] sm:max-w-[100px] truncate">
                 {city}
               </span>
               <span className="text-[10px] font-mono text-[#D62839] font-bold hidden xs:inline">
@@ -158,7 +158,7 @@ const Navbar = () => {
               <div className="flex items-center gap-1.5 sm:gap-2">
                 <Link
                   to="/profile"
-                  className="flex items-center gap-1.5 sm:gap-2 text-xs text-[#2B2B2B] bg-white hover:bg-[#FFF6DC] border border-[#EAE2D5] px-2.5 sm:px-3 py-1.5 rounded-xl shadow-xs transition-colors"
+                  className="flex items-center gap-1.5 text-xs text-[#2B2B2B] bg-white hover:bg-[#FFF6DC] border border-[#EAE2D5] px-2 sm:px-3 py-1.5 rounded-xl shadow-xs transition-colors"
                   title="View Profile"
                 >
                   {user.role === 'admin' ? (
@@ -166,37 +166,53 @@ const Navbar = () => {
                   ) : (
                     <User className="w-3.5 h-3.5 text-[#E63946] shrink-0" />
                   )}
-                  <span className="font-bold text-[#2B2B2B] truncate max-w-[70px] sm:max-w-[110px]">
-                    {user.username}
+                  <span className="font-bold text-[#2B2B2B] truncate max-w-[55px] sm:max-w-[110px]">
+                    {user.username.split(' ')[0]}
                   </span>
                 </Link>
-
                 <Link
                   to="/settings"
                   title="Account Settings"
                   aria-label="Account Settings"
-                  className="w-8 h-8 sm:w-9 sm:h-9 flex items-center justify-center rounded-xl text-[#6B7280] hover:text-[#E63946] bg-white hover:bg-[#FFF6DC] border border-[#EAE2D5] transition-colors"
+                  className="hidden sm:flex w-8 h-8 sm:w-9 sm:h-9 items-center justify-center rounded-xl text-[#6B7280] hover:text-[#E63946] bg-white hover:bg-[#FFF6DC] border border-[#EAE2D5] transition-colors"
                 >
                   <Settings className="w-4 h-4" />
                 </Link>
+                <button
+                  type="button"
+                  onClick={handleLogout}
+                  className="flex items-center gap-1 text-xs font-bold text-[#E63946] hover:text-[#D62839] bg-[#FDECEC] hover:bg-[#FCD7D7] border border-[#FCD7D7] px-2.5 sm:px-3 py-1.5 rounded-xl transition-all shadow-2xs cursor-pointer"
+                  title="Sign Out of iMovies"
+                >
+                  <LogOut className="w-3.5 h-3.5 text-[#E63946]" />
+                  <span className="hidden xs:inline">Sign Out</span>
+                </button>
               </div>
             ) : (
-              <div className="flex items-center gap-2">
+              <div className="flex items-center gap-1.5 sm:gap-2">
                 <Link
                   to="/login"
-                  className="text-xs sm:text-sm font-bold text-[#2B2B2B] hover:text-[#E63946] bg-white hover:bg-[#FFF6DC] border border-[#EAE2D5] px-3 sm:px-3.5 py-1.5 rounded-xl transition-all whitespace-nowrap shadow-xs inline-flex items-center gap-1.5"
-                  title="Sign In to your account"
+                  className="text-xs sm:text-sm font-bold text-white bg-[#E63946] hover:bg-[#D62839] px-3 sm:px-3.5 py-1.5 rounded-xl transition-all whitespace-nowrap shadow-sm shadow-[#E63946]/20 inline-flex items-center gap-1.5 cursor-pointer"
+                  title="Sign In with your existing account"
                 >
-                  <User className="w-3.5 h-3.5 text-[#E63946]" />
+                  <User className="w-3.5 h-3.5 text-white" />
                   <span>Sign In</span>
                 </Link>
                 <Link
-                  to="/settings"
-                  className="text-xs sm:text-sm font-bold bg-[#E63946] hover:bg-[#D62839] text-white px-3 sm:px-4 py-1.5 rounded-xl shadow-sm shadow-[#E63946]/20 transition-all whitespace-nowrap inline-flex items-center gap-1.5"
-                  title="Settings"
+                  to="/register"
+                  className="hidden xs:inline-flex text-xs sm:text-sm font-bold bg-white hover:bg-[#FFF6DC] text-[#2B2B2B] hover:text-[#E63946] border border-[#EAE2D5] px-2.5 sm:px-3 py-1.5 rounded-xl shadow-xs transition-all whitespace-nowrap items-center gap-1 cursor-pointer"
+                  title="Create New Member Account"
                 >
-                  <Settings className="w-3.5 h-3.5 text-white" />
-                  <span>Settings</span>
+                  <Sparkles className="w-3.5 h-3.5 text-[#E5B129]" />
+                  <span>Create Account</span>
+                </Link>
+                <Link
+                  to="/settings"
+                  title="Settings"
+                  aria-label="Settings"
+                  className="hidden md:flex w-8 h-8 sm:w-9 sm:h-9 items-center justify-center rounded-xl text-[#6B7280] hover:text-[#E63946] bg-white hover:bg-[#FFF6DC] border border-[#EAE2D5] transition-colors"
+                >
+                  <Settings className="w-4 h-4" />
                 </Link>
               </div>
             )}
