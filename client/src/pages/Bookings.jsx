@@ -37,7 +37,7 @@ const Bookings = () => {
       const { data } = await API.get('/bookings/user');
       setBookings(data || []);
     } catch (error) {
-      console.error('Error fetching user bookings:', error);
+      console.warn('Notice fetching user bookings:', error?.message || error);
     } finally {
       setLoading(false);
     }

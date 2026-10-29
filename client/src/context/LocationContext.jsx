@@ -49,7 +49,7 @@ export const LocationProvider = ({ children }) => {
           setSelectedCinema(null);
         }
       } catch (err) {
-        console.error('Failed to load cinemas for location:', err);
+        console.warn('Notice loading cinemas for location:', err?.message || err);
       } finally {
         setLoadingCinemas(false);
       }
@@ -139,36 +139,13 @@ export const LocationProvider = ({ children }) => {
   // IP Geolocation fallback query
   const detectFromIP = async () => {
     try {
-      // First try internal server endpoint which bypasses adblockers
+      // Use internal server endpoint which handles IP resolution safely on the backend
       const { data } = await API.get('/cinemas/location/detect');
       if (data && (data.city || data.country)) {
         return data;
       }
     } catch {
-      // Fall through to public ipwho.is client query
-    }
-
-    try {
-      const controller = new AbortController();
-      const timeoutId = setTimeout(() => controller.abort(), 3500);
-      const res = await fetch('https://ipwho.is/', { signal: controller.signal });
-      clearTimeout(timeoutId);
-      if (res.ok) {
-        const data = await res.json();
-        if (data && data.success) {
-          const lat = data.latitude;
-          const lng = data.longitude;
-          const closest = (lat && lng) ? findClosestLocation(lat, lng) : null;
-          return {
-            country: data.country_code || closest?.country || 'IN',
-            countryName: data.country || 'India',
-            state: data.region || closest?.state || 'Maharashtra',
-            city: data.city || closest?.city || 'Mumbai'
-          };
-        }
-      }
-    } catch {
-      // Ignore
+      // Fallback
     }
 
     return null;
@@ -192,35 +169,7 @@ export const LocationProvider = ({ children }) => {
 
         const userLat = position.coords.latitude;
         const userLng = position.coords.longitude;
-        let detected = findClosestLocation(userLat, userLng);
-
-        // Attempt lightweight reverse geocode for exact local city name
-        try {
-          const controller = new AbortController();
-          const timeoutId = setTimeout(() => controller.abort(), 2000);
-          const res = await fetch(
-            `https://nominatim.openstreetmap.org/reverse?lat=${userLat}&lon=${userLng}&format=json`,
-            { signal: controller.signal }
-          );
-          clearTimeout(timeoutId);
-          if (res.ok) {
-            const geoData = await res.json();
-            const addr = geoData.address || {};
-            const code = (addr.country_code || '').toUpperCase();
-            const revCity = addr.city || addr.town || addr.village || addr.suburb || detected.city;
-            const revState = addr.state || detected.state;
-            if (code) {
-              detected = {
-                country: code,
-                state: revState,
-                city: revCity,
-                distanceKm: detected.distanceKm
-              };
-            }
-          }
-        } catch {
-          // geometric calculation is already accurate
-        }
+        const detected = findClosestLocation(userLat, userLng);
 
         return applyDetectedLocation(detected);
       } catch {

@@ -446,9 +446,9 @@ const NearbyCinemaFinder = ({ className = '', defaultExpandedCinema = true }) =>
                       </p>
                     ) : (
                       <div className="divide-y divide-[#EAE2D5]">
-                        {schedule.map(({ movie, showtimes, price }) => (
+                        {schedule.map(({ movie, showtimes, price }, schedIdx) => (
                           <div
-                            key={movie._id}
+                            key={`${movie._id || 'mov'}-${schedIdx}`}
                             className="py-3.5 first:pt-0 last:pb-0 flex flex-col md:flex-row md:items-center justify-between gap-3"
                           >
                             {/* Movie Info */}

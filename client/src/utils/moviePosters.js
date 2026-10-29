@@ -1,10 +1,10 @@
 export const KNOWN_POSTERS = {
   'avengers: doomsday': {
-    local: '/posters/avengers-doomsday.jpg',
+    local: 'https://image.tmdb.org/t/p/original/jzPwsojjFStf5lR5Nm07w2hH56G.jpg',
     remote: 'https://image.tmdb.org/t/p/original/jzPwsojjFStf5lR5Nm07w2hH56G.jpg'
   },
   'avengers doomsday': {
-    local: '/posters/avengers-doomsday.jpg',
+    local: 'https://image.tmdb.org/t/p/original/jzPwsojjFStf5lR5Nm07w2hH56G.jpg',
     remote: 'https://image.tmdb.org/t/p/original/jzPwsojjFStf5lR5Nm07w2hH56G.jpg'
   },
   'pehla pyaar dusri baar': {

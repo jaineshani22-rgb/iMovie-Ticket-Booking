@@ -385,7 +385,7 @@ const AuthCard = ({ initialMode = 'login' }) => {
           <Film className="w-6 h-6 stroke-[2.2]" />
         </div>
         <h2 className="text-xl sm:text-2xl font-black text-[#2B2B2B] tracking-tight">
-          {mode === 'login' ? 'VIP Lounge Sign In' : 'Join VIP Membership'}
+          {mode === 'login' ? 'Sign In' : 'Join Membership'}
         </h2>
         <p className="text-xs text-[#6B7280]">
           {mode === 'login'
