@@ -101,7 +101,7 @@ exports.getMovieReviews = async (req, res) => {
       canReview: hasBooked
     });
   } catch (error) {
-    console.error('Error fetching movie reviews:', error);
+    console.warn('Notice fetching movie reviews:', error?.message || error);
     return res.status(500).json({ message: 'Failed to retrieve reviews', error: error.message });
   }
 };
@@ -196,7 +196,7 @@ exports.submitReview = async (req, res) => {
       stats: updatedData.stats
     });
   } catch (error) {
-    console.error('Error submitting review:', error);
+    console.warn('Notice submitting review:', error?.message || error);
     return res.status(500).json({ message: 'Failed to submit review', error: error.message });
   }
 };

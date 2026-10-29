@@ -59,11 +59,15 @@ app.use('/api/cinemas', require('./routes/cinemaRoutes'));
 app.use('/api/bookings', require('./routes/bookingRoutes'));
 app.use('/api/images', require('./routes/imageRoutes'));
 
-// Serve movie posters statically if requested through API server
 app.use('/posters', express.static(path.resolve(__dirname, '../client/public/posters'), {
   maxAge: '7d',
   immutable: true
 }));
+app.use('/posters', (req, res) => {
+  res.redirect('https://images.unsplash.com/photo-1489599849927-2ee91cede3ba?w=800&auto=format&fit=crop&q=80');
+});
+
+app.get('/favicon.ico', (req, res) => res.status(204).end());
 
 app.use((err, req, res, next) => {
   if (

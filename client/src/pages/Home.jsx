@@ -182,7 +182,7 @@ const Home = () => {
       });
       fetchMovies();
     } catch (error) {
-      console.error('Failed to add movie', error);
+      console.warn('Notice adding movie:', error?.message || error);
     } finally {
       setSubmitting(false);
     }
@@ -425,7 +425,7 @@ const Home = () => {
               try {
                 await detectCurrentLocation();
               } catch (e) {
-                console.error(e);
+                console.warn('Notice detecting location:', e?.message || e);
               }
             }}
             disabled={detectingLocation}
@@ -577,6 +577,12 @@ const Home = () => {
                     src={resolveMoviePoster(spot.title, spot.posterUrl || spot.backdropUrl)}
                     alt=""
                     aria-hidden="true"
+                    loading="lazy"
+                    decoding="async"
+                    referrerPolicy="no-referrer"
+                    onError={(e) => {
+                      e.currentTarget.src = DEFAULT_FALLBACK_POSTER;
+                    }}
                     className="absolute inset-0 w-full h-full object-cover filter blur-md opacity-35 scale-110 pointer-events-none"
                   />
 

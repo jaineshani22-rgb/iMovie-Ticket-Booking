@@ -52,6 +52,7 @@ const App = () => {
                     </ProtectedRoute>
                   }
                 />
+                <Route path="*" element={<Home />} />
               </Routes>
             </main>
             <footer className="border-t border-[#EAE2D5] py-8 bg-white text-xs text-[#6B7280] text-center shadow-xs">

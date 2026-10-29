@@ -128,7 +128,7 @@ const Navbar = () => {
                 try {
                   await detectCurrentLocation();
                 } catch (e) {
-                  console.error(e);
+                  console.warn('Notice detecting location:', e?.message || e);
                 }
               }}
               disabled={detectingLocation}

@@ -76,7 +76,7 @@ const MovieDetails = () => {
           setShowTime(data.showtimes.includes('06:30 PM') ? '06:30 PM' : data.showtimes[0]);
         }
       } catch (error) {
-        console.error('Failed to load movie:', error);
+        console.warn('Notice loading movie:', error?.message || error);
       } finally {
         setLoading(false);
       }
@@ -95,7 +95,7 @@ const MovieDetails = () => {
         setOccupiedSeats(data.occupiedSeats || []);
         setSelectedSeats([]);
       } catch (error) {
-        console.error('Error fetching occupied seats:', error);
+        console.warn('Notice fetching occupied seats:', error?.message || error);
       }
     };
     fetchOccupied();
@@ -230,7 +230,7 @@ const MovieDetails = () => {
         {movie.backdropUrl && (
           <div
             className="absolute inset-0 bg-cover bg-center opacity-10 pointer-events-none filter blur-[1px]"
-            style={{ backgroundImage: `url(${movie.backdropUrl})` }}
+            style={{ backgroundImage: `url(${resolveMoviePoster(movie?.title, movie.backdropUrl)})` }}
           />
         )}
 

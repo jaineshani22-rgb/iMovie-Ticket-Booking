@@ -66,12 +66,16 @@ router.get('/proxy', (req, res) => {
     });
   });
 
-  request.on('error', (err) => {
-    res.status(502).send('Error proxying image: ' + err.message);
+  request.on('error', () => {
+    if (!res.headersSent) {
+      res.redirect('https://images.unsplash.com/photo-1489599849927-2ee91cede3ba?w=1200&auto=format&fit=crop&q=90');
+    }
   });
   request.on('timeout', () => {
     request.destroy();
-    res.status(504).send('Image fetch timeout');
+    if (!res.headersSent) {
+      res.redirect('https://images.unsplash.com/photo-1489599849927-2ee91cede3ba?w=1200&auto=format&fit=crop&q=90');
+    }
   });
 });
 

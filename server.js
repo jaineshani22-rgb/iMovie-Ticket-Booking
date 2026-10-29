@@ -47,7 +47,13 @@ async function createApp() {
     maxAge: '7d',
     immutable: true
   }));
+  app.use('/posters', (req, res) => {
+    // If the local poster is not found, redirect to high-res Unsplash cinema poster
+    res.redirect('https://images.unsplash.com/photo-1489599849927-2ee91cede3ba?w=800&auto=format&fit=crop&q=80');
+  });
   app.use('/api/images', require('./server/routes/imageRoutes'));
+
+  app.get('/favicon.ico', (req, res) => res.status(204).end());
 
   app.get('/api/health', (req, res) => {
     res.json({ status: 'ok', time: new Date().toISOString() });
@@ -81,10 +87,32 @@ async function createApp() {
     try {
       const { createServer: createViteServer } = require('vite');
       const vite = await createViteServer({
-        server: { middlewareMode: true, host: '0.0.0.0', port: PORT },
+        server: { middlewareMode: true, host: '0.0.0.0', port: PORT, hmr: false },
         appType: 'spa',
         root: path.resolve(__dirname, 'client')
       });
+
+      // Serve a silent, no-op stub for @vite/client WebSocket to prevent HMR error loops
+      app.get('/@vite/client', (req, res, next) => {
+        try {
+          const clientPath = path.resolve(__dirname, 'node_modules/vite/dist/client/client.mjs');
+          if (fs.existsSync(clientPath)) {
+            let code = fs.readFileSync(clientPath, 'utf8');
+            code = code.replace(
+              'function setupWebSocket(protocol, hostAndPath, onCloseWithoutOpen) {',
+              'function setupWebSocket(protocol, hostAndPath, onCloseWithoutOpen) { return { readyState: 1, addEventListener(){}, removeEventListener(){}, close(){}, send(){} };'
+            );
+            code = code.replace(/console\.error\(\s*`\[vite\] failed to connect to websocket[\s\S]*?\`\s*\);/g, '');
+            res.setHeader('Content-Type', 'text/javascript');
+            res.setHeader('Cache-Control', 'no-cache');
+            return res.send(code);
+          }
+        } catch {
+          // Fall through
+        }
+        next();
+      });
+
       app.use(vite.middlewares);
     } catch (err) {
       console.warn('[iMovies] Vite middleware error, trying static files:', err.message);

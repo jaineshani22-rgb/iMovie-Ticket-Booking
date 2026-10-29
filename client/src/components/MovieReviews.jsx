@@ -81,7 +81,7 @@ const MovieReviews = ({ movieId, movieTitle, onScrollToBooking }) => {
         setComment('');
       }
     } catch (err) {
-      console.error('Failed to load reviews:', err);
+      console.warn('Notice loading reviews:', err?.message || err);
     } finally {
       setLoading(false);
     }
