@@ -508,7 +508,7 @@ const NearbyCinemaFinder = ({ className = '', defaultExpandedCinema = true }) =>
 
                               <button
                                 type="button"
-                                onClick={() => handleSelectShowtime(movie, cinema, showtimes[0] || '06:30 PM')}
+                                onClick={() => handleSelectShowtime(movie, cinema, showtimes?.[0] || '06:30 PM')}
                                 className="inline-flex items-center gap-1 bg-[#E63946] hover:bg-[#D62839] text-white px-3 py-2 rounded-xl text-xs font-bold transition-all ml-1 cursor-pointer shadow-xs"
                               >
                                 <Ticket className="w-3 h-3" />

@@ -18,7 +18,7 @@ const App = () => {
   return (
     <AuthProvider>
       <LocationProvider>
-        <Router>
+        <Router future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
           <div className="min-h-screen bg-[#FFF9F0] text-[#2B2B2B] flex flex-col selection:bg-[#FFC93C] selection:text-[#2B2B2B]">
             <Navbar />
             <main className="flex-1 pb-20 sm:pb-0">

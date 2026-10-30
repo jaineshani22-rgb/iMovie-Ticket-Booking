@@ -89,28 +89,24 @@ async function createApp() {
       const vite = await createViteServer({
         server: { middlewareMode: true, host: '0.0.0.0', port: PORT, hmr: false },
         appType: 'spa',
-        root: path.resolve(__dirname, 'client')
-      });
-
-      // Serve a silent, no-op stub for @vite/client WebSocket to prevent HMR error loops
-      app.get('/@vite/client', (req, res, next) => {
-        try {
-          const clientPath = path.resolve(__dirname, 'node_modules/vite/dist/client/client.mjs');
-          if (fs.existsSync(clientPath)) {
-            let code = fs.readFileSync(clientPath, 'utf8');
-            code = code.replace(
-              'function setupWebSocket(protocol, hostAndPath, onCloseWithoutOpen) {',
-              'function setupWebSocket(protocol, hostAndPath, onCloseWithoutOpen) { return { readyState: 1, addEventListener(){}, removeEventListener(){}, close(){}, send(){} };'
-            );
-            code = code.replace(/console\.error\(\s*`\[vite\] failed to connect to websocket[\s\S]*?\`\s*\);/g, '');
-            res.setHeader('Content-Type', 'text/javascript');
-            res.setHeader('Cache-Control', 'no-cache');
-            return res.send(code);
+        root: path.resolve(__dirname, 'client'),
+        plugins: [
+          {
+            name: 'suppress-hmr-websocket',
+            transformIndexHtml: {
+              order: 'pre',
+              handler() {
+                return [
+                  {
+                    tag: 'script',
+                    children: `(function(){if(typeof window==='undefined')return;var _orig=console.error;console.error=function(){if(arguments[0]&&typeof arguments[0]==='string'&&(arguments[0].includes('[vite]')||arguments[0].includes('vite-hmr')||arguments[0].includes('WebSocket')))return;_orig.apply(console,arguments);};if(window.WebSocket){var R=window.WebSocket;window.WebSocket=function(u,p){if(typeof u==='string'&&(u.includes('vite-hmr')||u.includes('token='))){return{readyState:1,addEventListener:function(){},removeEventListener:function(){},send:function(){},close:function(){}};}return new R(u,p);};window.WebSocket.prototype=R.prototype;}})();`,
+                    injectTo: 'head-prepend'
+                  }
+                ];
+              }
+            }
           }
-        } catch {
-          // Fall through
-        }
-        next();
+        ]
       });
 
       app.use(vite.middlewares);

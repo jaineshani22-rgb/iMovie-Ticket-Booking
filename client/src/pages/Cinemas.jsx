@@ -208,7 +208,7 @@ const Cinemas = () => {
 
               {/* Formats Tags */}
               <div className="flex flex-wrap gap-1.5 pt-1">
-                {cin.formats.map((fmt) => (
+                {(cin.formats || []).map((fmt) => (
                   <span
                     key={fmt}
                     className="text-[11px] font-bold text-[#2B2B2B] bg-[#FFF9F0] border border-[#EAE2D5] px-2.5 py-1 rounded-lg"
@@ -224,7 +224,7 @@ const Cinemas = () => {
                   Auditorium Features
                 </p>
                 <div className="grid grid-cols-2 gap-2 text-xs text-[#2B2B2B]">
-                  {cin.amenities.map((am) => (
+                  {(cin.amenities || []).map((am) => (
                     <div key={am} className="flex items-center gap-1.5 text-[11px]">
                       <CheckCircle className="w-3.5 h-3.5 text-[#10B981] shrink-0" />
                       <span className="truncate text-[#4B5563]">{am}</span>
